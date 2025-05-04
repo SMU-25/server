@@ -1,0 +1,15 @@
+package final_project.momeasy;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
+@SpringBootApplication
+@EnableJpaAuditing
+public class MomeasyApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(MomeasyApplication.class, args);
+	}
+
+}
