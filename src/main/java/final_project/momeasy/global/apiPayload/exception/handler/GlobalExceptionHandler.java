@@ -1,0 +1,60 @@
+package final_project.momeasy.global.apiPayload.exception.handler;
+
+import final_project.momeasy.global.apiPayload.CustomResponse;
+import final_project.momeasy.global.apiPayload.code.BaseErrorCode;
+import final_project.momeasy.global.apiPayload.code.GeneralErrorCode;
+import final_project.momeasy.global.apiPayload.exception.CustomException;
+import jakarta.validation.ConstraintViolation;
+import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Slf4j
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<CustomResponse<String>> handleCustomException(CustomException ex) {
+        log.error("[ CustomException ]: {} ", ex.getCode().getMessage());
+        BaseErrorCode errorCode = ex.getCode();
+        CustomResponse<String> errorResponse = CustomResponse.onFailure(errorCode.getCode(), ex.getMessage());
+        return ResponseEntity.status(ex.getCode().getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<CustomResponse<List<String>>> constraintViolationException(ConstraintViolationException ex) {
+        log.error(Arrays.toString(ex.getStackTrace()));
+        List<String> message = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).toList();
+
+        log.error("[ ConstraintViolationException ]: {} ", message);
+        BaseErrorCode errorCode = GeneralErrorCode.BAD_REQUEST_400;
+        CustomResponse<List<String>> errorResponse = CustomResponse.onFailure(errorCode.getCode(), errorCode.getMessage(),null);
+
+        return ResponseEntity.status(errorCode.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CustomResponse<Map<String,String>>> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        Map<String, String> error = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(fieldError -> error.put(fieldError.getField(), fieldError.getDefaultMessage()));
+        BaseErrorCode errorCode = GeneralErrorCode.BAD_REQUEST_400;
+        log.error("[ MethodArgumentNotValidException ]: {} ", error);
+        CustomResponse<Map<String,String>> errorResponse = CustomResponse.onFailure(errorCode.getCode(), errorCode.getMessage(),error);
+        return ResponseEntity.status(errorCode.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<CustomResponse<String>> handleException(Exception ex) {
+        log.error("[WARNING] Internal Server Error: {}", ex.getMessage());
+        BaseErrorCode errorCode = GeneralErrorCode.INTERNAL_SERVER_ERROR_500;
+        CustomResponse<String> errorResponse = CustomResponse.onFailure(errorCode.getCode(), ex.getMessage());
+        return ResponseEntity.status(errorCode.getStatus()).body(errorResponse);
+    }
+}
