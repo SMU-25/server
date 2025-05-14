@@ -21,6 +21,7 @@ public class Homecam {
 
     private String place;
 
+    @Column(nullable = false)
     private String date;
 
     private String video_url;
