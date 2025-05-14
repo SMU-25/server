@@ -17,6 +17,7 @@ import java.util.List;
 public class HomecamQueryServiceImpl implements HomecamQueryService {
     private final HomecamRepository homecamRepository;
 
+    @Override
     public HomecamResponseDTO.HomecamDTO getHomecamById(Long homecamId, Parent parent) {
         Homecam homecam = homecamRepository.findById(homecamId).orElseThrow(()->new HomecamException(HomecamErrorCode.NOT_FOUND));
         if(!homecam.getParent().equals(parent)) {
@@ -25,6 +26,7 @@ public class HomecamQueryServiceImpl implements HomecamQueryService {
         return HomecamConverter.toHomecamDTO(homecam);
     }
 
+    @Override
     public HomecamResponseDTO.HomecamVideoDTO getHomecamVideoById(Long homecamId, Parent parent) {
         Homecam homecam = homecamRepository.findById(homecamId).orElseThrow(()->new HomecamException(HomecamErrorCode.NOT_FOUND));
         if(!homecam.getParent().equals(parent)) {
@@ -33,6 +35,7 @@ public class HomecamQueryServiceImpl implements HomecamQueryService {
         return HomecamConverter.toHomecamVideoDTO(homecam);
     }
 
+    @Override
     public List<HomecamResponseDTO.HomecamDTO> getHomecamListByParent(Parent parent) {
         List<Homecam> homecamList = homecamRepository.findAllByParentId(parent.getId());
         List<HomecamResponseDTO.HomecamDTO> homecamListDto

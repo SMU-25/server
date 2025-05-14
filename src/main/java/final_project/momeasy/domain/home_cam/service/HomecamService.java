@@ -9,7 +9,7 @@ import final_project.momeasy.domain.home_cam.exception.HomecamException;
 import final_project.momeasy.domain.parent.entity.Parent;
 
 public interface HomecamService {
-    public void deleteHomecam(Long homecamId, Parent parent);
+    void deleteHomecam(Long homecamId, Parent parent);
 
-    public HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Parent parent);
+    HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Parent parent);
 }

@@ -10,9 +10,9 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import java.util.List;
 
 public interface HomecamQueryService {
-    public HomecamResponseDTO.HomecamDTO getHomecamById(Long homecamId, Parent parent);
+    HomecamResponseDTO.HomecamDTO getHomecamById(Long homecamId, Parent parent);
 
-    public HomecamResponseDTO.HomecamVideoDTO getHomecamVideoById(Long homecamId, Parent parent);
+    HomecamResponseDTO.HomecamVideoDTO getHomecamVideoById(Long homecamId, Parent parent);
 
-    public List<HomecamResponseDTO.HomecamDTO> getHomecamListByParent(Parent parent);
+    List<HomecamResponseDTO.HomecamDTO> getHomecamListByParent(Parent parent);
 }

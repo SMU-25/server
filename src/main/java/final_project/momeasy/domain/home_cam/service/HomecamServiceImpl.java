@@ -20,6 +20,7 @@ public class HomecamServiceImpl implements HomecamService {
     private final HomecamRepository homecamRepository;
     private final ParentRepository parentRepository;
 
+    @Override
     public void deleteHomecam(Long homecamId,Parent parent) {
         Homecam homecam = homecamRepository.findById(homecamId).orElseThrow(() -> new HomecamException(HomecamErrorCode.NOT_FOUND));
         if(homecam.getParent().equals(parent)) {
@@ -28,6 +29,7 @@ public class HomecamServiceImpl implements HomecamService {
         homecamRepository.delete(homecam);
     }
 
+    @Override
     public HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Parent parent) {
         Parent findparent = parentRepository.findById(parent.getId()).orElseThrow(() -> new RuntimeException("Parent not found"));
         // parent 예외 고치기
