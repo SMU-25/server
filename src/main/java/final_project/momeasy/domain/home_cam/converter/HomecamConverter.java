@@ -1,0 +1,32 @@
+package final_project.momeasy.domain.home_cam.converter;
+
+import final_project.momeasy.domain.home_cam.dto.HomecamRequestDTO;
+import final_project.momeasy.domain.home_cam.dto.HomecamResponseDTO;
+import final_project.momeasy.domain.home_cam.entity.Homecam;
+import final_project.momeasy.domain.parent.entity.Parent;
+
+public class HomecamConverter {
+    public static HomecamResponseDTO.HomecamDTO toHomecamDTO(Homecam homecam) {
+        return HomecamResponseDTO.HomecamDTO.builder()
+                .name(homecam.getName())
+                .place(homecam.getPlace())
+                .date(homecam.getDate())
+                .build();
+    }
+
+    public static HomecamResponseDTO.HomecamVideoDTO toHomecamVideoDTO(Homecam homecam) {
+        return HomecamResponseDTO.HomecamVideoDTO.builder()
+                .video_url(homecam.getVideo_url())
+                .build();
+    }
+
+    public static Homecam toHomecam(HomecamRequestDTO.HomecamRegisterDTO homecamRegisterDTO, Parent parent) {
+        return Homecam.builder()
+                .name(homecamRegisterDTO.getName())
+                .serial_num(homecamRegisterDTO.getSerial_num())
+                .place(homecamRegisterDTO.getPlace())
+                .date(homecamRegisterDTO.getDate())
+                .parent(parent)
+                .build();
+    }
+}
