@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<CustomResponse<List<String>>> constraintViolationException(ConstraintViolationException ex) {
+    public ResponseEntity<CustomResponse<List<String>>> handleConstraintViolationException(ConstraintViolationException ex) {
         log.error(Arrays.toString(ex.getStackTrace()));
         List<String> message = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).toList();
 
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<CustomResponse<Map<String,String>>> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<CustomResponse<Map<String,String>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, String> error = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(fieldError -> error.put(fieldError.getField(), fieldError.getDefaultMessage()));
         BaseErrorCode errorCode = GeneralErrorCode.BAD_REQUEST_400;
