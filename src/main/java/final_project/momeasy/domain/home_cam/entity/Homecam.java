@@ -14,16 +14,13 @@ public class Homecam {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false, unique = true)
     private String serial_num;
 
-    @Column(nullable = false)
     private String place;
 
-    @Column(nullable = false)
     private String date;
 
     private String video_url;
