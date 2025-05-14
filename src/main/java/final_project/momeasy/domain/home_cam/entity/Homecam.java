@@ -1,6 +1,5 @@
 package final_project.momeasy.domain.home_cam.entity;
 
-import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.parent.entity.Parent;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,7 +20,6 @@ public class Homecam {
 
     private String place;
 
-    @Column(nullable = false)
     private String date;
 
     private String video_url;
