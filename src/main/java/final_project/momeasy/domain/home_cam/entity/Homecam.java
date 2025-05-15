@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.home_cam.entity;
 
+import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.parent.entity.Parent;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,8 +29,17 @@ public class Homecam {
     @JoinColumn(name = "parent_id",nullable = false)
     private Parent parent;
 
+    @OneToOne(fetch =FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "child_id", nullable = false)
+    private Child child;
+
     public void setParent(Parent parent) {
         this.parent = parent;
         parent.getHomecams().add(this);
+    }
+
+    public void setChild(Child child) {
+        this.child = child;
+        child.setHomecam(this);
     }
 }

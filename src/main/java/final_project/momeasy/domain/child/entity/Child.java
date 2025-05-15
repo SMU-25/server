@@ -4,9 +4,9 @@ import final_project.momeasy.common.enums.Gender;
 import final_project.momeasy.domain.fever_record.entity.FeverRecord;
 import final_project.momeasy.domain.fever_report.entity.FeverReport;
 import final_project.momeasy.domain.home_cam.entity.Homecam;
-import final_project.momeasy.domain.illness.entity.Illness;
 import final_project.momeasy.domain.notification.entity.Notification;
 import final_project.momeasy.domain.outing_record.entity.OutingRecord;
+import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.entity.ParentChild;
 import final_project.momeasy.common.enums.Seizure;
 import final_project.momeasy.domain.room_condition.entity.RoomCondition;
@@ -75,5 +75,12 @@ public class Child extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "child", cascade = CascadeType.ALL)
     @Builder.Default
     private List<FeverReport> fever_reports = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY,mappedBy = "child")
+    private Homecam homecam;
+
+    public void setHomecam(Homecam homecam) {
+        this.homecam = homecam;
+    }
 
 }
