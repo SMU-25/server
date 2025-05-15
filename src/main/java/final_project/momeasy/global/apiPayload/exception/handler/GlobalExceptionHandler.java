@@ -32,7 +32,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CustomResponse<List<String>>> handleConstraintViolationException(ConstraintViolationException ex) {
         log.error(Arrays.toString(ex.getStackTrace()));
         List<String> message = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).toList();
-
         log.error("[ ConstraintViolationException ]: {} ", message);
         BaseErrorCode errorCode = GeneralErrorCode.BAD_REQUEST_400;
         CustomResponse<List<String>> errorResponse = CustomResponse.onFailure(errorCode.getCode(), errorCode.getMessage(),null);
