@@ -36,11 +36,10 @@ public class FeverRecordService {
         }
     }
 
-    @Scheduled(cron ="0 * * * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void deleteFeverRecord(){
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
-        LocalDateTime thirtySecondsAgo = LocalDateTime.now().minusSeconds(30);
-        feverRecordRepository.deleteByCreatedAtBefore(thirtySecondsAgo);
+        feverRecordRepository.deleteByCreatedAtBefore(sevenDaysAgo);
         log.info("Fever Record deleted");
     }
 }
