@@ -8,6 +8,8 @@ import final_project.momeasy.domain.home_cam.exception.HomecamErrorCode;
 import final_project.momeasy.domain.home_cam.exception.HomecamException;
 import final_project.momeasy.domain.home_cam.repository.HomecamRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
+import final_project.momeasy.domain.parent.exception.ParentErrorCode;
+import final_project.momeasy.domain.parent.exception.ParentException;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,7 @@ public class HomecamServiceImpl implements HomecamService {
 
     @Override
     public HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Parent parent) {
-        Parent findparent = parentRepository.findById(parent.getId()).orElseThrow(() -> new RuntimeException("Parent not found"));
+        Parent findparent = parentRepository.findById(parent.getId()).orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
         // parent 예외 고치기
         Homecam homecam = HomecamConverter.toHomecam(homecamRequestDTO,findparent);
         homecam.setParent(findparent);
