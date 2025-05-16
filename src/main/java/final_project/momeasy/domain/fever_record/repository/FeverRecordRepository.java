@@ -18,6 +18,9 @@ public interface FeverRecordRepository extends JpaRepository<FeverRecord, Long> 
     Slice<FeverRecord> findAllByChildIdOrderByIdDesc(Long childId, Pageable pageable);
     List<FeverRecord> findAllByChildId(Long childId);
 
+    @Query("SELECT fr FROM FeverRecord fr WHERE fr.child.id  = :childId AND fr.fever>=37.5 ORDER BY fr.createdAt DESC LIMIT 1")
+    Optional<FeverRecord> findRecentFeverRecord(Long childId);
+
     @Transactional
     @Modifying
     @Query("DELETE FROM FeverRecord fr WHERE fr.createdAt < :time") //스케줄링(@Scheduled)과 함께 사용, 7일 분량의 데이터만 저장
