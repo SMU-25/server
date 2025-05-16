@@ -1,0 +1,13 @@
+package final_project.momeasy.domain.room_condition.service;
+
+import final_project.momeasy.domain.room_condition.dto.RoomConditionResponseDTO;
+
+import java.util.List;
+
+public interface RoomConditionQueryService {
+    RoomConditionResponseDTO.RoomConditionViewDTO getRoomCondition(Long childId);
+
+    List<RoomConditionResponseDTO.RoomConditionViewDTO> getRoomConditionPage(Long childId, int page);
+
+    List<RoomConditionResponseDTO.RoomConditionViewDTO> getRoomConditionList(Long childId);
+}
