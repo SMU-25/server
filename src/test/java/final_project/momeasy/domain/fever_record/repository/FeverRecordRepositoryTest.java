@@ -74,20 +74,20 @@ public class FeverRecordRepositoryTest {
         parent.addChild(testChild, Relation.DAD);
 
         // 50개의 테스트 데이터 생성
-        for (int i = 0; i < TEST_DATA_COUNT; i++) {
-            FeverRecord feverRecord = FeverRecord.builder()
-                    .fever(20.0f + i)
-                    .child(testChild)
-                    .build();
-            feverRecord.setChild(testChild);
-            entityManager.persist(feverRecord);
-            System.out.println("created_at "+feverRecord.getCreatedAt());
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        for (int i = 0; i < TEST_DATA_COUNT; i++) {
+//            FeverRecord feverRecord = FeverRecord.builder()
+//                    .fever(20.0f + i)
+//                    .child(testChild)
+//                    .build();
+//            feverRecord.setChild(testChild);
+//            entityManager.persist(feverRecord);
+//            System.out.println("created_at "+feverRecord.getCreatedAt());
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
         entityManager.flush();
         entityManager.clear();
     }
@@ -139,5 +139,66 @@ public class FeverRecordRepositoryTest {
         long remainingCount = feverRecordRepository.count();
         System.out.println("remainingCount: " + remainingCount);
         assertThat(remainingCount).isLessThan(TEST_DATA_COUNT);
+    }
+
+    @Test
+    void findRecentFeverRecord_성공() {
+        // Case 1: fever 기록이 모두 37.5가 넘음
+        // given
+        FeverRecord highFeverRecord1 = FeverRecord.builder()
+                .fever(38.5f)
+                .child(testChild)
+                .build();
+        highFeverRecord1.setChild(testChild);
+        entityManager.persist(highFeverRecord1);
+
+        FeverRecord highFeverRecord2 = FeverRecord.builder()
+                .fever(39.0f)
+                .child(testChild)
+                .build();
+        highFeverRecord2.setChild(testChild);
+        entityManager.persist(highFeverRecord2);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        Optional<FeverRecord> recentFeverRecord = feverRecordRepository.findRecentFeverRecord(testChild.getId());
+
+        // then
+        assertThat(recentFeverRecord).isPresent();
+        assertThat(recentFeverRecord.get().getFever()).isEqualTo(39.0f);
+
+        // Case 2: fever 기록이 37.5넘지 않음
+        // given
+        feverRecordRepository.deleteAll();
+
+        FeverRecord lowFeverRecord = FeverRecord.builder()
+                .fever(36.5f)
+                .child(testChild)
+                .build();
+        lowFeverRecord.setChild(testChild);
+        entityManager.persist(lowFeverRecord);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        Optional<FeverRecord> noHighFeverRecord = feverRecordRepository.findRecentFeverRecord(testChild.getId());
+
+        // then
+        assertThat(noHighFeverRecord).isEmpty();
+
+        // Case 3: fever 기록이 없음
+        // given
+        feverRecordRepository.deleteAll();
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        Optional<FeverRecord> emptyResult = feverRecordRepository.findRecentFeverRecord(testChild.getId());
+
+        // then
+        assertThat(emptyResult).isEmpty();
     }
 }
