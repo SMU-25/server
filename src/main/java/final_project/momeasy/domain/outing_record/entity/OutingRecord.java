@@ -23,7 +23,7 @@ public class OutingRecord extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime outing_end_time;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id", nullable = false)
     private Child child;
 
