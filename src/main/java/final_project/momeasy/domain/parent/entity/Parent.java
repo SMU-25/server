@@ -41,8 +41,6 @@ public class Parent extends BaseEntity {
     @Column(nullable = false)
     private LocalDate birthdate;
 
-    private LocalDateTime createdAt;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
