@@ -47,7 +47,7 @@ public class Parent extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     @Builder.Default
-    private List<ParentChild> parentchild = new ArrayList<>();
+    private List<ParentChild> parentChild = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     @Builder.Default
@@ -72,7 +72,7 @@ public class Parent extends BaseEntity {
                 .relation(relation)
                 .build();
 
-        this.parentchild.add(parentChild);
+        this.parentChild.add(parentChild);
         child.getParentChildren().add(parentChild);
     }
 
