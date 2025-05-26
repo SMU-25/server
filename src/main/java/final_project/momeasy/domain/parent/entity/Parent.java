@@ -2,6 +2,8 @@ package final_project.momeasy.domain.parent.entity;
 
 import final_project.momeasy.common.enums.Gender;
 import final_project.momeasy.common.enums.Relation;
+import final_project.momeasy.common.enums.Role;
+import final_project.momeasy.common.enums.SocialType;
 import final_project.momeasy.domain.calendar.entity.Calendar;
 import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.home_cam.entity.Homecam;
@@ -12,7 +14,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,15 +42,21 @@ public class Parent extends BaseEntity {
     @Column(nullable = false)
     private LocalDate birthdate;
 
-    private LocalDateTime createdAt;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private SocialType socialType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     @Builder.Default
-    private List<ParentChild> parentchild = new ArrayList<>();
+    private List<ParentChild> parentChild = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     @Builder.Default
@@ -74,7 +81,7 @@ public class Parent extends BaseEntity {
                 .relation(relation)
                 .build();
 
-        this.parentchild.add(parentChild);
+        this.parentChild.add(parentChild);
         child.getParentChildren().add(parentChild);
     }
 
