@@ -102,9 +102,8 @@ class FeverReportRepositoryTest {
     void findAllByOrderByIdDesc_shouldReturnFeverReportsInDescendingOrder() {
         // given
         PageRequest pageRequest = PageRequest.of(0, 2); // 첫 페이지, 페이지당 2개 항목
-
         // when
-        Slice<FeverReport> reports = feverReportRepository.findAllByOrderByIdDesc(pageRequest);
+        Slice<FeverReport> reports = feverReportRepository.findAllByChildIdOrderByIdDesc(child.getId(), pageRequest);
 
         // then
         assertThat(reports.getContent()).hasSize(2);

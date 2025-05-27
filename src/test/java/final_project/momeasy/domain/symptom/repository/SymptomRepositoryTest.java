@@ -59,17 +59,14 @@ class SymptomRepositoryTest {
         // 증상 생성
         symptom1 = Symptom.builder()
                 .symptom(SymptomType.발열)
-                .symptom_name("고열")
                 .build();
 
         symptom2 = Symptom.builder()
                 .symptom(SymptomType.기침)
-                .symptom_name("마른기침")
                 .build();
 
         symptom3 = Symptom.builder()
                 .symptom(SymptomType.콧물)
-                .symptom_name("맑은 콧물")
                 .build();
 
         // 증상과 발열 보고서 연결
