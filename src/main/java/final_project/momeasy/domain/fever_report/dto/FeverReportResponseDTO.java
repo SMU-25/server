@@ -1,8 +1,6 @@
 package final_project.momeasy.domain.fever_report.dto;
 
-import final_project.momeasy.domain.symptom.entity.Symptom;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import final_project.momeasy.common.enums.SymptomType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +10,7 @@ public class FeverReportResponseDTO {
     @Getter
     @Builder
     public static class FeverReportViewDTO {
-        private List<Symptom> symptoms;
+        private List<SymptomType> symptoms;
 
         private String etc_symptom;
 
