@@ -9,15 +9,16 @@ import final_project.momeasy.domain.fever_record.exception.FeverRecordException;
 import final_project.momeasy.domain.fever_record.repository.FeverRecordRepository;
 import final_project.momeasy.domain.home_cam.exception.HomecamException;
 import final_project.momeasy.domain.home_cam.repository.HomecamRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FeverRecordQueryServiceImpl implements FeverRecordQueryService {
     private final FeverRecordRepository feverRecordRepository;
     private final ChildRepository childRepository;
@@ -36,8 +37,8 @@ public class FeverRecordQueryServiceImpl implements FeverRecordQueryService {
     @Override
     public List<FeverRecordResponseDTO.FeverRecordViewDTO> getFeverRecordPage(Long childId, int page) {
         homecamRepository.findById(childId).orElseThrow(()->new HomecamException(FeverRecordErrorCode.NOT_FOUND));
-        PageRequest pageRequest = PageRequest.of(page, 10);
-        Slice<FeverRecord> feverRecords = feverRecordRepository.findAllByChildIdOrderByIdDesc(childId,pageRequest);
+        Pageable pageable = PageRequest.of(page, 10);
+        Slice<FeverRecord> feverRecords = feverRecordRepository.findAllByChildIdOrderByIdDesc(childId,pageable);
         List<FeverRecordResponseDTO.FeverRecordViewDTO> feverRecordsDTO = feverRecords.stream().map(FeverRecordConverter::toFeverRecordResponseDTO).toList();
         return feverRecordsDTO;
     }

@@ -4,7 +4,6 @@ import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.child.exception.ChildErrorCode;
 import final_project.momeasy.domain.child.exception.ChildException;
 import final_project.momeasy.domain.child.repository.ChildRepository;
-import final_project.momeasy.domain.fever_record.exception.FeverRecordErrorCode;
 import final_project.momeasy.domain.home_cam.exception.HomecamException;
 import final_project.momeasy.domain.home_cam.repository.HomecamRepository;
 import final_project.momeasy.domain.room_condition.converter.RoomConditionConverter;
@@ -13,7 +12,7 @@ import final_project.momeasy.domain.room_condition.entity.RoomCondition;
 import final_project.momeasy.domain.room_condition.exception.RoomConditionErrorCode;
 import final_project.momeasy.domain.room_condition.exception.RoomConditionException;
 import final_project.momeasy.domain.room_condition.repository.RoomConditionRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -22,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RoomConditionQueryServiceImpl implements RoomConditionQueryService {
     private final RoomConditionRepository roomConditionRepository;
     private final ChildRepository childRepository;

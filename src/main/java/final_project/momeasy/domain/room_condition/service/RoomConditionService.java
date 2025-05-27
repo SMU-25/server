@@ -5,6 +5,7 @@ import final_project.momeasy.domain.child.repository.ChildRepository;
 import final_project.momeasy.domain.room_condition.entity.RoomCondition;
 import final_project.momeasy.domain.room_condition.repository.RoomConditionRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional
 public class RoomConditionService {
     private final RoomConditionRepository roomConditionRepository;
