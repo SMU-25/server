@@ -40,7 +40,7 @@ public class FeverReportController {
         return CustomResponse.onSuccess(null);
     }
 
-    @PostMapping("/{child_id}/posts")
+    @PostMapping("/{child_id}")
     public CustomResponse<FeverReportResponseDTO.FeverReportViewDTO> createFeverReport(@AuthenticationPrincipal Parent parent,
     @RequestBody FeverReportRequestDTO.FeverReportCreateDTO feverReportRequestDTO, @PathVariable("child_id") long childId) {
         FeverReportResponseDTO.FeverReportViewDTO feverReportViewDTO = feverReportService.createFeverReport(parent, feverReportRequestDTO, childId);
