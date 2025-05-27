@@ -72,6 +72,6 @@ public class FeverReportServiceImpl implements FeverReportService {
         if(feverReport == null) {
             throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
         }
-        return null;
+        return FeverReportConverter.toFeverReportViewDTO(feverReport);
     }
 }
