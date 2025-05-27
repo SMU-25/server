@@ -14,7 +14,6 @@ public class ParentRequestDTO {
     @Getter
     public static class ParentCreateRequestDTO {
         String name;
-        String loginId;
         String password;
         String email;
         LocalDate birthdate;

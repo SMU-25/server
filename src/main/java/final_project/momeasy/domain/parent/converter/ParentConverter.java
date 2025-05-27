@@ -15,7 +15,6 @@ public class ParentConverter {
     ) {
         return Parent.builder()
                 .name(parentCreateRequestDTO.getName())
-                .loginId(parentCreateRequestDTO.getLoginId())
                 .password(parentCreateRequestDTO.getPassword())
                 .email(parentCreateRequestDTO.getEmail())
                 .birthdate(parentCreateRequestDTO.getBirthdate())
