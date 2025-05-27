@@ -20,6 +20,7 @@ public class FeverReportConverter {
         return FeverReport.builder()
                 .outing(feverReportCreateDTO.getOuting())
                 .special(special)
+                .etc_symptom(feverReportCreateDTO.getEtc_symptom())
                 .build();
     }
 }
