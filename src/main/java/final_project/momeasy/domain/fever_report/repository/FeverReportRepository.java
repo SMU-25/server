@@ -9,6 +9,5 @@ import java.util.Optional;
 
 public interface FeverReportRepository extends JpaRepository<FeverReport, Long> {
     Optional<FeverReport> findById(Long id);
-    Optional<FeverReport> findByChildId(Long childId);
     Slice<FeverReport> findAllByChildIdOrderByIdDesc(Long ChildId, Pageable pageable);
 }
