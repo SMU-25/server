@@ -4,7 +4,6 @@ import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.child.repository.ChildRepository;
 import final_project.momeasy.domain.fever_record.entity.FeverRecord;
 import final_project.momeasy.domain.fever_record.repository.FeverRecordRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
