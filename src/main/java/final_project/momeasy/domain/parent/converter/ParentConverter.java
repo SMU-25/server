@@ -6,16 +6,18 @@ import final_project.momeasy.domain.parent.dto.response.ParentResponseDTO;
 import final_project.momeasy.domain.parent.entity.Parent;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ParentConverter {
 
     public static Parent toParent(
-            ParentRequestDTO.ParentCreateRequestDTO parentCreateRequestDTO
+            ParentRequestDTO.ParentCreateRequestDTO parentCreateRequestDTO,
+            PasswordEncoder passwordEncoder
     ) {
         return Parent.builder()
                 .name(parentCreateRequestDTO.getName())
-                .password(parentCreateRequestDTO.getPassword())
+                .password(passwordEncoder.encode(parentCreateRequestDTO.getPassword()))
                 .email(parentCreateRequestDTO.getEmail())
                 .birthdate(parentCreateRequestDTO.getBirthdate())
                 .socialType(parentCreateRequestDTO.getSocialType())
