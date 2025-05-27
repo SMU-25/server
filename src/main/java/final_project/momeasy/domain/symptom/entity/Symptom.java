@@ -22,9 +22,6 @@ public class Symptom {
     @Column(nullable = false)
     private SymptomType symptom;
 
-    @Column(nullable = false)
-    private String symptom_name;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "symptom", cascade = CascadeType.ALL)
     @Builder.Default
     private List<FeverReportSymptom> feverReportSymptoms = new ArrayList<>();
