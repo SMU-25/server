@@ -1,6 +1,6 @@
 package final_project.momeasy.domain.fever_report.dto;
 
-import final_project.momeasy.domain.symptom.entity.Symptom;
+import final_project.momeasy.common.enums.SymptomType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -13,7 +13,7 @@ public class FeverReportRequestDTO {
     @Builder
     public static class FeverReportCreateDTO {
         @NotBlank(message = "증상은 필수 입력 값입니다.")
-        private List<Symptom> symptoms;
+        private List<SymptomType> symptoms;
 
         private String etc_symptom;
 
