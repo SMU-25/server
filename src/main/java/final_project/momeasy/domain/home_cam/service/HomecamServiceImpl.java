@@ -1,5 +1,9 @@
 package final_project.momeasy.domain.home_cam.service;
 
+import final_project.momeasy.domain.child.entity.Child;
+import final_project.momeasy.domain.child.exception.ChildErrorCode;
+import final_project.momeasy.domain.child.exception.ChildException;
+import final_project.momeasy.domain.child.repository.ChildRepository;
 import final_project.momeasy.domain.home_cam.converter.HomecamConverter;
 import final_project.momeasy.domain.home_cam.dto.HomecamRequestDTO;
 import final_project.momeasy.domain.home_cam.dto.HomecamResponseDTO;
@@ -21,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class HomecamServiceImpl implements HomecamService {
     private final HomecamRepository homecamRepository;
     private final ParentRepository parentRepository;
+    private final ChildRepository childRepository;
 
     @Override
     public void deleteHomecam(Long homecamId,Parent parent) {
@@ -32,11 +37,13 @@ public class HomecamServiceImpl implements HomecamService {
     }
 
     @Override
-    public HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Parent parent) {
+    public HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Parent parent, Long childId) {
         Parent findparent = parentRepository.findById(parent.getId()).orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
+        Child child = childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
         // parent 예외 고치기
         Homecam homecam = HomecamConverter.toHomecam(homecamRequestDTO,findparent);
         homecam.setParent(findparent);
+        homecam.setChild(child);
         homecamRepository.save(homecam);
         return HomecamConverter.toHomecamDTO(homecam);
     }

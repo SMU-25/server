@@ -14,35 +14,35 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/report")
+@RequestMapping("/reports")
 public class FeverReportController {
     private final FeverReportService feverReportService;
     private final FeverReportQueryService feverReportQueryService;
 
-    @GetMapping("/{child_id}/{report_id}")
+    @GetMapping("/{childId}/{reportId}")
     public CustomResponse<FeverReportResponseDTO.FeverReportViewDTO> getFeverReport(@AuthenticationPrincipal Parent parent,
-        @PathVariable("child_id") long childId, @PathVariable("report_id") long reportId) {
+        @PathVariable("childId") long childId, @PathVariable("reportId") long reportId) {
         FeverReportResponseDTO.FeverReportViewDTO feverReportViewDTO = feverReportQueryService.getFeverReport(parent, childId, reportId);
         return CustomResponse.onSuccess(feverReportViewDTO);
     }
 
-    @GetMapping("/{child_id}/list")
+    @GetMapping("/{childId}/list")
     public CustomResponse<List<FeverReportResponseDTO.FeverReportViewDTO>> getFeverReports(@AuthenticationPrincipal Parent parent,
-         @PathVariable("child_id") long childId, @RequestParam(value="page", defaultValue="0") int page) {
+         @PathVariable("childId") long childId, @RequestParam(value="page", defaultValue="0") int page) {
         List<FeverReportResponseDTO.FeverReportViewDTO> feverReportViewDTOList = feverReportQueryService.getFeverReports(parent,childId,page);
         return CustomResponse.onSuccess(feverReportViewDTOList);
     }
 
-    @DeleteMapping("/{child_id}/{report_id}")
+    @DeleteMapping("/{childId}/{reportId}")
     public CustomResponse<Void> deleteFeverReport(@AuthenticationPrincipal Parent parent,
-     @PathVariable("child_id") long childId, @PathVariable("report_id") long reportId){
+     @PathVariable("childId") long childId, @PathVariable("reportId") long reportId){
         feverReportService.deleteFeverReport(parent,reportId,childId);
         return CustomResponse.onSuccess(null);
     }
 
-    @PostMapping("/{child_id}")
+    @PostMapping("/{childId}")
     public CustomResponse<FeverReportResponseDTO.FeverReportViewDTO> createFeverReport(@AuthenticationPrincipal Parent parent,
-    @RequestBody FeverReportRequestDTO.FeverReportCreateDTO feverReportRequestDTO, @PathVariable("child_id") long childId) {
+    @RequestBody FeverReportRequestDTO.FeverReportCreateDTO feverReportRequestDTO, @PathVariable("childId") long childId) {
         FeverReportResponseDTO.FeverReportViewDTO feverReportViewDTO = feverReportService.createFeverReport(parent, feverReportRequestDTO, childId);
         return CustomResponse.onSuccess(feverReportViewDTO);
     }
