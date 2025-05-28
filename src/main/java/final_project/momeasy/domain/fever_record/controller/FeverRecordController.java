@@ -3,7 +3,6 @@ package final_project.momeasy.domain.fever_record.controller;
 import final_project.momeasy.domain.fever_record.dto.FeverRecordResponseDTO;
 import final_project.momeasy.domain.fever_record.service.FeverRecordQueryService;
 import final_project.momeasy.global.apiPayload.CustomResponse;
-import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
