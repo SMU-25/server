@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/homecam")
+@RequestMapping("/homecams")
 public class HomecamController {
     // security 완성되면 @AuthenticatedMember 추가하기
     private final HomecamQueryService homecamQueryService;
@@ -30,7 +30,7 @@ public class HomecamController {
         return CustomResponse.onSuccess(homecam);
     }
 
-    @GetMapping("/url/{homecamId}")
+    @GetMapping("/urls/{homecamId}")
     public CustomResponse<HomecamResponseDTO.HomecamVideoDTO> getHomecamVideo(
             @AuthenticationPrincipal Parent parent,
             @PathVariable("homecamId") long homecamId) {
@@ -50,11 +50,11 @@ public class HomecamController {
         return CustomResponse.onSuccess(null);
     }
 
-    @PostMapping("/posts")
+    @PostMapping("/{childId}")
     public CustomResponse<HomecamResponseDTO.HomecamDTO> createHomecam(
             @AuthenticationPrincipal Parent parent,
-            @RequestBody HomecamRequestDTO.HomecamRegisterDTO homecamRegisterDTO) {
-        HomecamResponseDTO.HomecamDTO homecam = homecamService.createHomecam(homecamRegisterDTO,parent);
+            @RequestBody HomecamRequestDTO.HomecamRegisterDTO homecamRegisterDTO, @PathVariable("childId") Long childId){
+        HomecamResponseDTO.HomecamDTO homecam = homecamService.createHomecam(homecamRegisterDTO,parent, childId);
         return CustomResponse.onSuccess(homecam);
     }
 }
