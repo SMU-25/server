@@ -14,7 +14,7 @@ public class CustomUserDetails implements UserDetails {
 
     private final Parent parent;
 
-    CustomUserDetails(Parent parent) {
+    public CustomUserDetails(Parent parent) {
         this.parent = parent;
     }
 
