@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+jwt:
+  secretKey: ${SECRET_KEY}
+  token:
+    access-expiration-time: 3600000     # 1 hour (ms)
+    refresh-expiration-time: 86400000   # 24 hours (ms)
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.orm.jdbc.bind: trace
