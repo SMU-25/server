@@ -3,6 +3,7 @@ package final_project.momeasy.global.apiPayload;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import final_project.momeasy.global.apiPayload.code.BaseErrorCode;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,5 +39,13 @@ public class CustomResponse<T> {
     // 실패 응답 ( 데이터 없음 )
     public static <T> CustomResponse<T> onFailure(String code, String message) {
         return new CustomResponse<>(false,code,message,null);
+    }
+    // 상태 코드를 받아서 사용하는 실패 응답
+    public static <T> CustomResponse<T> onFailure(HttpStatus status, String code, String message, T result) {
+        return new CustomResponse<>(false, code, message, result);
+    }
+
+    public static <T> CustomResponse<T> onFailure(BaseErrorCode errorCode, T result) {
+        return new CustomResponse<>(false, errorCode.getCode(), errorCode.getMessage(), result);
     }
 }
