@@ -119,8 +119,13 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
             errorCode = "LOGIN404";
             errorMessage = "계정을 찾을 수 없습니다.";
         } else if (failed instanceof AuthenticationServiceException) {
-            errorCode = "LOGIN400";
-            errorMessage = "RequestBody 파싱 중 오류가 발생했습니다.";
+            if (failed.getMessage().contains("소셜 로그인")) {
+                errorCode = "LOGIN401_SOCIAL";
+                errorMessage = failed.getMessage();
+            } else {
+                errorCode = "LOGIN400";
+                errorMessage = "RequestBody 파싱 중 오류가 발생했습니다.";
+            }
         } else {
             errorCode = "LOGIN500";
             errorMessage = "인증에 실패했습니다.";

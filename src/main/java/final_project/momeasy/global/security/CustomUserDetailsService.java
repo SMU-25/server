@@ -1,11 +1,13 @@
 package final_project.momeasy.global.security;
 
+import final_project.momeasy.common.enums.SocialType;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.exception.ParentErrorCode;
 import final_project.momeasy.domain.parent.exception.ParentException;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,6 +27,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Parent parent = parentRepository.findByEmail(email)
                 .orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
+
+        // 소셜 로그인 유저일 경우 로그인 불가 예외
+        if (parent.getSocialType() != SocialType.LOCAL) {
+            throw new AuthenticationServiceException(ParentErrorCode.SOCIAL_USER_CANNOT_LOGIN.getMessage());
+        }
 
         return new CustomUserDetails(parent);
     }
