@@ -2,7 +2,7 @@ package final_project.momeasy.global.security.handler;
 
 import final_project.momeasy.domain.token.service.TokenService;
 import final_project.momeasy.global.security.jwt.JwtUtil;
-import jakarta.servlet.http.Cookie;
+import final_project.momeasy.global.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class CustomLogoutHandler implements LogoutHandler {
         }
 
         // refresh token 추출
-        String refreshToken = extractRefreshTokenFromCookie(request);
+        String refreshToken = CookieUtil.getCookieValue(request, "refreshToken");
 
         // refresh token 삭제
         if (refreshToken != null) {
@@ -50,25 +50,9 @@ public class CustomLogoutHandler implements LogoutHandler {
             }
         }
 
-        // cookie에서 refresh token 값 0으로 설정
-        Cookie cookie = new Cookie("refreshToken", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
-        response.addCookie(cookie);
+        // cookie에서 refresh token 삭제
+        CookieUtil.deleteRefreshTokenFromCookie(response);
         log.info("[ LogoutHandler ] 쿠키 삭제 완료");
     }
 
-    private String extractRefreshTokenFromCookie(HttpServletRequest request) {
-        if (request.getCookies() == null) return null;
-
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals("refreshToken")) {
-                return cookie.getValue();
-            }
-        }
-
-        return null;
-    }
 }

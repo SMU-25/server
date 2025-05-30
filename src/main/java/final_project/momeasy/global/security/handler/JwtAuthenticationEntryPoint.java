@@ -1,6 +1,5 @@
 package final_project.momeasy.global.security.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.apiPayload.code.GeneralErrorCode;
 import final_project.momeasy.global.util.ResponseUtil;

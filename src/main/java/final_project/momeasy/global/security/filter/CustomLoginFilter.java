@@ -7,10 +7,10 @@ import final_project.momeasy.global.security.CustomUserDetails;
 import final_project.momeasy.global.security.dto.request.LoginRequestDTO;
 import final_project.momeasy.global.security.dto.response.LoginResponseDTO;
 import final_project.momeasy.global.security.jwt.JwtUtil;
+import final_project.momeasy.global.util.CookieUtil;
 import final_project.momeasy.global.util.ResponseUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -79,8 +79,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         tokenService.saveOrUpdate(customUserDetails.getUsername(), refreshToken);
 
         // refresh token은 쿠키로 전달
-        Cookie refreshTokenCookie = createCookie("refreshToken", refreshToken);
-        response.addCookie(refreshTokenCookie);
+        CookieUtil.addRefreshTokenToCookie(response, refreshToken);
 
         // Client에게 줄 Response build
         LoginResponseDTO loginResponse = LoginResponseDTO.builder()
@@ -95,15 +94,6 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     }
 
-    private Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setMaxAge(24 * 60 * 60);
-
-        return cookie;
-    }
 
     @Override
     protected void unsuccessfulAuthentication(
