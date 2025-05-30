@@ -30,9 +30,6 @@ public class Parent extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "login_id", nullable = false, unique = true)
-    private String loginId;
-
     @Column(nullable = false)
     private String password;
 

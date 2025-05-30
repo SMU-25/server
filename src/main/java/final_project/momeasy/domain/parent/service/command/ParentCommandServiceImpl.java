@@ -7,6 +7,7 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ParentCommandServiceImpl implements ParentCommandService {
 
     private final ParentRepository parentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ParentResponseDTO.ParentCreateResponseDTO createParent(ParentRequestDTO.ParentCreateRequestDTO parentCreateRequestDTO) {
         // DTO -> Parent
-        Parent parent = ParentConverter.toParent(parentCreateRequestDTO);
+        Parent parent = ParentConverter.toParent(parentCreateRequestDTO, passwordEncoder);
 
         // DB에 저장
         parentRepository.save(parent);
