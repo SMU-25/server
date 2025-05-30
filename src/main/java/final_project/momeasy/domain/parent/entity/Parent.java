@@ -39,6 +39,8 @@ public class Parent extends BaseEntity {
     @Column(nullable = false)
     private LocalDate birthdate;
 
+    private String profileImage;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
