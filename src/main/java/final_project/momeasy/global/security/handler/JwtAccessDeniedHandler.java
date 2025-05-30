@@ -1,8 +1,8 @@
 package final_project.momeasy.global.security.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.apiPayload.code.GeneralErrorCode;
+import final_project.momeasy.global.util.ResponseUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,13 +18,10 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        response.setContentType("application/json");
-        response.setStatus(HttpStatus.FORBIDDEN.value());
 
         CustomResponse<Void> errorResponse = CustomResponse.onFailure(
                 GeneralErrorCode.FORBIDDEN_403, null);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(response.getOutputStream(), errorResponse);
+        ResponseUtil.writeJsonResponse(response, errorResponse, HttpStatus.FORBIDDEN);
     }
 }

@@ -1,6 +1,5 @@
 package final_project.momeasy.global.security.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.exception.ParentErrorCode;
 import final_project.momeasy.domain.parent.exception.ParentException;
@@ -9,6 +8,7 @@ import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.security.CustomUserDetails;
 import final_project.momeasy.global.security.jwt.JwtUtil;
 import final_project.momeasy.global.security.jwt.exception.JwtErrorCode;
+import final_project.momeasy.global.util.ResponseUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -61,24 +61,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             CustomResponse<Void> errorResponse = CustomResponse.onFailure(
                     JwtErrorCode.EXPIRED_TOKEN, null);
 
-            writeJsonResponse(response, errorResponse, HttpStatus.UNAUTHORIZED);
+            ResponseUtil.writeJsonResponse(response, errorResponse, HttpStatus.UNAUTHORIZED);
         } catch (JwtException e) {
             log.warn("[ JwtAuthorizationFilter ] 잘못된 access token");
             CustomResponse<Void> errorResponse = CustomResponse.onFailure(
                     JwtErrorCode.INVALID_TOKEN, null);
 
-            writeJsonResponse(response, errorResponse, HttpStatus.UNAUTHORIZED);
+            ResponseUtil.writeJsonResponse(response, errorResponse, HttpStatus.UNAUTHORIZED);
         }
 
-    }
-
-    private void writeJsonResponse(@NonNull HttpServletResponse response, Object responseBody, HttpStatus status) throws IOException {
-        response.setStatus(status.value());
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getOutputStream(), responseBody);
     }
 
 

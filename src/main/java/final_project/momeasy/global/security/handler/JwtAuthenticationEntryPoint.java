@@ -3,6 +3,7 @@ package final_project.momeasy.global.security.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.apiPayload.code.GeneralErrorCode;
+import final_project.momeasy.global.util.ResponseUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,14 +23,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         log.warn("[ JwtAuthenticationEntryPoint ] 인증되지 않은 사용자 요청");
 
-        response.setContentType("application/json");
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-
         CustomResponse<Void> errorResponse = CustomResponse.onFailure(
                 GeneralErrorCode.UNAUTHORIZED_401, null
         );
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getOutputStream(), errorResponse);
+        ResponseUtil.writeJsonResponse(response, errorResponse, HttpStatus.UNAUTHORIZED);
     }
 }

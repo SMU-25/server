@@ -7,6 +7,7 @@ import final_project.momeasy.global.security.CustomUserDetails;
 import final_project.momeasy.global.security.dto.request.LoginRequestDTO;
 import final_project.momeasy.global.security.dto.response.LoginResponseDTO;
 import final_project.momeasy.global.security.jwt.JwtUtil;
+import final_project.momeasy.global.util.ResponseUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -16,7 +17,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -91,13 +91,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         CustomResponse<LoginResponseDTO> customResponse
                 = CustomResponse.onSuccess(loginResponse);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        response.setStatus(HttpStatus.OK.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding("UTF-8");
-
-        // Body에 토큰을 담은 Response 작성
-        objectMapper.writeValue(response.getWriter(), customResponse);
+        ResponseUtil.writeJsonResponse(response, customResponse, HttpStatus.OK);
 
     }
 
@@ -146,10 +140,6 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         CustomResponse<Void> customResponse
                 = CustomResponse.onFailure(HttpStatus.UNAUTHORIZED, errorCode, errorMessage, null);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        objectMapper.writeValue(response.getWriter(), customResponse);
+        ResponseUtil.writeJsonResponse(response, customResponse, HttpStatus.UNAUTHORIZED);
     }
 }
