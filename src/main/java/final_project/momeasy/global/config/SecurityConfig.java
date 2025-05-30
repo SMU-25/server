@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
 import final_project.momeasy.domain.token.service.TokenService;
 import final_project.momeasy.global.apiPayload.CustomResponse;
+import final_project.momeasy.global.auth.service.CustomOAuthUserService;
 import final_project.momeasy.global.security.filter.CustomLoginFilter;
 import final_project.momeasy.global.security.filter.JwtAuthorizationFilter;
 import final_project.momeasy.global.security.handler.CustomLogoutHandler;
 import final_project.momeasy.global.security.handler.JwtAccessDeniedHandler;
 import final_project.momeasy.global.security.handler.JwtAuthenticationEntryPoint;
+import final_project.momeasy.global.security.handler.OAuth2LoginSuccessHandler;
 import final_project.momeasy.global.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -45,6 +47,11 @@ public class SecurityConfig {
     // 로그아웃 Handler
     private final CustomLogoutHandler logoutHandler;
 
+    private final CustomOAuthUserService customOAuthUserService;
+
+    // OAuth2 Handler
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -67,7 +74,9 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/swagger-resources/**",
             "/signup",
-            "/auth/login"
+            "/auth/login",
+            "/oauth2/**",
+            "/login/**"
     };
 
     @Bean
@@ -97,6 +106,14 @@ public class SecurityConfig {
                 .exceptionHandling(handler -> handler
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
+
+                // oauth2 로그인
+                .oauth2Login(oauth -> oauth
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuthUserService)
+                        )
+                        .successHandler(oAuth2LoginSuccessHandler)
+                )
 
                 // 로그아웃
                 .logout(logout -> logout
