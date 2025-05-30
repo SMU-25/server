@@ -3,6 +3,7 @@ package final_project.momeasy.global.security.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import final_project.momeasy.domain.token.service.TokenService;
 import final_project.momeasy.global.apiPayload.CustomResponse;
+import final_project.momeasy.global.auth.exception.AuthErrorCode;
 import final_project.momeasy.global.security.CustomUserDetails;
 import final_project.momeasy.global.security.dto.request.LoginRequestDTO;
 import final_project.momeasy.global.security.dto.response.LoginResponseDTO;
@@ -103,37 +104,29 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         log.info("[ LoginFilter ] 로그인에 실패했습니다.");
 
-        String errorCode;
-        String errorMessage;
+        AuthErrorCode authError;
 
         if (failed instanceof BadCredentialsException) {
-            errorCode = "LOGIN401";
-            errorMessage = "잘못된 정보입니다.";
+            authError = AuthErrorCode.WRONG_CREDENTIALS;
         } else if (failed instanceof LockedException) {
-            errorCode = "LOGIN423";
-            errorMessage = "계정이 잠금 상태입니다.";
+            authError = AuthErrorCode.ACCOUNT_LOCKED;
         } else if (failed instanceof DisabledException) {
-            errorCode = "LOGIN403";
-            errorMessage = "계정이 비활성화 되었습니다.";
+            authError = AuthErrorCode.ACCOUNT_DISABLED;
         } else if (failed instanceof UsernameNotFoundException) {
-            errorCode = "LOGIN404";
-            errorMessage = "계정을 찾을 수 없습니다.";
+            authError = AuthErrorCode.OAUTH_EMAIL_NOT_FOUND;
         } else if (failed instanceof AuthenticationServiceException) {
             if (failed.getMessage().contains("소셜 로그인")) {
-                errorCode = "LOGIN401_SOCIAL";
-                errorMessage = failed.getMessage();
+                authError = AuthErrorCode.SOCIAL_USER_CANNOT_LOGIN;
             } else {
-                errorCode = "LOGIN400";
-                errorMessage = "RequestBody 파싱 중 오류가 발생했습니다.";
+                authError = AuthErrorCode.OAUTH_TOKEN_FAIL;
             }
         } else {
-            errorCode = "LOGIN500";
-            errorMessage = "인증에 실패했습니다.";
+            authError = AuthErrorCode.LOGIN_FAILED;
         }
 
         // Custom Response 생성 (data는 null로 설정)
         CustomResponse<Void> customResponse
-                = CustomResponse.onFailure(HttpStatus.UNAUTHORIZED, errorCode, errorMessage, null);
+                = CustomResponse.onFailure(authError.getStatus(), authError.getCode(), authError.getMessage(), null);
 
         ResponseUtil.writeJsonResponse(response, customResponse, HttpStatus.UNAUTHORIZED);
     }

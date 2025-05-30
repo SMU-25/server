@@ -5,6 +5,7 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.exception.ParentErrorCode;
 import final_project.momeasy.domain.parent.exception.ParentException;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
+import final_project.momeasy.global.auth.exception.AuthErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -30,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // 소셜 로그인 유저일 경우 로그인 불가 예외
         if (parent.getSocialType() != SocialType.LOCAL) {
-            throw new AuthenticationServiceException(ParentErrorCode.SOCIAL_USER_CANNOT_LOGIN.getMessage());
+            throw new AuthenticationServiceException(AuthErrorCode.SOCIAL_USER_CANNOT_LOGIN.getMessage());
         }
 
         return new CustomUserDetails(parent);
