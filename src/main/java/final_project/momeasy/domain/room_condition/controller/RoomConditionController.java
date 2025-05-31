@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/rooms")
+@RequestMapping("/api/rooms")
 public class RoomConditionController {
     private final RoomConditionQueryService roomConditionQueryService;
 

@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/feverRecords")
+@RequestMapping("/api/feverRecords")
 public class FeverRecordController {
     private final FeverRecordQueryService feverRecordQueryService;
 

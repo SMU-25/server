@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/reports")
+@RequestMapping("/api/reports")
 public class FeverReportController {
     private final FeverReportService feverReportService;
     private final FeverReportQueryService feverReportQueryService;

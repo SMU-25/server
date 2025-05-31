@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/homecams")
+@RequestMapping("/api/homecams")
 public class HomecamController {
     // security 완성되면 @AuthenticatedMember 추가하기
     private final HomecamQueryService homecamQueryService;
