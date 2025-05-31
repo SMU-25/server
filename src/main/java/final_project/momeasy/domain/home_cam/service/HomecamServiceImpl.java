@@ -47,16 +47,4 @@ public class HomecamServiceImpl implements HomecamService {
         homecamRepository.save(homecam);
         return HomecamConverter.toHomecamDTO(homecam);
     }
-
-    @Override
-    public HomecamResponseDTO.HomecamDTO createHomecamTest(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Long parentId, Long childId){
-        Parent findparent = parentRepository.findById(parentId).orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
-        Child child = childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
-        // parent 예외 고치기
-        Homecam homecam = HomecamConverter.toHomecam(homecamRequestDTO,findparent);
-        homecam.setParent(findparent);
-        homecam.setChild(child);
-        homecamRepository.save(homecam);
-        return HomecamConverter.toHomecamDTO(homecam);
-    }
 }
