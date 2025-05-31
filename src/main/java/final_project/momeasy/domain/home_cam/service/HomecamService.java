@@ -8,4 +8,6 @@ public interface HomecamService {
     void deleteHomecam(Long homecamId, Parent parent);
 
     HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Parent parent, Long childId);
+    HomecamResponseDTO.HomecamDTO createHomecamTest(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Long parentId, Long childId);
+
 }
