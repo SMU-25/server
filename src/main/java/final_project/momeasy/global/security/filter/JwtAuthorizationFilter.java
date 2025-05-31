@@ -69,7 +69,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             ResponseUtil.writeJsonResponse(response, errorResponse, HttpStatus.UNAUTHORIZED);
         }
-
+        filterChain.doFilter(request, response);
     }
 
 
