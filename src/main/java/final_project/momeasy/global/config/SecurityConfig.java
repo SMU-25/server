@@ -119,7 +119,7 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
                         .addLogoutHandler(logoutHandler)
-                        .logoutSuccessHandler((requset, response, authentication) -> {
+                        .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(HttpStatus.OK.value());
                             response.setContentType("application/json");
                             response.setCharacterEncoding("UTF-8");
