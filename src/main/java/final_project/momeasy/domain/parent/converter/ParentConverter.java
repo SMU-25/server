@@ -4,6 +4,7 @@ import final_project.momeasy.common.enums.Role;
 import final_project.momeasy.domain.parent.dto.request.ParentRequestDTO;
 import final_project.momeasy.domain.parent.dto.response.ParentResponseDTO;
 import final_project.momeasy.domain.parent.entity.Parent;
+import final_project.momeasy.global.auth.dto.ParentProfile;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +31,19 @@ public class ParentConverter {
         return ParentResponseDTO.ParentCreateResponseDTO.builder()
                 .id(parent.getId())
                 .createdAt(parent.getCreatedAt())
+                .build();
+    }
+
+    public static Parent toParentFromProfile(ParentProfile profile) {
+        return Parent.builder()
+                .name(profile.getName())
+                .email(profile.getEmail())
+                .password("")
+                .gender(profile.getGender())
+                .birthdate(profile.getBirthdate())
+                .profileImage(profile.getProfileImageUrl())
+                .role(Role.USER)
+                .socialType(profile.getSocialType())
                 .build();
     }
 }
