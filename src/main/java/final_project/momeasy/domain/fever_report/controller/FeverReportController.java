@@ -4,7 +4,6 @@ import final_project.momeasy.domain.fever_report.dto.FeverReportRequestDTO;
 import final_project.momeasy.domain.fever_report.dto.FeverReportResponseDTO;
 import final_project.momeasy.domain.fever_report.service.FeverReportQueryService;
 import final_project.momeasy.domain.fever_report.service.FeverReportService;
-import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;

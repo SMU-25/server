@@ -4,7 +4,6 @@ import final_project.momeasy.domain.home_cam.dto.HomecamRequestDTO;
 import final_project.momeasy.domain.home_cam.dto.HomecamResponseDTO;
 import final_project.momeasy.domain.home_cam.service.HomecamQueryService;
 import final_project.momeasy.domain.home_cam.service.HomecamService;
-import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
