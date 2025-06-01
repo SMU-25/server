@@ -13,14 +13,12 @@ import final_project.momeasy.domain.fever_report.exception.FeverReportErrorCode;
 import final_project.momeasy.domain.fever_report.exception.FeverReportException;
 import final_project.momeasy.domain.fever_report.repository.FeverReportRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
-import final_project.momeasy.domain.parent.entity.ParentChild;
 import final_project.momeasy.domain.symptom.entity.Symptom;
 import final_project.momeasy.domain.symptom.repository.SymptomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

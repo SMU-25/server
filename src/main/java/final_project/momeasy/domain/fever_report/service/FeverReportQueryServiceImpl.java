@@ -11,7 +11,6 @@ import final_project.momeasy.domain.fever_report.exception.FeverReportErrorCode;
 import final_project.momeasy.domain.fever_report.exception.FeverReportException;
 import final_project.momeasy.domain.fever_report.repository.FeverReportRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
-import final_project.momeasy.domain.parent.entity.ParentChild;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
