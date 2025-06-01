@@ -29,7 +29,7 @@ public class Homecam {
     @JoinColumn(name = "parent_id",nullable = false)
     private Parent parent;
 
-    @OneToOne(fetch =FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(fetch =FetchType.LAZY)
     @JoinColumn(name = "child_id", nullable = false)
     private Child child;
 

@@ -70,7 +70,7 @@ public class Child extends BaseEntity {
     @Builder.Default
     private List<FeverReport> fever_reports = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY,mappedBy = "child")
+    @OneToOne(fetch = FetchType.LAZY,mappedBy = "child", cascade = CascadeType.ALL)
     private Homecam homecam;
 
     public void setHomecam(Homecam homecam) {
