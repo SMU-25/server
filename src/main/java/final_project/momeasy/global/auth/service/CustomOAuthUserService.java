@@ -38,11 +38,14 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         log.info("[CustomOAuthUserService] 로그인 요청된 소셜 플랫폼: {}", registrationId);
 
+        String userNameAttributeName = userRequest.getClientRegistration()
+                .getProviderDetails()
+                .getUserInfoEndpoint()
+                .getUserNameAttributeName();
+
         // 3. 사용자 정보 파싱
         Map<String, Object> attributes= oAuth2User.getAttributes();
         ParentProfile profile = OAuthAttributes.extract(registrationId, attributes);
-        log.info("[CustomOAuthUserService] 파싱된 사용자 프로필: {}", profile);
-
 
         // 4. DB 저장 or 조회
         Parent parent = saveOrUpdate(profile);
@@ -51,7 +54,7 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(Role.USER.name())),
                 attributes,
-                "id"
+                userNameAttributeName
         );
     }
 
