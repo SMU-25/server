@@ -4,8 +4,10 @@ import final_project.momeasy.domain.home_cam.dto.HomecamRequestDTO;
 import final_project.momeasy.domain.home_cam.dto.HomecamResponseDTO;
 import final_project.momeasy.domain.home_cam.service.HomecamQueryService;
 import final_project.momeasy.domain.home_cam.service.HomecamService;
+import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.security.CustomUserDetails;
+import final_project.momeasy.global.security.annotation.AuthParent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +28,9 @@ public class HomecamController {
     @GetMapping("/{homecamId}")
     @Operation(summary = "홈캠 1개 조회 API", description = "homecam 1개를 조회합니다.")
     public CustomResponse<HomecamResponseDTO.HomecamDTO> getHomecam(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @AuthParent Parent parent,
             @PathVariable("homecamId") long homecamId) {
-        HomecamResponseDTO.HomecamDTO homecam = homecamQueryService.getHomecamById(homecamId,userDetails.getParent());
+        HomecamResponseDTO.HomecamDTO homecam = homecamQueryService.getHomecamById(homecamId,parent);
         return CustomResponse.onSuccess(homecam);
     }
 
@@ -58,9 +60,9 @@ public class HomecamController {
     @PostMapping("/{childId}")
     @Operation(summary = "홈캠 생성 API", description = "홈캠을 생성합니다.")
     public CustomResponse<HomecamResponseDTO.HomecamDTO> createHomecam(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @AuthParent Parent parent,
             @RequestBody HomecamRequestDTO.HomecamRegisterDTO homecamRegisterDTO, @PathVariable("childId") Long childId){
-        HomecamResponseDTO.HomecamDTO homecam = homecamService.createHomecam(homecamRegisterDTO,userDetails.getParent(), childId);
+        HomecamResponseDTO.HomecamDTO homecam = homecamService.createHomecam(homecamRegisterDTO,parent, childId);
         return CustomResponse.onSuccess(homecam);
     }
 }

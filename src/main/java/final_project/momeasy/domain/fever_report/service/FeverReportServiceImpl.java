@@ -32,17 +32,9 @@ public class FeverReportServiceImpl implements FeverReportService {
 
     @Override
     public void deleteFeverReport(Parent parent, Long FeverReportId, Long ChildId) {
-
         Child child = childRepository.findById(ChildId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
-        List<ParentChild> parentChildren = child.getParentChildren();
-        FeverReport feverReport = null;
-        for (ParentChild parentChild : parentChildren) {
-            if(parentChild.getParent().getId().equals(parent.getId())) {
-                feverReport = feverReportRepository.findById(FeverReportId).orElseThrow(()->new FeverReportException(FeverReportErrorCode.NOT_FOUND));
-                break;
-            }
-        }
-        if(feverReport == null || feverReport.getChild()!=child) {
+        FeverReport feverReport = feverReportRepository.findById(FeverReportId).orElseThrow(()->new FeverReportException(FeverReportErrorCode.NOT_FOUND));
+        if(feverReport.getChild()!=child) {
             throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
         }
         feverReportRepository.deleteById(FeverReportId);
@@ -51,26 +43,16 @@ public class FeverReportServiceImpl implements FeverReportService {
     @Override
     public FeverReportResponseDTO.FeverReportViewDTO createFeverReport(Parent parent, FeverReportRequestDTO.FeverReportCreateDTO feverReportRequestDTO, Long ChildId) {
         Child child = childRepository.findById(ChildId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
-        List<ParentChild> parentChildren = child.getParentChildren();
-        FeverReport feverReport = null;
         String special = "특이 사항";
-        for (ParentChild parentChild : parentChildren) {
-            if(parentChild.getParent().getId().equals(parent.getId())) {
-                feverReport = FeverReportConverter.toFeverReport(feverReportRequestDTO,special);
-                feverReport.setChild(child);
-                feverReportRepository.save(feverReport);
-                for(SymptomType symptomtype: feverReportRequestDTO.getSymptoms()) {
-                    Symptom symptom = Symptom.builder()
-                            .symptom(symptomtype)
-                            .build();
-                    symptom.addFeverReport(feverReport);
-                    symptomRepository.save(symptom);
-                }
-                break;
-            }
-        }
-        if(feverReport == null) {
-            throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
+        FeverReport feverReport = FeverReportConverter.toFeverReport(feverReportRequestDTO,special);
+        feverReport.setChild(child);
+        feverReportRepository.save(feverReport);
+        for(SymptomType symptomtype: feverReportRequestDTO.getSymptoms()) {
+            Symptom symptom = Symptom.builder()
+                    .symptom(symptomtype)
+                    .build();
+            symptom.addFeverReport(feverReport);
+            symptomRepository.save(symptom);
         }
         return FeverReportConverter.toFeverReportViewDTO(feverReport);
     }

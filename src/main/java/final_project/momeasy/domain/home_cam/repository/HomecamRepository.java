@@ -1,7 +1,6 @@
 package final_project.momeasy.domain.home_cam.repository;
 
 import final_project.momeasy.domain.home_cam.entity.Homecam;
-import final_project.momeasy.domain.parent.entity.Parent;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
