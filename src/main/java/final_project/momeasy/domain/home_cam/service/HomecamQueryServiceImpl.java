@@ -37,7 +37,7 @@ public class HomecamQueryServiceImpl implements HomecamQueryService {
 
     @Override
     public List<HomecamResponseDTO.HomecamDTO> getHomecamListByParent(Parent parent) {
-        List<Homecam> homecamList = homecamRepository.findAllByParentId(parent.getId());
+        List<Homecam> homecamList = homecamRepository.findAllByParentIdOrderByIdDesc(parent.getId());
         if(homecamList.isEmpty()){
             throw new HomecamException(HomecamErrorCode.NOT_FOUND);
         }

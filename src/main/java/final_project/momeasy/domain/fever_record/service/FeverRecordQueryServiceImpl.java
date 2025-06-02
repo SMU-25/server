@@ -70,7 +70,7 @@ public class FeverRecordQueryServiceImpl implements FeverRecordQueryService {
         List<FeverRecord> feverRecords = null;
         for(ParentChild parentChild : parentChildren) {
             if (parentChild.getParent().equals(parent)) {
-                feverRecords = feverRecordRepository.findAllByChildId(childId);
+                feverRecords = feverRecordRepository.findAllByChildIdOrderByIdDesc(childId);
             }
         }
         if(feverRecords == null) {
