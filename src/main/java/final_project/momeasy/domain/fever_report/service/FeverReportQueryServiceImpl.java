@@ -11,6 +11,7 @@ import final_project.momeasy.domain.fever_report.exception.FeverReportErrorCode;
 import final_project.momeasy.domain.fever_report.exception.FeverReportException;
 import final_project.momeasy.domain.fever_report.repository.FeverReportRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
+import final_project.momeasy.domain.parent.entity.ParentChild;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +29,14 @@ public class FeverReportQueryServiceImpl implements FeverReportQueryService {
     @Override
     public FeverReportResponseDTO.FeverReportViewDTO getFeverReport(Parent parent, Long childId, Long reportId) {
         Child child = childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
-        FeverReport feverReport = feverReportRepository.findById(reportId).orElseThrow(()->new FeverReportException(FeverReportErrorCode.NOT_FOUND));
-        if(feverReport.getChild()!=child){
+        List<ParentChild> parentChildren = child.getParentChildren();
+        FeverReport feverReport = null;
+        for(ParentChild parentChild : parentChildren) {
+            if(parentChild.getParent().equals(parent)) {
+                feverReport = feverReportRepository.findById(reportId).orElseThrow(()->new FeverReportException(FeverReportErrorCode.NOT_FOUND));
+            }
+        }
+        if(feverReport == null) {
             throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
         }
         return FeverReportConverter.toFeverReportViewDTO(feverReport);
@@ -38,12 +45,39 @@ public class FeverReportQueryServiceImpl implements FeverReportQueryService {
     @Override
     public List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReports(Parent parent, Long childId, int page) {
         Child child = childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
-        Pageable pageable = PageRequest.of(page,10);
-        Slice<FeverReport> feverReportSlice = feverReportRepository.findAllByChildIdOrderByIdDesc(childId,pageable);
-        for(FeverReport feverReport : feverReportSlice){
-            if(feverReport.getChild()!=child){
-                throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
+        List<ParentChild> parentChildren = child.getParentChildren();
+        Slice<FeverReport> feverReportSlice = null;
+        for(ParentChild parentChild : parentChildren) {
+            if(parentChild.getParent().equals(parent)) {
+                Pageable pageable = PageRequest.of(page,10);
+                feverReportSlice = feverReportRepository.findAllByChildIdOrderByIdDesc(childId,pageable);
             }
+        }
+        if(feverReportSlice == null) {
+            throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
+        }
+        if(feverReportSlice.isEmpty()){
+            throw new FeverReportException(FeverReportErrorCode.NOT_FOUND);
+        }
+        List<FeverReportResponseDTO.FeverReportViewDTO> feverReportList = feverReportSlice.stream().map(feverReport -> FeverReportConverter.toFeverReportViewDTO(feverReport)).toList();
+        return feverReportList;
+    }
+
+    @Override
+    public List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReportList(Parent parent, Long childId) {
+        Child child = childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
+        List<ParentChild> parentChildren = child.getParentChildren();
+        List<FeverReport> feverReportSlice = null;
+        for(ParentChild parentChild : parentChildren) {
+            if(parentChild.getParent().equals(parent)) {
+                feverReportSlice = feverReportRepository.findAllByChildIdOrderByIdDesc(childId);
+            }
+        }
+        if(feverReportSlice == null) {
+            throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
+        }
+        if(feverReportSlice.isEmpty()){
+            throw new FeverReportException(FeverReportErrorCode.NOT_FOUND);
         }
         List<FeverReportResponseDTO.FeverReportViewDTO> feverReportList = feverReportSlice.stream().map(feverReport -> FeverReportConverter.toFeverReportViewDTO(feverReport)).toList();
         return feverReportList;
