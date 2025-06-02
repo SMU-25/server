@@ -20,7 +20,7 @@ public class HomecamQueryServiceImpl implements HomecamQueryService {
     @Override
     public HomecamResponseDTO.HomecamDTO getHomecamById(Long homecamId, Parent parent) {
         Homecam homecam = homecamRepository.findById(homecamId).orElseThrow(()->new HomecamException(HomecamErrorCode.NOT_FOUND));
-        if(!homecam.getParent().getId().equals(parent.getId())) {
+        if(!homecam.getParent().equals(parent)) {
             throw new HomecamException(HomecamErrorCode.UNAUTHORIZED_ACCESS);
         }
         return HomecamConverter.toHomecamDTO(homecam);
@@ -29,7 +29,7 @@ public class HomecamQueryServiceImpl implements HomecamQueryService {
     @Override
     public HomecamResponseDTO.HomecamVideoDTO getHomecamVideoById(Long homecamId, Parent parent) {
         Homecam homecam = homecamRepository.findById(homecamId).orElseThrow(()->new HomecamException(HomecamErrorCode.NOT_FOUND));
-        if(!homecam.getParent().getId().equals(parent.getId())) {
+        if(!homecam.getParent().equals(parent)) {
             throw new HomecamException(HomecamErrorCode.UNAUTHORIZED_ACCESS);
         }
         return HomecamConverter.toHomecamVideoDTO(homecam);
@@ -38,6 +38,9 @@ public class HomecamQueryServiceImpl implements HomecamQueryService {
     @Override
     public List<HomecamResponseDTO.HomecamDTO> getHomecamListByParent(Parent parent) {
         List<Homecam> homecamList = homecamRepository.findAllByParentId(parent.getId());
+        if(homecamList.isEmpty()){
+            throw new HomecamException(HomecamErrorCode.NOT_FOUND);
+        }
         List<HomecamResponseDTO.HomecamDTO> homecamListDto
         = homecamList.stream().map(HomecamConverter::toHomecamDTO).toList();
         return homecamListDto;
