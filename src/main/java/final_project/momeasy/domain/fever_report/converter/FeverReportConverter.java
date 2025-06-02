@@ -13,6 +13,7 @@ public class FeverReportConverter {
                 .special(feverReport.getSpecial())
                 .etc_symptom(feverReport.getEtc_symptom())
                 .symptoms(feverReport.getFeverReportSymptoms().stream().map(FeverReportSymptom -> FeverReportSymptom.getSymptom().getSymptom()).toList())
+                .createdAt(feverReport.getCreatedAt())
                 .build();
     }
 

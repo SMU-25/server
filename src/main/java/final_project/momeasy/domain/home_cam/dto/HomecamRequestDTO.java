@@ -20,9 +20,5 @@ public class HomecamRequestDTO {
         @NotBlank(message = "설치 장소는 필수 입력 값입니다.")
         @JsonProperty("place")
         private String place;
-
-        @NotBlank(message = "설치 날짜는 필수 입력 값입니다.")
-        @JsonProperty("date")
-        private String date;
     }
 }

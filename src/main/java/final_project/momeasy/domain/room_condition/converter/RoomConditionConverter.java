@@ -10,6 +10,7 @@ public class RoomConditionConverter {
         return RoomConditionResponseDTO.RoomConditionViewDTO.builder()
                 .temperature(roomCondition.getTemperature())
                 .humidity(roomCondition.getHumidity())
+                .createdAt(roomCondition.getCreatedAt())
                 .build();
     }
 
