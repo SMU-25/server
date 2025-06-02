@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface HomecamRepository extends JpaRepository<Homecam, Long> {
     List<Homecam> findAllByParentId(Long parentId);
     Optional<Homecam> findById(Long HomecamId);
+    Optional<Homecam> findByChildId(Long childId);
 }
