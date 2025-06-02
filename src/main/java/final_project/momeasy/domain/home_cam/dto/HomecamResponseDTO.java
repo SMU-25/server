@@ -2,13 +2,16 @@ package final_project.momeasy.domain.home_cam.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class HomecamResponseDTO {
     @Getter
     @Builder
     public static class HomecamDTO {
         private String name;
         private String place;
-        private String date;
+        private LocalDateTime createdAt;
     }
 
     @Getter

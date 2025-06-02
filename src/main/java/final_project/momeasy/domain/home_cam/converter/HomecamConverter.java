@@ -10,7 +10,7 @@ public class HomecamConverter {
         return HomecamResponseDTO.HomecamDTO.builder()
                 .name(homecam.getName())
                 .place(homecam.getPlace())
-                .date(homecam.getDate())
+                .createdAt(homecam.getCreatedAt())
                 .build();
     }
 
@@ -25,7 +25,6 @@ public class HomecamConverter {
                 .name(homecamRegisterDTO.getName())
                 .serial_num(homecamRegisterDTO.getSerial_num())
                 .place(homecamRegisterDTO.getPlace())
-                .date(homecamRegisterDTO.getDate())
                 .parent(parent)
                 .build();
     }
