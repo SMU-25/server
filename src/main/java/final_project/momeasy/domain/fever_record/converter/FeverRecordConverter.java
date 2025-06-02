@@ -16,6 +16,7 @@ public class FeverRecordConverter {
     public static FeverRecordResponseDTO.FeverRecordViewDTO toFeverRecordResponseDTO(FeverRecord feverRecord) {
         return FeverRecordResponseDTO.FeverRecordViewDTO.builder()
                 .fever(feverRecord.getFever())
+                .createdAt(feverRecord.getCreatedAt())
                 .build();
     }
 }

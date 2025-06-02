@@ -4,6 +4,7 @@ import final_project.momeasy.common.enums.SymptomType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FeverReportResponseDTO {
@@ -17,5 +18,7 @@ public class FeverReportResponseDTO {
         private String outing;
 
         private String special;
+
+        private LocalDateTime createdAt;
     }
 }
