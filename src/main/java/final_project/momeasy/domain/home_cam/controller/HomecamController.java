@@ -6,12 +6,10 @@ import final_project.momeasy.domain.home_cam.service.HomecamQueryService;
 import final_project.momeasy.domain.home_cam.service.HomecamService;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.global.apiPayload.CustomResponse;
-import final_project.momeasy.global.security.CustomUserDetails;
 import final_project.momeasy.global.security.annotation.AuthParent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,23 +35,23 @@ public class HomecamController {
     @GetMapping("/urls/{homecamId}")
     @Operation(summary = "홈캠 cctv URL 조회 API", description = "홈캠의 cctv URL을 조회합니다.")
     public CustomResponse<HomecamResponseDTO.HomecamVideoDTO> getHomecamVideo(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @AuthParent Parent parent,
             @PathVariable("homecamId") long homecamId) {
-        HomecamResponseDTO.HomecamVideoDTO homecam = homecamQueryService.getHomecamVideoById(homecamId, userDetails.getParent());
+        HomecamResponseDTO.HomecamVideoDTO homecam = homecamQueryService.getHomecamVideoById(homecamId, parent);
         return CustomResponse.onSuccess(homecam);
     }
 
     @GetMapping("/list")
     @Operation(summary = "홈캠 전체 조회 API", description = "homecam을 전체 조회합니다.")
-    public CustomResponse<List<HomecamResponseDTO.HomecamDTO>> getHomecams(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<HomecamResponseDTO.HomecamDTO> homecamList = homecamQueryService.getHomecamListByParent(userDetails.getParent());
+    public CustomResponse<List<HomecamResponseDTO.HomecamDTO>> getHomecams(@AuthParent Parent parent) {
+        List<HomecamResponseDTO.HomecamDTO> homecamList = homecamQueryService.getHomecamListByParent(parent);
         return CustomResponse.onSuccess(homecamList);
     }
 
     @DeleteMapping("/{homecamId}")
     @Operation(summary = "홈캠 삭제 API", description = "homecam을 1개 삭제합니다.")
-    public CustomResponse<Void> deleteHomecam(@PathVariable("homecamId") long homecamId, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        homecamService.deleteHomecam(homecamId,userDetails.getParent());
+    public CustomResponse<Void> deleteHomecam(@PathVariable("homecamId") long homecamId, @AuthParent Parent parent) {
+        homecamService.deleteHomecam(homecamId,parent);
         return CustomResponse.onSuccess(null);
     }
 
