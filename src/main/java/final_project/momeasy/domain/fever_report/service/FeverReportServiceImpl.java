@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -32,17 +33,15 @@ public class FeverReportServiceImpl implements FeverReportService {
 
     @Override
     public void deleteFeverReport(Parent parent, Long FeverReportId, Long ChildId) {
-
         Child child = childRepository.findById(ChildId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
         List<ParentChild> parentChildren = child.getParentChildren();
         FeverReport feverReport = null;
-        for (ParentChild parentChild : parentChildren) {
-            if(parentChild.getParent().getId().equals(parent.getId())) {
+        for(ParentChild parentChild : parentChildren) {
+            if(parentChild.getParent().equals(parent)) {
                 feverReport = feverReportRepository.findById(FeverReportId).orElseThrow(()->new FeverReportException(FeverReportErrorCode.NOT_FOUND));
-                break;
             }
         }
-        if(feverReport == null || feverReport.getChild()!=child) {
+        if(feverReport == null) {
             throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
         }
         feverReportRepository.deleteById(FeverReportId);
@@ -53,9 +52,9 @@ public class FeverReportServiceImpl implements FeverReportService {
         Child child = childRepository.findById(ChildId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
         List<ParentChild> parentChildren = child.getParentChildren();
         FeverReport feverReport = null;
-        String special = "특이 사항";
-        for (ParentChild parentChild : parentChildren) {
-            if(parentChild.getParent().getId().equals(parent.getId())) {
+        for(ParentChild parentChild : parentChildren) {
+            if(parentChild.getParent().equals(parent)) {
+                String special = "특이 사항";
                 feverReport = FeverReportConverter.toFeverReport(feverReportRequestDTO,special);
                 feverReport.setChild(child);
                 feverReportRepository.save(feverReport);
@@ -66,7 +65,6 @@ public class FeverReportServiceImpl implements FeverReportService {
                     symptom.addFeverReport(feverReport);
                     symptomRepository.save(symptom);
                 }
-                break;
             }
         }
         if(feverReport == null) {

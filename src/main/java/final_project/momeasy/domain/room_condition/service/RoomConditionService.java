@@ -27,6 +27,7 @@ public class RoomConditionService {
         log.info("Starting scheduled create Room Condition");
         List<Child> childList = childRepository.findAll();
         for(Child child : childList){
+            if(child.getHomecam()==null){continue;}
             RoomCondition roomCondition = RoomCondition.builder()
                     .temperature(36.5f)
                     .humidity(50.0f)

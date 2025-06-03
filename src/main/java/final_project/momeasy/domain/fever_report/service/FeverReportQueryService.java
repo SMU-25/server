@@ -8,4 +8,6 @@ import java.util.List;
 public interface FeverReportQueryService {
     FeverReportResponseDTO.FeverReportViewDTO getFeverReport(Parent parent, Long childId, Long reportId);
     List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReports(Parent parent, Long childId, int page);
+    List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReportList(Parent parent, Long childId);
+
 }

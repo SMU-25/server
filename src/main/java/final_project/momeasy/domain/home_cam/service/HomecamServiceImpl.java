@@ -12,25 +12,24 @@ import final_project.momeasy.domain.home_cam.exception.HomecamErrorCode;
 import final_project.momeasy.domain.home_cam.exception.HomecamException;
 import final_project.momeasy.domain.home_cam.repository.HomecamRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
-import final_project.momeasy.domain.parent.exception.ParentErrorCode;
-import final_project.momeasy.domain.parent.exception.ParentException;
-import final_project.momeasy.domain.parent.repository.ParentRepository;
+import final_project.momeasy.domain.parent.entity.ParentChild;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class HomecamServiceImpl implements HomecamService {
     private final HomecamRepository homecamRepository;
-    private final ParentRepository parentRepository;
     private final ChildRepository childRepository;
 
     @Override
     public void deleteHomecam(Long homecamId,Parent parent) {
-        Homecam homecam = homecamRepository.findById(homecamId).orElseThrow(() -> new HomecamException(HomecamErrorCode.NOT_FOUND));
-        if(homecam.getParent().equals(parent)) {
+        Homecam homecam = homecamRepository.findById(homecamId).orElseThrow(()->new HomecamException(HomecamErrorCode.NOT_FOUND));
+        if(!homecam.getParent().equals(parent)) {
             throw new HomecamException(HomecamErrorCode.UNAUTHORIZED_ACCESS);
         }
         homecamRepository.delete(homecam);
@@ -38,13 +37,21 @@ public class HomecamServiceImpl implements HomecamService {
 
     @Override
     public HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Parent parent, Long childId) {
-        Parent findparent = parentRepository.findById(parent.getId()).orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
         Child child = childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
-        // parent 예외 고치기
-        Homecam homecam = HomecamConverter.toHomecam(homecamRequestDTO,findparent);
-        homecam.setParent(findparent);
-        homecam.setChild(child);
-        homecamRepository.save(homecam);
+        homecamRepository.findByChildId(childId).ifPresent(homecam -> {throw new HomecamException(HomecamErrorCode.ALREADY_HAVE);});
+        List<ParentChild> parentChildren = child.getParentChildren();
+        Homecam homecam = null;
+        for(ParentChild parentChild : parentChildren) {
+            if(parentChild.getParent().equals(parent)) {
+                homecam = HomecamConverter.toHomecam(homecamRequestDTO,parent);
+                homecam.setParent(parent);
+                homecam.setChild(child);
+                homecamRepository.save(homecam);
+            }
+        }
+        if(homecam == null) {
+            throw new HomecamException(HomecamErrorCode.UNAUTHORIZED_ACCESS);
+        }
         return HomecamConverter.toHomecamDTO(homecam);
     }
 }
