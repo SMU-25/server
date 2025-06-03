@@ -14,9 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RoomConditionRepository extends JpaRepository<RoomCondition, Long> {
-    Optional<RoomCondition> findTopByChildIdOrderByIdDesc(Long childId);
-    Slice<RoomCondition> findAllByChildIdOrderByIdDesc(Long childId, Pageable pageable);
-    List<RoomCondition> findAllByChildIdOrderByIdDesc(Long childId);
+    Optional<RoomCondition> findTopByChildIdOrderByCreatedAtDesc(Long childId);
+    Slice<RoomCondition> findAllByChildIdOrderByCreatedAtDesc(Long childId, Pageable pageable);
 
     @Transactional
     @Modifying

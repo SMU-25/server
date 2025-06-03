@@ -10,13 +10,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 public interface FeverRecordRepository extends JpaRepository<FeverRecord, Long> {
-    Optional<FeverRecord> findTopByChildIdOrderByIdDesc(Long childId);
-    Slice<FeverRecord> findAllByChildIdOrderByIdDesc(Long childId, Pageable pageable);
-    List<FeverRecord> findAllByChildIdOrderByIdDesc(Long childId);
+    Optional<FeverRecord> findTopByChildIdOrderByCreatedAtDesc(Long childId);
+    Slice<FeverRecord> findAllByChildIdOrderByCreatedAtDesc(Long childId, Pageable pageable);
 
     @Query("SELECT fr FROM FeverRecord fr WHERE fr.child.id  = :childId AND fr.fever>=37.5 ORDER BY fr.createdAt DESC LIMIT 1")
     Optional<FeverRecord> findRecentFeverRecord(Long childId);
