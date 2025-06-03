@@ -33,11 +33,4 @@ public class RoomConditionController {
         List<RoomConditionResponseDTO.RoomConditionViewDTO> roomConditionViewList = roomConditionQueryService.getRoomConditionPage(childId, page, parent);
         return CustomResponse.onSuccess(roomConditionViewList);
     }
-
-    @GetMapping("all/{childId}")
-    @Operation(summary = "전체 방 온습도 기록 조회 API", description = "전체 방 온습도 기록을 조회합니다.")
-    public CustomResponse<List<RoomConditionResponseDTO.RoomConditionViewDTO>> getRoomConditionList(@PathVariable("childId") Long childId, @AuthParent Parent parent) {
-        List<RoomConditionResponseDTO.RoomConditionViewDTO> roomConditionViewList= roomConditionQueryService.getRoomConditionList(childId, parent);
-        return CustomResponse.onSuccess(roomConditionViewList);
-    }
 }

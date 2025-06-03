@@ -33,7 +33,7 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
         RoomCondition roomCondition = null;
         for(ParentChild parentChild : parentChildren) {
             if(parentChild.getParent().equals(parent)) {
-                roomCondition = roomConditionRepository.findTopByChildIdOrderByIdDesc(childId).orElseThrow(()->new RoomConditionException(RoomConditionErrorCode.NOT_FOUND));
+                roomCondition = roomConditionRepository.findTopByChildIdOrderByCreatedAtDesc(childId).orElseThrow(()->new RoomConditionException(RoomConditionErrorCode.NOT_FOUND));
             }
         }
         if(roomCondition == null) {
@@ -50,28 +50,7 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
         for(ParentChild parentChild : parentChildren) {
             if(parentChild.getParent().equals(parent)) {
                 Pageable pageable = PageRequest.of(page, 10);
-                roomConditionList = roomConditionRepository.findAllByChildIdOrderByIdDesc(childId, pageable);
-            }
-        }
-        if(roomConditionList == null) {
-            throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
-        }
-        if(roomConditionList.isEmpty()){
-            throw new RoomConditionException(RoomConditionErrorCode.NOT_FOUND);
-        }
-        List<RoomConditionResponseDTO.RoomConditionViewDTO> roomConditionViewDTOList = roomConditionList.stream()
-                .map(RoomConditionConverter::toRoomConditionViewDTO).toList();
-        return roomConditionViewDTOList;
-    }
-
-    @Override
-    public List<RoomConditionResponseDTO.RoomConditionViewDTO> getRoomConditionList(Long childId, Parent parent) {
-        Child child = childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
-        List<ParentChild> parentChildren = child.getParentChildren();
-        List<RoomCondition> roomConditionList = null;
-        for(ParentChild parentChild : parentChildren) {
-            if(parentChild.getParent().equals(parent)) {
-                roomConditionList = roomConditionRepository.findAllByChildIdOrderByIdDesc(childId);
+                roomConditionList = roomConditionRepository.findAllByChildIdOrderByCreatedAtDesc(childId, pageable);
             }
         }
         if(roomConditionList == null) {

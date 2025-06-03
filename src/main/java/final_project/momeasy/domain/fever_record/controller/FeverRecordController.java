@@ -33,12 +33,4 @@ public class FeverRecordController {
         List<FeverRecordResponseDTO.FeverRecordViewDTO> feverRecordViewList = feverRecordQueryService.getFeverRecordPage(childId,page, parent);
         return CustomResponse.onSuccess(feverRecordViewList);
     }
-
-    @GetMapping("/all/{childId}")
-    @Operation(summary = "전체 체온 기록 조회 API", description = "전체 체온 기록을 조회합니다.")
-    public CustomResponse<List<FeverRecordResponseDTO.FeverRecordViewDTO>>getFeverRecordList(@PathVariable("childId") Long childId,
-        @AuthParent Parent parent) {
-        List<FeverRecordResponseDTO.FeverRecordViewDTO> feverRecordViewList = feverRecordQueryService.getFeverRecordList(childId, parent);
-        return CustomResponse.onSuccess(feverRecordViewList);
-    }
 }
