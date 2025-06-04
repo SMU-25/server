@@ -1,6 +1,5 @@
 package final_project.momeasy.domain.parent.entity;
 
-import final_project.momeasy.common.enums.Relation;
 import final_project.momeasy.domain.child.entity.Child;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,9 +13,6 @@ public class ParentChild {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Enumerated(EnumType.STRING)
-    private Relation relation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id", nullable = false)
