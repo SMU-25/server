@@ -13,6 +13,7 @@ import final_project.momeasy.domain.fever_record.repository.FeverRecordRepositor
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.entity.ParentChild;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FeverRecordQueryServiceImpl implements FeverRecordQueryService {
     private final FeverRecordRepository feverRecordRepository;
     private final ChildRepository childRepository;
@@ -33,7 +35,7 @@ public class FeverRecordQueryServiceImpl implements FeverRecordQueryService {
         FeverRecord feverRecord = null;
         for (ParentChild parentChild : parentChildren) {
             if (parentChild.getParent().equals(parent)) {
-                feverRecord = feverRecordRepository.findTopByChildIdOrderByIdDesc(childId).orElseThrow(() -> new FeverRecordException(FeverRecordErrorCode.NOT_FOUND));
+                feverRecord = feverRecordRepository.findTopByChildIdOrderByCreatedAtDesc(childId).orElseThrow(() -> new FeverRecordException(FeverRecordErrorCode.NOT_FOUND));
             }
         }
         if (feverRecord == null) {
@@ -50,27 +52,7 @@ public class FeverRecordQueryServiceImpl implements FeverRecordQueryService {
         for(ParentChild parentChild : parentChildren) {
             if (parentChild.getParent().equals(parent)) {
                 Pageable pageable = PageRequest.of(page, 10);
-                feverRecords = feverRecordRepository.findAllByChildIdOrderByIdDesc(childId,pageable);
-            }
-        }
-        if(feverRecords == null) {
-            throw new FeverRecordException(FeverRecordErrorCode.UNAUTHORIZED_ACCESS);
-        }
-        if(feverRecords.isEmpty()){
-            throw new FeverRecordException(FeverRecordErrorCode.NOT_FOUND);
-        }
-        List<FeverRecordResponseDTO.FeverRecordViewDTO> feverRecordsDTO = feverRecords.stream().map(FeverRecordConverter::toFeverRecordResponseDTO).toList();
-        return feverRecordsDTO;
-    }
-
-    @Override
-    public List<FeverRecordResponseDTO.FeverRecordViewDTO> getFeverRecordList(Long childId, Parent parent) {
-        Child child = childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
-        List<ParentChild> parentChildren = child.getParentChildren();
-        List<FeverRecord> feverRecords = null;
-        for(ParentChild parentChild : parentChildren) {
-            if (parentChild.getParent().equals(parent)) {
-                feverRecords = feverRecordRepository.findAllByChildIdOrderByIdDesc(childId);
+                feverRecords = feverRecordRepository.findAllByChildIdOrderByCreatedAtDesc(childId,pageable);
             }
         }
         if(feverRecords == null) {
