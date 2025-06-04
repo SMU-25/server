@@ -33,7 +33,7 @@ public class Child extends BaseEntity {
     private LocalDate birthdate;
 
     @Column(nullable = false)
-    private int height;
+    private float height;
 
     @Column(nullable = false)
     private float weight;
