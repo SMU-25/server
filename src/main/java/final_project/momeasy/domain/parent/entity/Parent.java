@@ -14,6 +14,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,8 @@ public class Parent extends BaseEntity {
     @Column(nullable = false)
     private Role role;
 
+    private LocalDateTime deletedAt;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     @Builder.Default
     private List<ParentChild> parentChild = new ArrayList<>();
@@ -87,6 +90,21 @@ public class Parent extends BaseEntity {
     public void setSetting(Setting setting) {
         this.setting = setting;
         setting.setParent(this);
+    }
+
+    // soft delete
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    // check delete
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
+
+    // undo delete
+    public void undoDelete() {
+        this.deletedAt = null;
     }
 
 }
