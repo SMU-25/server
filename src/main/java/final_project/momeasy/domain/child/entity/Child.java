@@ -33,10 +33,10 @@ public class Child extends BaseEntity {
     private LocalDate birthdate;
 
     @Column(nullable = false)
-    private float height;
+    private Float height;
 
     @Column(nullable = false)
-    private float weight;
+    private Float weight;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
