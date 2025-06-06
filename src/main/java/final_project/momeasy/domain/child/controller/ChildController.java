@@ -8,10 +8,7 @@ import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.security.annotation.AuthParent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,5 +21,11 @@ public class ChildController {
     public CustomResponse<ChildResponseDTO.ChildCreateResponseDTO> createChild(@RequestBody ChildRequestDTO.ChildCreateRequestDTO createDTO, @AuthParent Parent parent) {
         return CustomResponse.onSuccess(
                 HttpStatus.CREATED, childCommandService.createChild(createDTO, parent.getId()));
+    }
+
+    @DeleteMapping("/{childId}")
+    public CustomResponse<String> deleteChild(@PathVariable Long childId, @AuthParent Parent parent) {
+        childCommandService.deleteChild(childId, parent);
+        return CustomResponse.onSuccess(HttpStatus.NO_CONTENT, "아이 삭제 완료");
     }
 }

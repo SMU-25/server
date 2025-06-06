@@ -16,4 +16,10 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
 
     @Query("SELECT c FROM Child c JOIN FETCH c.homecam WHERE c.homecam IS NOT NULL")
     List<Child> findByHomecamIsNotNull();
+
+    @Query("""
+            SELECT COUNT(c) > 0 FROM Child c
+            JOIN ParentChild pc ON pc.child.id = c.id
+            WHERE c.id = :childId AND pc.parent.id = :parentId""")
+    boolean existsByChildIdAndParentId(@Param("childId") Long childId, @Param("parentId") Long parentId);
 }

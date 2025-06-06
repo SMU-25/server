@@ -14,6 +14,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,8 @@ public class Child extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Seizure seizure;
+
+    private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "child",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @Builder.Default
@@ -85,6 +88,10 @@ public class Child extends BaseEntity {
 
         this.childIllnesses.add(childIllness);
         illness.getChildIllnesses().add(childIllness);
+    }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
     }
 
 }

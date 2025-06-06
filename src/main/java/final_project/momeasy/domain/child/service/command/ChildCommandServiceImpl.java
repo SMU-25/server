@@ -5,6 +5,8 @@ import final_project.momeasy.domain.child.converter.ChildConverter;
 import final_project.momeasy.domain.child.dto.request.ChildRequestDTO;
 import final_project.momeasy.domain.child.dto.response.ChildResponseDTO;
 import final_project.momeasy.domain.child.entity.Child;
+import final_project.momeasy.domain.child.exception.ChildErrorCode;
+import final_project.momeasy.domain.child.exception.ChildException;
 import final_project.momeasy.domain.child.repository.ChildRepository;
 import final_project.momeasy.domain.illness.entity.Illness;
 import final_project.momeasy.domain.illness.repository.IllnessRepository;
@@ -53,5 +55,17 @@ public class ChildCommandServiceImpl implements ChildCommandService {
 
         return ChildConverter.toChildCreateResponseDTO(child);
 
+    }
+
+    @Override
+    public void deleteChild(Long childId, Parent parent) {
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
+
+        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
+            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        child.delete();
     }
 }
