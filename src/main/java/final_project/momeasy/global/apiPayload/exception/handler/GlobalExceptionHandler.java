@@ -7,6 +7,7 @@ import final_project.momeasy.global.apiPayload.exception.CustomException;
 import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -47,6 +48,17 @@ public class GlobalExceptionHandler {
         log.error("[ MethodArgumentNotValidException ]: {} ", error);
         CustomResponse<Map<String,String>> errorResponse = CustomResponse.onFailure(errorCode.getCode(), errorCode.getMessage(),error);
         return ResponseEntity.status(errorCode.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<CustomResponse<Map<String,String>>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        log.error("[ DataIntegrityViolationException ]: {} ", ex.getMessage());
+
+        BaseErrorCode errorCode = GeneralErrorCode.DUPLICATE_409;
+        CustomResponse<Map<String, String>> errorResponse = CustomResponse.onFailure(errorCode.getCode(), errorCode.getMessage());
+
+        return ResponseEntity.status(errorCode.getStatus())
+                .body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
