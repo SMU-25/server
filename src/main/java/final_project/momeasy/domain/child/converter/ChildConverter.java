@@ -42,4 +42,12 @@ public class ChildConverter {
                 .build();
     }
 
+    public static ChildResponseDTO.ChildSimpleResponseDTO toChildSimpleResponseDTO(Child child) {
+        return ChildResponseDTO.ChildSimpleResponseDTO.builder()
+                .childId(child.getId())
+                .name(child.getName())
+                .profileImage(child.getProfileImage())
+                .build();
+    }
+
 }

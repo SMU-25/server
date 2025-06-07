@@ -30,4 +30,12 @@ public class ChildResponseDTO {
             List<IllnessType> illnessTypes
     ) {
     }
+
+    @Builder
+    public record ChildSimpleResponseDTO(
+            Long childId,
+            String name,
+            String profileImage
+    ) {
+    }
 }

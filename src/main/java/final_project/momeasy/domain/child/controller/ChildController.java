@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/children")
@@ -42,6 +44,11 @@ public class ChildController {
     @GetMapping("/{childId}")
     public CustomResponse<ChildResponseDTO.ChildDetailResponseDTO> getChild(@AuthParent Parent parent, @PathVariable Long childId) {
         return CustomResponse.onSuccess(HttpStatus.OK, childQueryService.getChild(childId, parent));
+    }
+
+    @GetMapping
+    public CustomResponse<List<ChildResponseDTO.ChildSimpleResponseDTO>> getChildren(@AuthParent Parent parent) {
+        return CustomResponse.onSuccess(HttpStatus.OK, childQueryService.getChildren(parent));
     }
 
 }
