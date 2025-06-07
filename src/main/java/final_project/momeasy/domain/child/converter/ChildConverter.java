@@ -4,6 +4,8 @@ import final_project.momeasy.domain.child.dto.request.ChildRequestDTO;
 import final_project.momeasy.domain.child.dto.response.ChildResponseDTO;
 import final_project.momeasy.domain.child.entity.Child;
 
+import java.util.stream.Collectors;
+
 public class ChildConverter {
 
     public static Child toChild(ChildRequestDTO.ChildCreateRequestDTO dto) {
@@ -23,4 +25,19 @@ public class ChildConverter {
                 .createdAt(child.getCreatedAt())
                 .build();
     }
+
+    public static ChildResponseDTO.ChildDetailResponseDTO toChildDetailResponseDTO(Child child) {
+        return ChildResponseDTO.ChildDetailResponseDTO.builder()
+                .name(child.getName())
+                .birthdate(child.getBirthdate())
+                .height(child.getHeight())
+                .weight(child.getWeight())
+                .gender(child.getGender())
+                .seizure(child.getSeizure())
+                .illnessTypes(child.getChildIllnesses().stream()
+                        .map(childIllness -> childIllness.getIllness().getIllnessType())
+                        .collect(Collectors.toUnmodifiableList()))
+                .build();
+    }
+
 }
