@@ -21,22 +21,10 @@ public class Illness {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private IllnessType illness;
-
-    @Column(nullable = false)
-    private String type_name;
+    private IllnessType illnessType;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "illness", cascade = CascadeType.ALL)
     @Builder.Default
     private List<ChildIllness> childIllnesses = new ArrayList<>();
 
-    public void addChild(Child child) {
-        ChildIllness childIllness = ChildIllness.builder()
-                .child(child)
-                .illness(this)
-                .build();
-
-        this.childIllnesses.add(childIllness);
-        child.getChildIllnesses().add(childIllness);
-    }
 }

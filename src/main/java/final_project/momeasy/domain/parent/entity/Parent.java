@@ -1,7 +1,6 @@
 package final_project.momeasy.domain.parent.entity;
 
 import final_project.momeasy.common.enums.Gender;
-import final_project.momeasy.common.enums.Relation;
 import final_project.momeasy.common.enums.Role;
 import final_project.momeasy.common.enums.SocialType;
 import final_project.momeasy.domain.calendar.entity.Calendar;
@@ -76,11 +75,10 @@ public class Parent extends BaseEntity {
     private Setting setting;
 
     // 연관 관계 메서드
-    public void addChild(Child child, Relation relation) {
+    public void addChild(Child child) {
         ParentChild parentChild = ParentChild.builder()
                 .parent(this)
                 .child(child)
-                .relation(relation)
                 .build();
 
         this.parentChild.add(parentChild);
