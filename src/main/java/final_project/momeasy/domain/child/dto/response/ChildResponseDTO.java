@@ -26,6 +26,7 @@ public class ChildResponseDTO {
             Float weight,
             Gender gender,
             Seizure seizure,
+            String profileImage,
             List<IllnessType> illnessTypes
     ) {
     }

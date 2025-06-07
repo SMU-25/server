@@ -16,6 +16,7 @@ public class ChildConverter {
                 .weight(dto.weight())
                 .gender(dto.gender())
                 .seizure(dto.seizure())
+                .profileImage(dto.profileImage())
                 .build();
     }
 
@@ -34,6 +35,7 @@ public class ChildConverter {
                 .weight(child.getWeight())
                 .gender(child.getGender())
                 .seizure(child.getSeizure())
+                .profileImage(child.getProfileImage())
                 .illnessTypes(child.getChildIllnesses().stream()
                         .map(childIllness -> childIllness.getIllness().getIllnessType())
                         .collect(Collectors.toUnmodifiableList()))

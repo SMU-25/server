@@ -49,6 +49,8 @@ public class Child extends BaseEntity {
     @Column(nullable = false)
     private Seizure seizure;
 
+    private String profileImage;
+
     private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "child",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
@@ -102,6 +104,7 @@ public class Child extends BaseEntity {
         this.weight = dto.weight();
         this.gender = dto.gender();
         this.seizure = dto.seizure();
+        this.profileImage = dto.profileImage();
     }
 
 }
