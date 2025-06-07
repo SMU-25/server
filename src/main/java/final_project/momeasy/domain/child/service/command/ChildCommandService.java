@@ -9,4 +9,6 @@ public interface ChildCommandService {
     ChildResponseDTO.ChildCreateResponseDTO createChild(ChildRequestDTO.ChildCreateRequestDTO dto, Long parentId);
 
     void deleteChild(Long childId, Parent parent);
+
+    void updateChild(Long childId, Parent parent, ChildRequestDTO.ChildUpdateRequestDTO dto);
 }

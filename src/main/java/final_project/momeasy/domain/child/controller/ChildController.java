@@ -28,4 +28,12 @@ public class ChildController {
         childCommandService.deleteChild(childId, parent);
         return CustomResponse.onSuccess(HttpStatus.NO_CONTENT, "아이 삭제 완료");
     }
+
+    @PatchMapping("/{childId}")
+    public CustomResponse<String> updateChild(@PathVariable Long childId,
+                                         @RequestBody ChildRequestDTO.ChildUpdateRequestDTO dto,
+                                         @AuthParent Parent parent) {
+        childCommandService.updateChild(childId, parent, dto);
+        return CustomResponse.onSuccess(HttpStatus.OK, "아이 정보 수정 완료");
+    }
 }

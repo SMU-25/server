@@ -68,4 +68,32 @@ public class ChildCommandServiceImpl implements ChildCommandService {
 
         child.delete();
     }
+
+    @Override
+    public void updateChild(Long childId, Parent parent, ChildRequestDTO.ChildUpdateRequestDTO dto) {
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
+
+        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
+            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        // update
+        child.update(dto);
+
+        child.getChildIllnesses().clear(); // 기존 연관관계 제거
+
+        // child-illness 연관관계 설정
+        for (IllnessType illnessType : dto.illnessTypes()) {
+            Illness illness = illnessRepository.findByIllnessType(illnessType)
+                    .orElseGet(() -> illnessRepository.save(
+                            Illness.builder()
+                                    .illnessType(illnessType)
+                                    .build()
+                    ));
+
+            child.addIllness(illness);
+        }
+
+    }
 }

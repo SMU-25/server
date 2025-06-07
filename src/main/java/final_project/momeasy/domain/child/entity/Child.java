@@ -1,6 +1,7 @@
 package final_project.momeasy.domain.child.entity;
 
 import final_project.momeasy.common.enums.Gender;
+import final_project.momeasy.domain.child.dto.request.ChildRequestDTO;
 import final_project.momeasy.domain.fever_record.entity.FeverRecord;
 import final_project.momeasy.domain.fever_report.entity.FeverReport;
 import final_project.momeasy.domain.home_cam.entity.Homecam;
@@ -92,6 +93,15 @@ public class Child extends BaseEntity {
 
     public void delete() {
         this.deletedAt = LocalDateTime.now();
+    }
+
+    public void update(ChildRequestDTO.ChildUpdateRequestDTO dto) {
+        this.name = dto.name();
+        this.birthdate = dto.birthdate();
+        this.height = dto.height();
+        this.weight = dto.weight();
+        this.gender = dto.gender();
+        this.seizure = dto.seizure();
     }
 
 }

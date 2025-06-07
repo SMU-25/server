@@ -21,4 +21,15 @@ public class ChildRequestDTO {
             List<IllnessType> illnessTypes
     ) {
     }
+
+    public record ChildUpdateRequestDTO(
+            String name,
+            LocalDate birthdate,
+            Float height,
+            Float weight,
+            Gender gender,
+            Seizure seizure,
+            List<IllnessType> illnessTypes
+    ) {
+    }
 }
