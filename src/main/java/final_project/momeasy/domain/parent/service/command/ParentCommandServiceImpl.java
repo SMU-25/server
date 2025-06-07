@@ -24,6 +24,10 @@ public class ParentCommandServiceImpl implements ParentCommandService {
 
     @Override
     public ParentResponseDTO.ParentCreateResponseDTO createParent(ParentRequestDTO.ParentCreateRequestDTO parentCreateRequestDTO) {
+        if (parentRepository.findByEmail(parentCreateRequestDTO.getEmail()).isPresent()) {
+            throw new ParentException(ParentErrorCode.DUPLICATE_EMAIL);
+        }
+
         // DTO -> Parent
         Parent parent = ParentConverter.toParent(parentCreateRequestDTO, passwordEncoder);
 
