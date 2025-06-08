@@ -6,4 +6,6 @@ import final_project.momeasy.domain.parent.dto.response.ParentResponseDTO;
 public interface ParentCommandService {
 
     ParentResponseDTO.ParentCreateResponseDTO createParent(ParentRequestDTO.ParentCreateRequestDTO parentCreateRequestDTO);
+
+    void deleteParent(Long parentId);
 }

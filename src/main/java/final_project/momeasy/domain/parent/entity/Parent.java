@@ -1,7 +1,6 @@
 package final_project.momeasy.domain.parent.entity;
 
 import final_project.momeasy.common.enums.Gender;
-import final_project.momeasy.common.enums.Relation;
 import final_project.momeasy.common.enums.Role;
 import final_project.momeasy.common.enums.SocialType;
 import final_project.momeasy.domain.calendar.entity.Calendar;
@@ -14,6 +13,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +53,8 @@ public class Parent extends BaseEntity {
     @Column(nullable = false)
     private Role role;
 
+    private LocalDateTime deletedAt;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     @Builder.Default
     private List<ParentChild> parentChild = new ArrayList<>();
@@ -73,11 +75,10 @@ public class Parent extends BaseEntity {
     private Setting setting;
 
     // 연관 관계 메서드
-    public void addChild(Child child, Relation relation) {
+    public void addChild(Child child) {
         ParentChild parentChild = ParentChild.builder()
                 .parent(this)
                 .child(child)
-                .relation(relation)
                 .build();
 
         this.parentChild.add(parentChild);
@@ -87,6 +88,21 @@ public class Parent extends BaseEntity {
     public void setSetting(Setting setting) {
         this.setting = setting;
         setting.setParent(this);
+    }
+
+    // soft delete
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    // check delete
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
+
+    // undo delete
+    public void undoDelete() {
+        this.deletedAt = null;
     }
 
 }

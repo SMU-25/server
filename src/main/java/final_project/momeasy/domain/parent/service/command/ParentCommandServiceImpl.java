@@ -4,6 +4,8 @@ import final_project.momeasy.domain.parent.converter.ParentConverter;
 import final_project.momeasy.domain.parent.dto.request.ParentRequestDTO;
 import final_project.momeasy.domain.parent.dto.response.ParentResponseDTO;
 import final_project.momeasy.domain.parent.entity.Parent;
+import final_project.momeasy.domain.parent.exception.ParentErrorCode;
+import final_project.momeasy.domain.parent.exception.ParentException;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,4 +34,13 @@ public class ParentCommandServiceImpl implements ParentCommandService {
         return ParentConverter.toParentResponseDTO(parent);
 
     }
+
+    @Override
+    public void deleteParent(Long parentId) {
+        Parent parent = parentRepository.findByIdNotDeleted(parentId)
+                .orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
+
+        parent.softDelete();
+    }
+
 }
