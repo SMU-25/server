@@ -15,19 +15,19 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/feverRecords")
-@Tag(name = "FeverRecord", description = "FeverRecord Controller")
+@Tag(name = "FeverRecord", description = "체온 기록 API")
 public class FeverRecordController {
     private final FeverRecordQueryService feverRecordQueryService;
 
     @GetMapping("/{childId}")
-    @Operation(summary = "최근 체온 기록 조회 API", description = "최근 체온 기록을 조회합니다.")
+    @Operation(summary = "최근 체온 기록 조회", description = "최근 체온 기록을 조회합니다.")
     public CustomResponse<FeverRecordResponseDTO.FeverRecordViewDTO> getFeverRecord(@PathVariable("childId") Long childId, @AuthParent Parent parent) {
         FeverRecordResponseDTO.FeverRecordViewDTO feverRecordViewDTO = feverRecordQueryService.getFeverRecord(childId, parent);
         return CustomResponse.onSuccess(feverRecordViewDTO);
     }
 
     @GetMapping("/list/{childId}")
-    @Operation(summary = "체온 기록 조회 API", description = "최근 체온 기록 10개를 조회합니다.")
+    @Operation(summary = "체온 기록 목록 조회", description = "최근 체온 기록 10개를 조회합니다.")
     public CustomResponse<List<FeverRecordResponseDTO.FeverRecordViewDTO>>getFeverRecordPage(@PathVariable("childId") Long childId,
          @RequestParam(value="page", defaultValue="0") int page, @AuthParent Parent parent) {
         List<FeverRecordResponseDTO.FeverRecordViewDTO> feverRecordViewList = feverRecordQueryService.getFeverRecordPage(childId,page, parent);
