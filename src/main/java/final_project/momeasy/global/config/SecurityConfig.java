@@ -84,7 +84,7 @@ public class SecurityConfig {
 
         CustomLoginFilter loginFilter = new CustomLoginFilter(
                 authenticationManager(authenticationConfiguration), jwtUtil, tokenService);
-        loginFilter.setFilterProcessesUrl("/auth/login");
+        loginFilter.setFilterProcessesUrl("/api/auth/login");
 
         http
                 .authorizeHttpRequests(request -> request
@@ -117,7 +117,7 @@ public class SecurityConfig {
 
                 // 로그아웃
                 .logout(logout -> logout
-                        .logoutUrl("/auth/logout")
+                        .logoutUrl("/api/auth/logout")
                         .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(HttpStatus.OK.value());
