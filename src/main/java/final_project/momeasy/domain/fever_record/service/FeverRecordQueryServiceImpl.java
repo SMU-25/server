@@ -30,34 +30,22 @@ public class FeverRecordQueryServiceImpl implements FeverRecordQueryService {
 
     @Override
     public FeverRecordResponseDTO.FeverRecordViewDTO getFeverRecord(Long childId, Parent parent) {
-        Child child = childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
-        List<ParentChild> parentChildren = child.getParentChildren();
-        FeverRecord feverRecord = null;
-        for (ParentChild parentChild : parentChildren) {
-            if (parentChild.getParent().equals(parent)) {
-                feverRecord = feverRecordRepository.findTopByChildIdOrderByCreatedAtDesc(childId).orElseThrow(() -> new FeverRecordException(FeverRecordErrorCode.NOT_FOUND));
-            }
-        }
-        if (feverRecord == null) {
+        childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
+        if(!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
             throw new FeverRecordException(FeverRecordErrorCode.UNAUTHORIZED_ACCESS);
         }
+        FeverRecord feverRecord = feverRecordRepository.findTopByChildIdOrderByCreatedAtDesc(childId).orElseThrow(() -> new FeverRecordException(FeverRecordErrorCode.NOT_FOUND));
         return FeverRecordConverter.toFeverRecordResponseDTO(feverRecord);
     }
 
     @Override
     public List<FeverRecordResponseDTO.FeverRecordViewDTO> getFeverRecordPage(Long childId, int page, Parent parent) {
-        Child child = childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
-        List<ParentChild> parentChildren = child.getParentChildren();
-        Slice<FeverRecord> feverRecords = null;
-        for(ParentChild parentChild : parentChildren) {
-            if (parentChild.getParent().equals(parent)) {
-                Pageable pageable = PageRequest.of(page, 10);
-                feverRecords = feverRecordRepository.findAllByChildIdOrderByCreatedAtDesc(childId,pageable);
-            }
-        }
-        if(feverRecords == null) {
+        childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
+        if(!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
             throw new FeverRecordException(FeverRecordErrorCode.UNAUTHORIZED_ACCESS);
         }
+        Pageable pageable = PageRequest.of(page, 10);
+        Slice<FeverRecord> feverRecords = feverRecordRepository.findAllByChildIdOrderByCreatedAtDesc(childId,pageable);
         if(feverRecords.isEmpty()){
             throw new FeverRecordException(FeverRecordErrorCode.NOT_FOUND);
         }
