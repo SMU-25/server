@@ -38,20 +38,14 @@ public class HomecamServiceImpl implements HomecamService {
     @Override
     public HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Parent parent, Long childId) {
         Child child = childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
+        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
+            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
+        }
         homecamRepository.findByChildId(childId).ifPresent(homecam -> {throw new HomecamException(HomecamErrorCode.ALREADY_HAVE);});
-        List<ParentChild> parentChildren = child.getParentChildren();
-        Homecam homecam = null;
-        for(ParentChild parentChild : parentChildren) {
-            if(parentChild.getParent().equals(parent)) {
-                homecam = HomecamConverter.toHomecam(homecamRequestDTO,parent);
-                homecam.setParent(parent);
-                homecam.setChild(child);
-                homecamRepository.save(homecam);
-            }
-        }
-        if(homecam == null) {
-            throw new HomecamException(HomecamErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        Homecam homecam = HomecamConverter.toHomecam(homecamRequestDTO,parent);
+        homecam.setParent(parent);
+        homecam.setChild(child);
+        homecamRepository.save(homecam);
         return HomecamConverter.toHomecamDTO(homecam);
     }
 }

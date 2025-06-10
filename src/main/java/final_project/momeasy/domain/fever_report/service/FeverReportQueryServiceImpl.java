@@ -28,34 +28,22 @@ public class FeverReportQueryServiceImpl implements FeverReportQueryService {
 
     @Override
     public FeverReportResponseDTO.FeverReportViewDTO getFeverReport(Parent parent, Long childId, Long reportId) {
-        Child child = childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
-        List<ParentChild> parentChildren = child.getParentChildren();
-        FeverReport feverReport = null;
-        for(ParentChild parentChild : parentChildren) {
-            if(parentChild.getParent().equals(parent)) {
-                feverReport = feverReportRepository.findById(reportId).orElseThrow(()->new FeverReportException(FeverReportErrorCode.NOT_FOUND));
-            }
+        childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
+        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
+            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
         }
-        if(feverReport == null) {
-            throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        FeverReport feverReport = feverReportRepository.findById(reportId).orElseThrow(()->new FeverReportException(FeverReportErrorCode.NOT_FOUND));
         return FeverReportConverter.toFeverReportViewDTO(feverReport);
     }
 
     @Override
     public List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReports(Parent parent, Long childId, int page) {
-        Child child = childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
-        List<ParentChild> parentChildren = child.getParentChildren();
-        Slice<FeverReport> feverReportSlice = null;
-        for(ParentChild parentChild : parentChildren) {
-            if(parentChild.getParent().equals(parent)) {
-                Pageable pageable = PageRequest.of(page,10);
-                feverReportSlice = feverReportRepository.findAllByChildIdOrderByIdDesc(childId,pageable);
-            }
+        childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
+        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
+            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
         }
-        if(feverReportSlice == null) {
-            throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        Pageable pageable = PageRequest.of(page,10);
+        Slice<FeverReport> feverReportSlice = feverReportRepository.findAllByChildIdOrderByIdDesc(childId,pageable);
         if(feverReportSlice.isEmpty()){
             throw new FeverReportException(FeverReportErrorCode.NOT_FOUND);
         }
@@ -65,17 +53,11 @@ public class FeverReportQueryServiceImpl implements FeverReportQueryService {
 
     @Override
     public List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReportList(Parent parent, Long childId) {
-        Child child = childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
-        List<ParentChild> parentChildren = child.getParentChildren();
-        List<FeverReport> feverReportSlice = null;
-        for(ParentChild parentChild : parentChildren) {
-            if(parentChild.getParent().equals(parent)) {
-                feverReportSlice = feverReportRepository.findAllByChildIdOrderByIdDesc(childId);
-            }
+        childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
+        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
+            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
         }
-        if(feverReportSlice == null) {
-            throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        List<FeverReport> feverReportSlice = feverReportRepository.findAllByChildIdOrderByIdDesc(childId);
         if(feverReportSlice.isEmpty()){
             throw new FeverReportException(FeverReportErrorCode.NOT_FOUND);
         }
