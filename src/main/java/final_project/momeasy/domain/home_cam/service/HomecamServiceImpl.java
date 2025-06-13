@@ -12,12 +12,10 @@ import final_project.momeasy.domain.home_cam.exception.HomecamErrorCode;
 import final_project.momeasy.domain.home_cam.exception.HomecamException;
 import final_project.momeasy.domain.home_cam.repository.HomecamRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
-import final_project.momeasy.domain.parent.entity.ParentChild;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +34,7 @@ public class HomecamServiceImpl implements HomecamService {
     }
 
     @Override
-    public HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamRegisterDTO homecamRequestDTO, Parent parent, Long childId) {
+    public HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamCreateDTO homecamRequestDTO, Parent parent, Long childId) {
         Child child = childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
         if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
             throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
@@ -47,5 +45,16 @@ public class HomecamServiceImpl implements HomecamService {
         homecam.setChild(child);
         homecamRepository.save(homecam);
         return HomecamConverter.toHomecamDTO(homecam);
+    }
+
+    @Override
+    public void updateHomecam(HomecamRequestDTO.HomecamUpdateDTO homecamUpdateDTO, Parent parent, Long childId, Long homecamId) {
+        Homecam homecam = homecamRepository.findById(homecamId).orElseThrow(()->new HomecamException(HomecamErrorCode.NOT_FOUND));
+        Child child = childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
+        if(!homecam.getParent().equals(parent) || !childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
+            throw new HomecamException(HomecamErrorCode.UNAUTHORIZED_ACCESS);
+        }
+        homecam.update(homecamUpdateDTO);
+        homecam.setChild(child);
     }
 }
