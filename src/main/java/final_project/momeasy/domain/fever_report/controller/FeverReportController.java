@@ -62,4 +62,12 @@ public class FeverReportController {
         FeverReportResponseDTO.FeverReportViewDTO feverReportViewDTO = feverReportService.createFeverReport(parent, feverReportRequestDTO, childId);
         return CustomResponse.onSuccess(HttpStatus.CREATED,feverReportViewDTO);
     }
+
+    @PatchMapping("/{childId}/{reportId}")
+    @Operation(summary = "발열 리포트 수정", description = "발열 리포트를 수정합니다.")
+    public CustomResponse<String> updateFeverReport(@AuthParent Parent parent,
+   @RequestBody FeverReportRequestDTO.FeverReportUpdateDTO feverReportRequestDTO, @PathVariable("childId") long childId, @PathVariable("reportId") long reportId) {
+        feverReportService.updateFeverReport(parent,reportId,childId, feverReportRequestDTO);
+        return CustomResponse.onSuccess("아이 정보 수정 완료");
+    }
 }
