@@ -11,13 +11,15 @@ import java.time.LocalDate;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor // 기본 public 접근 제한자
 public class Calendar extends BaseEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate recordDate;
+    private LocalDate scheduleDate;
 
     @Column(nullable = false)
     private String title;
@@ -25,11 +27,17 @@ public class Calendar extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id",nullable = false)
+    @JoinColumn(name = "parent_id", nullable = false)
     private Parent parent;
 
     public void setParent(Parent parent) {
         this.parent = parent;
         parent.getCalendars().add(this);
+    }
+
+    public void update(LocalDate scheduleDate, String title, String content) {
+        this.scheduleDate = scheduleDate;
+        this.title = title;
+        this.content = content;
     }
 }
