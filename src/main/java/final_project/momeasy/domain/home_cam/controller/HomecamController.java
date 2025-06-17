@@ -60,8 +60,17 @@ public class HomecamController {
     @Operation(summary = "홈캠 생성", description = "홈캠을 생성합니다.")
     public CustomResponse<HomecamResponseDTO.HomecamDTO> createHomecam(
             @AuthParent Parent parent,
-            @RequestBody HomecamRequestDTO.HomecamRegisterDTO homecamRegisterDTO, @PathVariable("childId") Long childId){
+            @RequestBody HomecamRequestDTO.HomecamCreateDTO homecamRegisterDTO, @PathVariable("childId") Long childId){
         HomecamResponseDTO.HomecamDTO homecam = homecamService.createHomecam(homecamRegisterDTO,parent, childId);
         return CustomResponse.onSuccess(HttpStatus.CREATED,homecam);
+    }
+
+    @PatchMapping("/{childId}/{homecamId}")
+    @Operation(summary = "홈캠 수정", description = "홈캠을 수정합니다.")
+    public CustomResponse<String> updateHomecam(
+            @AuthParent Parent parent,
+            @RequestBody HomecamRequestDTO.HomecamUpdateDTO homecamRegisterDTO, @PathVariable("childId") long childId, @PathVariable("homecamId") long homecamId){
+        homecamService.updateHomecam(homecamRegisterDTO,parent,childId,homecamId);
+        return CustomResponse.onSuccess(HttpStatus.CREATED,"홈캠 수정 완료");
     }
 }

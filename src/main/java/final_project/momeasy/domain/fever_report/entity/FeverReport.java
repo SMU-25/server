@@ -1,7 +1,7 @@
 package final_project.momeasy.domain.fever_report.entity;
 
 import final_project.momeasy.domain.child.entity.Child;
-import final_project.momeasy.domain.parent.entity.ParentChild;
+import final_project.momeasy.domain.fever_report.dto.FeverReportRequestDTO;
 import final_project.momeasy.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,5 +36,11 @@ public class FeverReport extends BaseEntity {
     public void setChild(Child child) {
         this.child = child;
         child.getFever_reports().add(this);
+    }
+
+    public void updateFeverReport(FeverReportRequestDTO.FeverReportUpdateDTO feverReportUpdateDTO,String special) {
+        this.etc_symptom = feverReportUpdateDTO.getEtc_symptom();
+        this.outing = feverReportUpdateDTO.getOuting();
+        this.special = special;
     }
 }

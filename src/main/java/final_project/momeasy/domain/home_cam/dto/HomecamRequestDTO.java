@@ -8,7 +8,7 @@ import lombok.*;
 public class HomecamRequestDTO {
     @Getter
     @Builder
-    public static class HomecamRegisterDTO {
+    public static class HomecamCreateDTO {
         @NotNull(message = "기기 번호는 필수 입력 값입니다.")
         @JsonProperty("serial_num")
         private String serial_num;
@@ -20,5 +20,19 @@ public class HomecamRequestDTO {
         @NotBlank(message = "설치 장소는 필수 입력 값입니다.")
         @JsonProperty("place")
         private String place;
+    }
+
+    @Getter
+    @Builder
+    public static class HomecamUpdateDTO {
+        @NotBlank(message = "기기 이름은 필수 입력 값입니다.")
+        @JsonProperty("name")
+        private String name;
+
+        @NotBlank(message = "설치 장소는 필수 입력 값입니다.")
+        @JsonProperty("place")
+        private String place;
+
+
     }
 }
