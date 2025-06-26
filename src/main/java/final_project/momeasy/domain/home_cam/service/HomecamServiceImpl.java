@@ -4,6 +4,8 @@ import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.child.exception.ChildErrorCode;
 import final_project.momeasy.domain.child.exception.ChildException;
 import final_project.momeasy.domain.child.repository.ChildRepository;
+import final_project.momeasy.domain.fever_record.entity.FeverRecord;
+import final_project.momeasy.domain.fever_record.repository.FeverRecordBulkRepository;
 import final_project.momeasy.domain.home_cam.converter.HomecamConverter;
 import final_project.momeasy.domain.home_cam.dto.HomecamRequestDTO;
 import final_project.momeasy.domain.home_cam.dto.HomecamResponseDTO;
@@ -12,17 +14,81 @@ import final_project.momeasy.domain.home_cam.exception.HomecamErrorCode;
 import final_project.momeasy.domain.home_cam.exception.HomecamException;
 import final_project.momeasy.domain.home_cam.repository.HomecamRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
+import final_project.momeasy.domain.room_condition.entity.RoomCondition;
+import final_project.momeasy.domain.room_condition.repository.RoomConditionBulkRepository;
+import final_project.momeasy.global.tcp.SensorDataQueue;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class HomecamServiceImpl implements HomecamService {
     private final HomecamRepository homecamRepository;
     private final ChildRepository childRepository;
+    private final FeverRecordBulkRepository feverRecordBulkRepository;
+    private final RoomConditionBulkRepository roomConditionBulkRepository;
+    private final SensorDataQueue sensorDataQueue;
+
+    @Scheduled(cron = "0 * * * * *")
+    public void createSensorData(){
+        log.info("Starting scheduled create Sensor Data");
+        List<String> batch = new ArrayList<>();
+        sensorDataQueue.queue.drainTo(batch);
+        if(batch.isEmpty()){
+            log.info("Non Sensor Data");
+            return;
+        }
+        List<FeverRecord> feverRecords = new ArrayList<>();
+        List<RoomCondition> roomConditions = new ArrayList<>();
+        for(String line : batch){
+            String[] parts = line.split("/");
+            String boardId = parts[0];
+
+            String[] env = parts[1].split(",");
+            float humidity = Float.parseFloat(env[0]);
+            float temperature = Float.parseFloat(env[1]);
+
+            Homecam homecam = homecamRepository.findBySerialNum(boardId).orElseThrow(()->new HomecamException(HomecamErrorCode.NOT_FOUND));
+            Child child = childRepository.findByHomecam(homecam).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
+
+            if(parts.length >= 3){
+                double sum = 0.0;
+                int count = 0;
+                String[] tempValues = parts[2].split(",");
+                for(String val: tempValues){
+                    sum += Float.parseFloat(val);
+                    count++;
+                }
+                float avgFever = (float) (count > 0 ? sum/count: 0.0);
+                avgFever = Math.round(avgFever * 10) / 10.0f;
+
+                FeverRecord feverRecord = FeverRecord.builder()
+                        .fever(avgFever)
+                        .child(child)
+                        .build();
+                feverRecords.add(feverRecord);
+            }
+
+            RoomCondition roomCondition = RoomCondition.builder()
+                    .temperature(temperature)
+                    .humidity(humidity)
+                    .child(child)
+                    .build();
+            roomConditions.add(roomCondition);
+        }
+        feverRecordBulkRepository.saveAll(feverRecords);
+        roomConditionBulkRepository.saveAll(roomConditions);
+        log.info("Ending scheduled create Sensor Data");
+    }
 
     @Override
     public void deleteHomecam(Long homecamId,Parent parent) {
