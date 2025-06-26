@@ -23,7 +23,7 @@ public class HomecamConverter {
     public static Homecam toHomecam(HomecamRequestDTO.HomecamCreateDTO homecamRegisterDTO, Parent parent) {
         return Homecam.builder()
                 .name(homecamRegisterDTO.getName())
-                .serial_num(homecamRegisterDTO.getSerial_num())
+                .serialNum(homecamRegisterDTO.getSerial_num())
                 .place(homecamRegisterDTO.getPlace())
                 .parent(parent)
                 .build();

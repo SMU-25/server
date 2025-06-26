@@ -18,8 +18,8 @@ public class Homecam extends BaseEntity {
 
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String serial_num;
+    @Column(name = "serial_num",nullable = false, unique = true)
+    private String serialNum;
 
     private String place;
 
