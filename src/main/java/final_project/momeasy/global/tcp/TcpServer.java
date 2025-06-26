@@ -21,12 +21,16 @@ public class TcpServer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         int port = 12345;
-        ServerSocket serverSocket = new ServerSocket(port);
-        log.info("TCP Server is running on port {}", port);
+        try {
+            ServerSocket serverSocket = new ServerSocket(port);
+            log.info("TCP Server is running on port {}", port);
 
-        while (true) {
-            Socket clientSocket = serverSocket.accept();
-            new Thread(()->handleClient(clientSocket)).start();
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                new Thread(() -> handleClient(clientSocket)).start();
+            }
+        }catch(Exception e) {
+            log.error("[Socket Error] {}", e.getMessage(), e);
         }
     }
 
