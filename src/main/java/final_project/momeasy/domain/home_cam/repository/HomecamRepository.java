@@ -10,4 +10,5 @@ public interface HomecamRepository extends JpaRepository<Homecam, Long> {
     List<Homecam> findAllByParentIdOrderByIdDesc(Long parentId);
     Optional<Homecam> findById(Long HomecamId);
     Optional<Homecam> findByChildId(Long childId);
+    Optional<Homecam> findBySerialNum(String serial_num);
 }
