@@ -31,15 +31,15 @@ public class TcpServer implements CommandLineRunner {
     }
 
     private void handleClient(Socket socket) {
-        try(BufferedReader in = new BufferedReader(
+        try (BufferedReader in = new BufferedReader(
                 new InputStreamReader(socket.getInputStream()))) {
             String line;
             while ((line = in.readLine()) != null) {
                 log.info("Received: {}", line);
                 sensorDataQueue.queue.offer(line);
             }
-        }catch(IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            log.error("[Socket Error] {}", e.getMessage(), e);  // 꼭 로깅
         }
     }
 }
