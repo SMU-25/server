@@ -1,6 +1,5 @@
 package final_project.momeasy.global.tcp;
 
-import jakarta.persistence.Column;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.BlockingQueue;
