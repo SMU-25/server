@@ -17,10 +17,10 @@ import java.net.Socket;
 public class TcpServer implements CommandLineRunner {
 
     private final SensorDataQueue sensorDataQueue;
+    private final int port = 12345;
 
     @Override
     public void run(String... args) throws Exception {
-        int port = 12345;
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             log.info("TCP Server is running on port {}", port);
