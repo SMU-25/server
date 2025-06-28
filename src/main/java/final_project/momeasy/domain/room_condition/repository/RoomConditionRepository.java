@@ -22,4 +22,5 @@ public interface RoomConditionRepository extends JpaRepository<RoomCondition, Lo
     @Query("DELETE FROM RoomCondition rc WHERE rc.createdAt < :time") //스케줄링(@Scheduled)과 함께 사용, 30일 분량의 데이터만 저장
     void deleteByCreatedAtBefore(@Param("time") LocalDateTime time);
 
+    List<RoomCondition> findByChildIdAndCreatedAtBetween(Long childId, LocalDateTime start, LocalDateTime end);
 }
