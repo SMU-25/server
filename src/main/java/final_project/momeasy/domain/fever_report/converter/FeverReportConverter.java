@@ -34,9 +34,9 @@ public class FeverReportConverter {
                 .etc_symptom(feverReport.getEtc_symptom())
                 .symptoms(feverReport.getFeverReportSymptoms().stream().map(FeverReportSymptom -> FeverReportSymptom.getSymptom().getSymptom()).toList())
                 .createdAt(feverReport.getCreatedAt())
-                .day1(getGraphGroupViewDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.Day1))
-                .day3(getGraphGroupViewDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.Day3))
-                .day7(getGraphGroupViewDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.Day7))
+                .day1(getGraphGroupViewDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY1))
+                .day3(getGraphGroupViewDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY3))
+                .day7(getGraphGroupViewDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY7))
                 .build();
     }
 
@@ -48,9 +48,9 @@ public class FeverReportConverter {
                 .etc_symptom(feverReport.getEtc_symptom())
                 .symptoms(feverReport.getFeverReportSymptoms().stream().map(FeverReportSymptom -> FeverReportSymptom.getSymptom().getSymptom()).toList())
                 .createdAt(feverReport.getCreatedAt())
-                .day1(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.Day1))
-                .day3(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.Day3))
-                .day7(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.Day7))
+                .day1(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY1))
+                .day3(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY3))
+                .day7(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY7))
                 .build();
     }
 

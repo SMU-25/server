@@ -31,26 +31,26 @@ public class FeverGraphServiceImpl implements FeverGraphService {
         List<FeverGraph> feverGraphs = new ArrayList<>();
         // 범위 day1
         for(int t = 0 ; t <24 ; t+=3){
-            feverGraphs.add(buildFeverGraph(feverReport, 0, DayRange.Day1,t, t, childId));
+            feverGraphs.add(buildFeverGraph(feverReport, 0, DayRange.DAY1,t, t, childId));
         }
         // 범위 day3
         for (int d = 2; d >= 0; d--) {
-            feverGraphs.add(buildFeverGraph(feverReport, d, DayRange.Day3,0, 6,childId));   // 새벽
-            feverGraphs.add(buildFeverGraph(feverReport, d, DayRange.Day3,6, 12,childId));  // 오전
-            feverGraphs.add(buildFeverGraph(feverReport, d, DayRange.Day3,12, 24,childId)); // 오후
+            feverGraphs.add(buildFeverGraph(feverReport, d, DayRange.DAY3,0, 6,childId));   // 새벽
+            feverGraphs.add(buildFeverGraph(feverReport, d, DayRange.DAY3,6, 12,childId));  // 오전
+            feverGraphs.add(buildFeverGraph(feverReport, d, DayRange.DAY3,12, 24,childId)); // 오후
         }
         // 범위 day7
         for(int d = 6; d>=0; d--){
-            feverGraphs.add(buildFeverGraph(feverReport, d, DayRange.Day7,0, 24,childId));
+            feverGraphs.add(buildFeverGraph(feverReport, d, DayRange.DAY7,0, 24,childId));
         }
         feverGraphRepository.saveAll(feverGraphs);
         return feverGraphs;
     }
 
     private FeverGraph buildFeverGraph(FeverReport feverReport, int dayOffset, DayRange dayRange ,int startHour, int endHour, Long childId) {
-        float avg = dayRange == DayRange.Day1 ? avgFever.getFeverAvgBy3Hour(startHour, childId) : avgFever.getFeverAvgByDayAndTimeRange(dayOffset, startHour, endHour, childId);
+        float avg = dayRange == DayRange.DAY1 ? avgFever.getFeverAvgBy3Hour(startHour, childId) : avgFever.getFeverAvgByDayAndTimeRange(dayOffset, startHour, endHour, childId);
         FeverGraph feverGraph = FeverGraph.builder()
-                .fever(avg)
+                .avgFever(avg)
                 .dayRange(dayRange)
                 .build();
         feverGraph.setFeverReport(feverReport);

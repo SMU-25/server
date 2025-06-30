@@ -30,26 +30,26 @@ public class TemperatureGraphServiceImpl implements TemperatureGraphService {
         List<TemperatureGraph> temperatureGraphs = new ArrayList<>();
         // 범위 day1
         for(int t = 0 ; t <24 ; t+=3){
-            temperatureGraphs.add(buildTemperatureGraph(feverReport, 0, DayRange.Day1,t, t, childId));
+            temperatureGraphs.add(buildTemperatureGraph(feverReport, 0, DayRange.DAY1,t, t, childId));
         }
         // 범위 day3
         for (int d = 2; d >= 0; d--) {
-            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.Day3,0, 6,childId));   // 새벽
-            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.Day3,6, 12,childId));  // 오전
-            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.Day3,12, 24,childId)); // 오후
+            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.DAY3,0, 6,childId));   // 새벽
+            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.DAY3,6, 12,childId));  // 오전
+            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.DAY3,12, 24,childId)); // 오후
         }
         // 범위 day7
         for(int d = 6; d>=0; d--){
-            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.Day7,0, 24,childId));
+            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.DAY7,0, 24,childId));
         }
         temperatureGraphRepository.saveAll(temperatureGraphs);
         return temperatureGraphs;
     }
 
     private TemperatureGraph buildTemperatureGraph(FeverReport feverReport, int dayOffset, DayRange dayRange , int startHour, int endHour, Long childId) {
-        float avg = dayRange == DayRange.Day1 ? avgTemperature.getTemperatureAvgBy3Hour(startHour, childId) : avgTemperature.getTemperatureAvgByDayAndTimeRange(dayOffset, startHour, endHour, childId);
+        float avg = dayRange == DayRange.DAY1 ? avgTemperature.getTemperatureAvgBy3Hour(startHour, childId) : avgTemperature.getTemperatureAvgByDayAndTimeRange(dayOffset, startHour, endHour, childId);
         TemperatureGraph temperatureGraph = TemperatureGraph.builder()
-                .temperature(avg)
+                .avgTemperature(avg)
                 .dayRange(dayRange)
                 .build();
         temperatureGraph.setFeverReport(feverReport);

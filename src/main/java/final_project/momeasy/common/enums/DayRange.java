@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum DayRange {
-    Day1("1일"),
-    Day3("3일"),
-    Day7("7일");
+    DAY1("1일"),
+    DAY3("3일"),
+    DAY7("7일");
 
     private final String dayrange;
 
