@@ -14,11 +14,11 @@ import java.util.List;
 public class AvgHumidity {
     private final RoomConditionRepository roomConditionRepository;
 
-    public float getHumidityAvgBy3Hour(int t, Long childId) {
-        LocalDateTime start = LocalDate.now().atTime(t,0);
-        LocalDateTime end = (t == 21)
+    public float getHumidityAvgBy3Hour(int time, Long childId) {
+        LocalDateTime start = LocalDate.now().atTime(time,0);
+        LocalDateTime end = (time == 21)
                 ?LocalDate.now().plusDays(1).atStartOfDay()
-                :LocalDate.now().atTime(t+3,0);
+                :LocalDate.now().atTime(time+3,0);
         List<RoomCondition> roomConditions = roomConditionRepository.findByChildIdAndCreatedAtBetween(childId,start,end);
         return (float) Math.round(
                 roomConditions.stream()
@@ -28,12 +28,12 @@ public class AvgHumidity {
         ) / 10;
     }
 
-    public float getHumidityAvgByDayAndTimeRange(int day, int t1, int t2, Long childId) {
+    public float getHumidityAvgByDayAndTimeRange(int day, int time1, int time2, Long childId) {
         LocalDate now = LocalDate.now().minusDays(day);
-        LocalDateTime start = now.atTime(t1,0);
-        LocalDateTime end = (t2 == 24)
+        LocalDateTime start = now.atTime(time1,0);
+        LocalDateTime end = (time2 == 24)
                 ? now.plusDays(1).atStartOfDay()
-                : now.atTime(t2, 0);
+                : now.atTime(time2, 0);
         List<RoomCondition> roomConditions = roomConditionRepository.findByChildIdAndCreatedAtBetween(childId, start,end);
         return (float) Math.round(
                 roomConditions.stream()
