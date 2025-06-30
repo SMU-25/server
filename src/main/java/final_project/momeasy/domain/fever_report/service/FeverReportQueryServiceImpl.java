@@ -4,14 +4,19 @@ import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.child.exception.ChildErrorCode;
 import final_project.momeasy.domain.child.exception.ChildException;
 import final_project.momeasy.domain.child.repository.ChildRepository;
+import final_project.momeasy.domain.fever_graph.entity.FeverGraph;
+import final_project.momeasy.domain.fever_graph.repository.FeverGraphRepository;
 import final_project.momeasy.domain.fever_report.converter.FeverReportConverter;
 import final_project.momeasy.domain.fever_report.dto.FeverReportResponseDTO;
 import final_project.momeasy.domain.fever_report.entity.FeverReport;
 import final_project.momeasy.domain.fever_report.exception.FeverReportErrorCode;
 import final_project.momeasy.domain.fever_report.exception.FeverReportException;
 import final_project.momeasy.domain.fever_report.repository.FeverReportRepository;
+import final_project.momeasy.domain.humidity_graph.entity.HumidityGraph;
+import final_project.momeasy.domain.humidity_graph.repository.HumidityGraphRepositoy;
 import final_project.momeasy.domain.parent.entity.Parent;
-import final_project.momeasy.domain.parent.entity.ParentChild;
+import final_project.momeasy.domain.temperature_graph.entity.TemperatureGraph;
+import final_project.momeasy.domain.temperature_graph.repository.TemperatureGraphRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,15 +30,23 @@ import java.util.List;
 public class FeverReportQueryServiceImpl implements FeverReportQueryService {
     private final FeverReportRepository feverReportRepository;
     private final ChildRepository childRepository;
+    private final FeverGraphRepository feverGraphRepository;
+    private final HumidityGraphRepositoy humidityGraphRepositoy;
+    private final TemperatureGraphRepository temperatureGraphRepository;
 
     @Override
-    public FeverReportResponseDTO.FeverReportViewDTO getFeverReport(Parent parent, Long childId, Long reportId) {
-        childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
-        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
-        }
+    public FeverReportResponseDTO.FeverReportDetailViewDTO getFeverReport(Parent parent, Long reportId) {
         FeverReport feverReport = feverReportRepository.findById(reportId).orElseThrow(()->new FeverReportException(FeverReportErrorCode.NOT_FOUND));
-        return FeverReportConverter.toFeverReportViewDTO(feverReport);
+        Child child = feverReport.getChild();
+        if (!childRepository.existsByChildIdAndParentId(child.getId(), parent.getId())) {
+            throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
+        }
+        List<FeverGraph> feverGraphs = feverGraphRepository.findByFeverReport(feverReport);
+        List<HumidityGraph> humidityGraphs = humidityGraphRepositoy.findByFeverReport(feverReport);
+        List<TemperatureGraph> temperatureGraphs = temperatureGraphRepository.findByFeverReport(feverReport);
+        return FeverReportConverter.toFeverReportDetailDTO(
+                feverReport,feverGraphs, humidityGraphs,temperatureGraphs
+        );
     }
 
     @Override

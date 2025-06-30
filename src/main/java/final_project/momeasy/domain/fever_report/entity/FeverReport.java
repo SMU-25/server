@@ -1,7 +1,10 @@
 package final_project.momeasy.domain.fever_report.entity;
 
 import final_project.momeasy.domain.child.entity.Child;
+import final_project.momeasy.domain.fever_graph.entity.FeverGraph;
 import final_project.momeasy.domain.fever_report.dto.FeverReportRequestDTO;
+import final_project.momeasy.domain.humidity_graph.entity.HumidityGraph;
+import final_project.momeasy.domain.temperature_graph.entity.TemperatureGraph;
 import final_project.momeasy.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,9 +32,22 @@ public class FeverReport extends BaseEntity {
     @JoinColumn(name = "child_id", nullable = false)
     private Child child;
 
+    // 이름 카멜 케이스로 변경하기
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "feverreport", cascade = CascadeType.ALL)
     @Builder.Default
     private List<FeverReportSymptom>  feverReportSymptoms = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "feverReport", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<FeverGraph> feverGraphs = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "feverReport", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<HumidityGraph> humidityGraphs = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "feverReport", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<TemperatureGraph> temperatureGraphs = new ArrayList<>();
 
     public void setChild(Child child) {
         this.child = child;

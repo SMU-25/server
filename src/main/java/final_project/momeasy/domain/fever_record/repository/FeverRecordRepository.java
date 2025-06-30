@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface FeverRecordRepository extends JpaRepository<FeverRecord, Long> {
@@ -23,4 +24,6 @@ public interface FeverRecordRepository extends JpaRepository<FeverRecord, Long> 
     @Modifying
     @Query("DELETE FROM FeverRecord fr WHERE fr.createdAt < :time") //스케줄링(@Scheduled)과 함께 사용, 7일 분량의 데이터만 저장
     void deleteByCreatedAtBefore(@Param("time") LocalDateTime time);
+
+    List<FeverRecord> findByChildIdAndCreatedAtBetween(Long childId, LocalDateTime start, LocalDateTime end);
 }

@@ -6,7 +6,7 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import java.util.List;
 
 public interface FeverReportQueryService {
-    FeverReportResponseDTO.FeverReportViewDTO getFeverReport(Parent parent, Long childId, Long reportId);
+    FeverReportResponseDTO.FeverReportDetailViewDTO getFeverReport(Parent parent, Long reportId);
     List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReports(Parent parent, Long childId, int page);
     List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReportList(Parent parent, Long childId);
 
