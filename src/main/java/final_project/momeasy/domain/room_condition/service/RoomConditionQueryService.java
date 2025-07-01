@@ -9,4 +9,11 @@ public interface RoomConditionQueryService {
     RoomConditionResponseDTO.RoomConditionViewDTO getRoomCondition(Long childId, Parent parent);
 
     List<RoomConditionResponseDTO.RoomConditionViewDTO> getRoomConditionPage(Long childId, int page, Parent parent);
+
+    List<RoomConditionResponseDTO.RoomConditionGrpahDTO> getRoomConditionGraphDay1(Long childId, Parent parent);
+
+    List<RoomConditionResponseDTO.RoomConditionGrpahDTO> getRoomConditionGraphDay3(Long childId, Parent parent);
+
+    List<RoomConditionResponseDTO.RoomConditionGrpahDTO> getRoomConditionGraphDay7(Long childId, Parent parent);
+
 }
