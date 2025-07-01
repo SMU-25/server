@@ -43,6 +43,10 @@ public class Homecam extends BaseEntity {
         child.setHomecam(this);
     }
 
+    public void setVideo_url(String video_url) {
+        this.video_url = video_url;
+    }
+
     public void update(HomecamRequestDTO.HomecamUpdateDTO updateDTO) {
         this.name = updateDTO.getName();
         this.place = updateDTO.getPlace();
