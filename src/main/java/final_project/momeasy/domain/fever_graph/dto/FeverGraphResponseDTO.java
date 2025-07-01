@@ -7,12 +7,12 @@ public class FeverGraphResponseDTO {
     @Getter
     @Builder
     public static class FeverGraphCreateDTO{
-        private float fever;
+        private float avgfever;
     }
 
     @Getter
     @Builder
     public static class FeverGraphViewDTO{
-        private float fever;
+        private float avgfever;
     }
 }

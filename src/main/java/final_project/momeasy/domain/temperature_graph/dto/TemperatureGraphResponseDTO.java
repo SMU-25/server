@@ -7,12 +7,12 @@ public class TemperatureGraphResponseDTO {
     @Getter
     @Builder
     public static class TemperatureGraphCreateDTO{
-        private float temperature;
+        private float avgtemperature;
     }
 
     @Getter
     @Builder
     public static class TemperatureGraphViewDTO{
-        private float temperature;
+        private float avgtemperature;
     }
 }

@@ -17,7 +17,7 @@ public class TemperatureGraph extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private float temperature;
+    private float avgTemperature;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
