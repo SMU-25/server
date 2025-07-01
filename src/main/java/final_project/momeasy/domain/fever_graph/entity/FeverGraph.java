@@ -16,7 +16,7 @@ public class FeverGraph extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private float fever;
+    private float avgFever;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

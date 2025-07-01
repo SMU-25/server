@@ -12,4 +12,10 @@ public class FeverRecordResponseDTO {
         private float fever;
         private LocalDateTime createdAt;
     }
+
+    @Getter
+    @Builder
+    public static class FeverRecordGraphDTO{
+        private float avgfever;
+    }
 }

@@ -7,12 +7,12 @@ public class HumidityGraphResponseDTO {
     @Getter
     @Builder
     public static class HumidityGraphCreateDTO{
-        private float humidity;
+        private float avghumidity;
     }
 
     @Getter
     @Builder
     public static class HumidityGraphViewDTO{
-        private float humidity;
+        private float avghumidity;
     }
 }

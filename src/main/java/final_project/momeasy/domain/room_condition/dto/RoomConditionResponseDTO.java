@@ -13,4 +13,11 @@ public class RoomConditionResponseDTO {
         private float humidity;
         private LocalDateTime createdAt;
     }
+
+    @Getter
+    @Builder
+    public static class RoomConditionGrpahDTO {
+        private float avgtemperature;
+        private float avghumidity;
+    }
 }

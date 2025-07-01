@@ -16,7 +16,7 @@ public class HumidityGraph {
     private Long id;
 
     @Column(nullable = false)
-    private float humidity;
+    private float avgHumidity;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
