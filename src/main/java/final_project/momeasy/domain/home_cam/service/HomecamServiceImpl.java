@@ -50,9 +50,17 @@ public class HomecamServiceImpl implements HomecamService {
         List<FeverRecord> feverRecords = new ArrayList<>();
         List<RoomCondition> roomConditions = new ArrayList<>();
         for(String line : batch){
-            String[] parts = line.split("/");
+            String[] parts = line.split("::");
+            if(parts.length != 3){
+                log.warn("error data format: {}", line);
+                continue;
+            }
             String boardId = parts[0];
-
+            if(parts[1].equals("ESP32CAM")){
+                Homecam homecam = homecamRepository.findBySerialNum(boardId).orElseThrow(()->new HomecamException(HomecamErrorCode.NOT_FOUND));
+                homecam.setVideo_url(parts[2]);
+                continue;
+            }
             String[] env = parts[1].split(",");
             float humidity = Float.parseFloat(env[0]);
             float temperature = Float.parseFloat(env[1]);
