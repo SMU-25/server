@@ -7,6 +7,9 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.exception.ParentErrorCode;
 import final_project.momeasy.domain.parent.exception.ParentException;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
+import final_project.momeasy.global.util.mail.verification.exception.VerificationCodeErrorCode;
+import final_project.momeasy.global.util.mail.verification.exception.VerificationCodeException;
+import final_project.momeasy.global.util.mail.verification.service.VerificationCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,11 +24,16 @@ public class ParentCommandServiceImpl implements ParentCommandService {
 
     private final ParentRepository parentRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VerificationCodeService verificationCodeService;
 
     @Override
     public ParentResponseDTO.ParentCreateResponseDTO createParent(ParentRequestDTO.ParentCreateRequestDTO parentCreateRequestDTO) {
         if (parentRepository.findByEmail(parentCreateRequestDTO.getEmail()).isPresent()) {
             throw new ParentException(ParentErrorCode.DUPLICATE_EMAIL);
+        }
+
+        if (!verificationCodeService.isVerified(parentCreateRequestDTO.getEmail())) {
+            throw new VerificationCodeException(VerificationCodeErrorCode.CODE_NOT_VERIFIED);
         }
 
         // DTO -> Parent
