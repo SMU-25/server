@@ -33,9 +33,9 @@ public class CalendarController {
     }
 
     @Operation(summary = "캘린더 일정 단건 조회")
-    @GetMapping("/{id}")
-    public CustomResponse<CalendarResponseDto> getCalendar(@PathVariable Long id) {
-        CalendarResponseDto response = calendarService.getCalendar(id);
+    @GetMapping("/{calendarId}")
+    public CustomResponse<CalendarResponseDto> getCalendar(@PathVariable Long calendarId) {
+        CalendarResponseDto response = calendarService.getCalendar(calendarId);
         return CustomResponse.onSuccess(response);
     }
 
@@ -49,23 +49,23 @@ public class CalendarController {
     }
 
     @Operation(summary = "캘린더 일정 수정")
-    @PutMapping("/{id}")
+    @PutMapping("/{calendarId}")
     public CustomResponse<CalendarResponseDto> updateCalendar(
-            @PathVariable Long id,
+            @PathVariable Long calendarId,
             @RequestBody @Valid CalendarRequestDto requestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long parentId = userDetails.getParent().getId();
-        CalendarResponseDto response = calendarService.updateCalendar(id, requestDto, parentId);
+        CalendarResponseDto response = calendarService.updateCalendar(calendarId, requestDto, parentId);
         return CustomResponse.onSuccess(response);
     }
 
     @Operation(summary = "캘린더 일정 삭제")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{calendarId}")
     public CustomResponse<Void> deleteCalendar(
-            @PathVariable Long id,
+            @PathVariable Long calendarId,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long parentId = userDetails.getParent().getId();
-        calendarService.deleteCalendar(id, parentId);
+        calendarService.deleteCalendar(calendarId, parentId);
         return CustomResponse.onSuccess(HttpStatus.NO_CONTENT, null);
     }
 
