@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -22,7 +23,7 @@ public class TcpServer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try {
-            ServerSocket serverSocket = new ServerSocket(port);
+            ServerSocket serverSocket = new ServerSocket(port,50, InetAddress.getByName("0.0.0.0"));
             log.info("TCP Server is running on port {}", port);
 
             while (true) {
