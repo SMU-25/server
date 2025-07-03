@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor // 기본 public 접근 제한자
+@AllArgsConstructor(access = AccessLevel.PRIVATE) // 외부에서 무분별한 생성 방지
 public class Calendar extends BaseEntity {
 
     @Id
