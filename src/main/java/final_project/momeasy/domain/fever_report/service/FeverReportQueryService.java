@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FeverReportQueryService {
     FeverReportResponseDTO.FeverReportDetailViewDTO getFeverReport(Parent parent, Long reportId);
-    List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReports(Parent parent, Long childId, int page);
+    FeverReportResponseDTO.FeverReportListViewDTO getFeverReports(Parent parent,Long cursor, Integer size,Long childId);
     List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReportList(Parent parent, Long childId);
 
 }

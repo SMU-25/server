@@ -50,18 +50,23 @@ public class FeverReportQueryServiceImpl implements FeverReportQueryService {
     }
 
     @Override
-    public List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReports(Parent parent, Long childId, int page) {
+    public FeverReportResponseDTO.FeverReportListViewDTO getFeverReports(Parent parent,Long cursor, Integer size,Long childId) {
         childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
         if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
             throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
         }
-        Pageable pageable = PageRequest.of(page,10);
-        Slice<FeverReport> feverReportSlice = feverReportRepository.findAllByChildIdOrderByIdDesc(childId,pageable);
-        if(feverReportSlice.isEmpty()){
+        Pageable pageable = PageRequest.of(0, size);
+        Slice<FeverReport> feverReports = feverReportRepository.findFeverReportCursorPagination(childId,cursor,pageable);
+        List<FeverReport> feverReportList = feverReports.toList();
+        List<FeverReportResponseDTO.FeverReportViewDTO> feverReportViewDTOList = feverReportList.stream().map(FeverReportConverter::toFeverReportViewDTO).toList();
+        if(feverReports.isEmpty()){
             throw new FeverReportException(FeverReportErrorCode.NOT_FOUND);
         }
-        List<FeverReportResponseDTO.FeverReportViewDTO> feverReportList = feverReportSlice.stream().map(feverReport -> FeverReportConverter.toFeverReportViewDTO(feverReport)).toList();
-        return feverReportList;
+        Long nextCursor = null;
+        if(!feverReportList.isEmpty() && feverReports.hasNext()){
+            nextCursor = feverReportList.get(feverReportList.size()-1).getId();
+        }
+        return FeverReportConverter.toFeverReportListViewDTO(feverReportViewDTOList,feverReports.hasNext(),nextCursor);
     }
 
     @Override
