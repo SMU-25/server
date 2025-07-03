@@ -73,10 +73,8 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/swagger-resources/**",
-            "/api/auth/signup",
-            "/api/auth/login",
+            "/api/auth/**",
             "/api/email/**",
-            "/oauth2/**",
             "/login/**"
     };
 
@@ -108,13 +106,13 @@ public class SecurityConfig {
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
 
-                // oauth2 로그인
-                .oauth2Login(oauth -> oauth
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuthUserService)
-                        )
-                        .successHandler(oAuth2LoginSuccessHandler)
-                )
+//                // oauth2 로그인
+//                .oauth2Login(oauth -> oauth
+//                        .userInfoEndpoint(userInfo -> userInfo
+//                                .userService(customOAuthUserService)
+//                        )
+//                        .successHandler(oAuth2LoginSuccessHandler)
+//                )
 
                 // 로그아웃
                 .logout(logout -> logout
