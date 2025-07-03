@@ -53,7 +53,7 @@ public class FeverReportQueryServiceImpl implements FeverReportQueryService {
     public List<FeverReportResponseDTO.FeverReportViewDTO> getFeverReports(Parent parent, Long childId, int page) {
         childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
         if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
+            throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
         }
         Pageable pageable = PageRequest.of(page,10);
         Slice<FeverReport> feverReportSlice = feverReportRepository.findAllByChildIdOrderByIdDesc(childId,pageable);
