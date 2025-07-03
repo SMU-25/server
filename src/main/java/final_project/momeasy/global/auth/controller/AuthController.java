@@ -4,6 +4,9 @@ import final_project.momeasy.domain.parent.dto.request.ParentRequestDTO;
 import final_project.momeasy.domain.parent.dto.response.ParentResponseDTO;
 import final_project.momeasy.domain.parent.service.command.ParentCommandService;
 import final_project.momeasy.global.apiPayload.CustomResponse;
+import final_project.momeasy.global.auth.dto.request.OAuthRequestDTO;
+import final_project.momeasy.global.auth.dto.response.OAuthResponseDTO;
+import final_project.momeasy.global.auth.service.OAuthLoginService;
 import final_project.momeasy.global.security.dto.request.LoginRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final ParentCommandService parentCommandService;
+    private final OAuthLoginService oAuthLoginService;
 
     @Operation(summary = "로컬 회원가입")
     @PostMapping("/signup")
@@ -40,5 +44,12 @@ public class AuthController {
     @PostMapping("/logout")
     public CustomResponse<?> logout() {
         return null;
+    }
+
+    @Operation(summary = "소셜 로그인 (KAKAO, NAVER)")
+    @PostMapping("/social")
+    public CustomResponse<OAuthResponseDTO.OAuthLoginResponseDTO> socialLogin(
+            @RequestBody OAuthRequestDTO.OAuthLoginRequestDTO requestDTO) {
+        return CustomResponse.onSuccess(oAuthLoginService.login(requestDTO));
     }
 }
