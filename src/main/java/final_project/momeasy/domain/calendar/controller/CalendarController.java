@@ -3,10 +3,12 @@ package final_project.momeasy.domain.calendar.controller;
 import final_project.momeasy.domain.calendar.dto.CalendarRequestDto;
 import final_project.momeasy.domain.calendar.dto.CalendarResponseDto;
 import final_project.momeasy.domain.calendar.service.CalendarService;
+import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.security.CustomUserDetails;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,58 +22,71 @@ public class CalendarController {
 
     private final CalendarService calendarService;
 
+    @Operation(summary = "캘린더 일정 생성")
     @PostMapping
-    public ResponseEntity<CalendarResponseDto> createCalendar(
+    public CustomResponse<CalendarResponseDto> createCalendar(
             @RequestBody @Valid CalendarRequestDto requestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long parentId = userDetails.getParent().getId();
-        return ResponseEntity.ok(calendarService.createCalendar(requestDto, parentId));
+        CalendarResponseDto response = calendarService.createCalendar(requestDto, parentId);
+        return CustomResponse.onSuccess(HttpStatus.CREATED, response);
     }
 
+    @Operation(summary = "캘린더 일정 단건 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<CalendarResponseDto> getCalendar(@PathVariable Long id) {
-        return ResponseEntity.ok(calendarService.getCalendar(id));
+    public CustomResponse<CalendarResponseDto> getCalendar(@PathVariable Long id) {
+        CalendarResponseDto response = calendarService.getCalendar(id);
+        return CustomResponse.onSuccess(response);
     }
 
+    @Operation(summary = "내 캘린더 일정 전체 조회")
     @GetMapping("/my")
-    public ResponseEntity<List<CalendarResponseDto>> getMyCalendars(
+    public CustomResponse<List<CalendarResponseDto>> getMyCalendars(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long parentId = userDetails.getParent().getId();
-        return ResponseEntity.ok(calendarService.getCalendarsByParent(parentId));
+        List<CalendarResponseDto> response = calendarService.getCalendarsByParent(parentId);
+        return CustomResponse.onSuccess(response);
     }
 
+    @Operation(summary = "캘린더 일정 수정")
     @PutMapping("/{id}")
-    public ResponseEntity<CalendarResponseDto> updateCalendar(
+    public CustomResponse<CalendarResponseDto> updateCalendar(
             @PathVariable Long id,
             @RequestBody @Valid CalendarRequestDto requestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long parentId = userDetails.getParent().getId();
-        return ResponseEntity.ok(calendarService.updateCalendar(id, requestDto, parentId));
+        CalendarResponseDto response = calendarService.updateCalendar(id, requestDto, parentId);
+        return CustomResponse.onSuccess(response);
     }
 
+    @Operation(summary = "캘린더 일정 삭제")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCalendar(
+    public CustomResponse<Void> deleteCalendar(
             @PathVariable Long id,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long parentId = userDetails.getParent().getId();
         calendarService.deleteCalendar(id, parentId);
-        return ResponseEntity.noContent().build();
+        return CustomResponse.onSuccess(HttpStatus.NO_CONTENT, null);
     }
 
+    @Operation(summary = "키워드로 일정 검색")
     @GetMapping("/search")
-    public ResponseEntity<List<CalendarResponseDto>> searchCalendars(
+    public CustomResponse<List<CalendarResponseDto>> searchCalendars(
             @RequestParam String keyword,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long parentId = userDetails.getParent().getId();
-        return ResponseEntity.ok(calendarService.searchCalendars(parentId, keyword));
+        List<CalendarResponseDto> response = calendarService.searchCalendars(parentId, keyword);
+        return CustomResponse.onSuccess(response);
     }
 
+    @Operation(summary = "날짜로 일정 조회")
     @GetMapping("/date")
-    public ResponseEntity<List<CalendarResponseDto>> getCalendarsByDate(
+    public CustomResponse<List<CalendarResponseDto>> getCalendarsByDate(
             @RequestParam String date,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long parentId = userDetails.getParent().getId();
         LocalDate localDate = LocalDate.parse(date);
-        return ResponseEntity.ok(calendarService.getCalendarsByDate(parentId, localDate));
+        List<CalendarResponseDto> response = calendarService.getCalendarsByDate(parentId, localDate);
+        return CustomResponse.onSuccess(response);
     }
 }
