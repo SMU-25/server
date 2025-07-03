@@ -53,6 +53,6 @@ public class OAuthLoginServiceImpl implements OAuthLoginService {
 
         tokenService.saveOrUpdate(parent.getEmail(), refreshJwt);
 
-        return new OAuthResponseDTO.OAuthLoginResponseDTO(accessJwt, refreshJwt);
+        return new OAuthResponseDTO.OAuthLoginResponseDTO(accessJwt);
     }
 }
