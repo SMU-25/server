@@ -8,14 +8,18 @@ import final_project.momeasy.domain.parent.entity.Parent;
 public class HomecamConverter {
     public static HomecamResponseDTO.HomecamDTO toHomecamDTO(Homecam homecam) {
         return HomecamResponseDTO.HomecamDTO.builder()
+                .homecamId(homecam.getId())
                 .name(homecam.getName())
                 .place(homecam.getPlace())
                 .createdAt(homecam.getCreatedAt())
+                .serialNum(homecam.getSerialNum())
                 .build();
     }
 
-    public static HomecamResponseDTO.HomecamVideoDTO toHomecamVideoDTO(Homecam homecam) {
-        return HomecamResponseDTO.HomecamVideoDTO.builder()
+    public static HomecamResponseDTO.HomecamDetailDTO toHomecamDetailDTO(Homecam homecam) {
+        return HomecamResponseDTO.HomecamDetailDTO.builder()
+                .name(homecam.getName())
+                .place(homecam.getPlace())
                 .video_url(homecam.getVideo_url())
                 .build();
     }

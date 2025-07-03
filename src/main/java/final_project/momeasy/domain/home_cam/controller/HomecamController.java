@@ -20,25 +20,15 @@ import java.util.List;
 @RequestMapping("/api/homecams")
 @Tag(name = "Homecam", description = "홈캠 API")
 public class HomecamController {
-    // security 완성되면 @AuthenticatedMember 추가하기
     private final HomecamQueryService homecamQueryService;
     private final HomecamService homecamService;
 
     @GetMapping("/{homecamId}")
     @Operation(summary = "홈캠 상세 조회", description = "homecam 1개를 조회합니다.")
-    public CustomResponse<HomecamResponseDTO.HomecamDTO> getHomecam(
+    public CustomResponse<HomecamResponseDTO.HomecamDetailDTO> getHomecam(
             @AuthParent Parent parent,
             @PathVariable("homecamId") long homecamId) {
-        HomecamResponseDTO.HomecamDTO homecam = homecamQueryService.getHomecamById(homecamId,parent);
-        return CustomResponse.onSuccess(homecam);
-    }
-
-    @GetMapping("/urls/{homecamId}")
-    @Operation(summary = "홈캠 cctv URL 조회", description = "홈캠의 cctv URL을 조회합니다.")
-    public CustomResponse<HomecamResponseDTO.HomecamVideoDTO> getHomecamVideo(
-            @AuthParent Parent parent,
-            @PathVariable("homecamId") long homecamId) {
-        HomecamResponseDTO.HomecamVideoDTO homecam = homecamQueryService.getHomecamVideoById(homecamId, parent);
+        HomecamResponseDTO.HomecamDetailDTO homecam = homecamQueryService.getHomecamById(homecamId,parent);
         return CustomResponse.onSuccess(homecam);
     }
 

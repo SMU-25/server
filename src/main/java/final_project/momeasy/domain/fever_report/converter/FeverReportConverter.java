@@ -18,6 +18,7 @@ import java.util.List;
 public class FeverReportConverter {
     public static FeverReportResponseDTO.FeverReportViewDTO toFeverReportViewDTO(FeverReport feverReport) {
         return FeverReportResponseDTO.FeverReportViewDTO.builder()
+                .reportId(feverReport.getId())
                 .outing(feverReport.getOuting())
                 .special(feverReport.getSpecial())
                 .etc_symptom(feverReport.getEtc_symptom())
