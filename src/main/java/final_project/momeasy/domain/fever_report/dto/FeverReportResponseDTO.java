@@ -29,6 +29,14 @@ public class FeverReportResponseDTO {
 
     @Getter
     @Builder
+    public static class FeverReportListViewDTO {
+        List<FeverReportViewDTO> feverReports;
+        private boolean hasNext;
+        private Long cursor;
+    }
+
+    @Getter
+    @Builder
     public static class FeverReportDetailViewDTO {
 
         private List<SymptomType> symptoms;

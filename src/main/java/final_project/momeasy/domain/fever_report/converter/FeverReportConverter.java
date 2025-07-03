@@ -27,6 +27,24 @@ public class FeverReportConverter {
                 .build();
     }
 
+    public static FeverReport toFeverReport(FeverReportRequestDTO.FeverReportCreateDTO feverReportCreateDTO, String special) {
+        return FeverReport.builder()
+                .outing(feverReportCreateDTO.getOuting())
+                .special(special)
+                .etc_symptom(feverReportCreateDTO.getEtc_symptom())
+                .build();
+    }
+
+    public static FeverReportResponseDTO.FeverReportListViewDTO toFeverReportListViewDTO(List<FeverReportResponseDTO.FeverReportViewDTO> feverReports,
+    Boolean hasNext, Long cursor) {
+        return FeverReportResponseDTO.FeverReportListViewDTO.builder()
+                .feverReports(feverReports)
+                .hasNext(hasNext)
+                .cursor(cursor)
+                .build();
+    }
+
+
     public static FeverReportResponseDTO.FeverReportDetailViewDTO toFeverReportDetailDTO(FeverReport feverReport,
          List<FeverGraph> feverGraphs, List<HumidityGraph> humidityGraphs, List<TemperatureGraph> temperatureGraphs) {
         return FeverReportResponseDTO.FeverReportDetailViewDTO.builder()
@@ -52,14 +70,6 @@ public class FeverReportConverter {
                 .day1(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY1))
                 .day3(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY3))
                 .day7(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY7))
-                .build();
-    }
-
-    public static FeverReport toFeverReport(FeverReportRequestDTO.FeverReportCreateDTO feverReportCreateDTO, String special) {
-        return FeverReport.builder()
-                .outing(feverReportCreateDTO.getOuting())
-                .special(special)
-                .etc_symptom(feverReportCreateDTO.getEtc_symptom())
                 .build();
     }
 
