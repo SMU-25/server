@@ -125,8 +125,11 @@ public class HomecamServiceImpl implements HomecamService {
     public void updateHomecam(HomecamRequestDTO.HomecamUpdateDTO homecamUpdateDTO, Parent parent, Long childId, Long homecamId) {
         Homecam homecam = homecamRepository.findById(homecamId).orElseThrow(()->new HomecamException(HomecamErrorCode.NOT_FOUND));
         Child child = childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
-        if(!homecam.getParent().equals(parent) || !childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
+        if(!homecam.getParent().equals(parent)) {
             throw new HomecamException(HomecamErrorCode.UNAUTHORIZED_ACCESS);
+        }
+        if(!childRepository.existsByChildIdAndParentId(childId, parent.getId())){
+            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
         }
         homecam.update(homecamUpdateDTO);
         homecam.setChild(child);

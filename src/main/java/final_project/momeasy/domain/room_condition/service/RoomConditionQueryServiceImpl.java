@@ -3,8 +3,6 @@ package final_project.momeasy.domain.room_condition.service;
 import final_project.momeasy.domain.child.exception.ChildErrorCode;
 import final_project.momeasy.domain.child.exception.ChildException;
 import final_project.momeasy.domain.child.repository.ChildRepository;
-import final_project.momeasy.domain.fever_record.exception.FeverRecordErrorCode;
-import final_project.momeasy.domain.fever_record.exception.FeverRecordException;
 import final_project.momeasy.domain.humidity_graph.service.AvgHumidity;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.room_condition.converter.RoomConditionConverter;
@@ -35,7 +33,7 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
     public RoomConditionResponseDTO.RoomConditionViewDTO getRoomCondition(Long childId, Parent parent) {
         childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
         if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
+            throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
         }
         RoomCondition roomCondition = roomConditionRepository.findTopByChildIdOrderByCreatedAtDesc(childId).orElseThrow(()->new RoomConditionException(RoomConditionErrorCode.NOT_FOUND));
         return RoomConditionConverter.toRoomConditionViewDTO(roomCondition);
@@ -45,7 +43,7 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
     public List<RoomConditionResponseDTO.RoomConditionViewDTO> getRoomConditionPage(Long childId, int page, Parent parent) {
         childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
         if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
+            throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
         }
         Pageable pageable = PageRequest.of(page, 10);
         Slice<RoomCondition> roomConditionList = roomConditionRepository.findAllByChildIdOrderByCreatedAtDesc(childId, pageable);
@@ -61,7 +59,7 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
     public List<RoomConditionResponseDTO.RoomConditionGrpahDTO> getRoomConditionGraphDay1(Long childId, Parent parent) {
         childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
         if(!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new FeverRecordException(FeverRecordErrorCode.UNAUTHORIZED_ACCESS);
+            throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
         }
         List<RoomConditionResponseDTO.RoomConditionGrpahDTO> result = new ArrayList<>();
         for(int t = 0 ; t <24 ; t+=3){
@@ -77,7 +75,7 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
     public List<RoomConditionResponseDTO.RoomConditionGrpahDTO> getRoomConditionGraphDay3(Long childId, Parent parent) {
         childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
         if(!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new FeverRecordException(FeverRecordErrorCode.UNAUTHORIZED_ACCESS);
+            throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
         }
         List<RoomConditionResponseDTO.RoomConditionGrpahDTO> result = new ArrayList<>();
         for(int d=2; d>=0; d--) {
@@ -106,7 +104,7 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
     public List<RoomConditionResponseDTO.RoomConditionGrpahDTO> getRoomConditionGraphDay7(Long childId, Parent parent) {
         childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
         if(!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new FeverRecordException(FeverRecordErrorCode.UNAUTHORIZED_ACCESS);
+            throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
         }
         List<RoomConditionResponseDTO.RoomConditionGrpahDTO> result = new ArrayList<>();
         for(int d = 6; d>=0; d--){

@@ -17,7 +17,7 @@ public interface FeverRecordRepository extends JpaRepository<FeverRecord, Long> 
     Optional<FeverRecord> findTopByChildIdOrderByCreatedAtDesc(Long childId);
     Slice<FeverRecord> findAllByChildIdOrderByCreatedAtDesc(Long childId, Pageable pageable);
 
-    @Query("SELECT fr FROM FeverRecord fr WHERE fr.child.id  = :childId AND fr.fever>=37.5 ORDER BY fr.createdAt DESC LIMIT 1")
+    @Query("SELECT fr FROM FeverRecord fr WHERE fr.child.id  = :childId AND fr.fever>=37.0 ORDER BY fr.createdAt DESC LIMIT 1")
     Optional<FeverRecord> findRecentFeverRecord(Long childId);
 
     @Transactional
