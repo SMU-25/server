@@ -3,9 +3,10 @@ package final_project.momeasy.domain.calendar.service;
 import final_project.momeasy.domain.calendar.dto.CalendarRequestDto;
 import final_project.momeasy.domain.calendar.dto.CalendarResponseDto;
 import final_project.momeasy.domain.calendar.entity.Calendar;
+import final_project.momeasy.domain.calendar.exception.CalendarErrorCode;
+import final_project.momeasy.domain.calendar.exception.CalendarException;
 import final_project.momeasy.domain.calendar.repository.CalendarRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class CalendarService {
     // 2. 일정 단건 조회
     public CalendarResponseDto getCalendar(Long id) {
         Calendar calendar = calendarRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CalendarException(CalendarErrorCode.CALENDAR_NOT_FOUND));
         return CalendarResponseDto.fromEntity(calendar);
     }
 
@@ -48,10 +49,10 @@ public class CalendarService {
     // 4. 일정 수정
     public CalendarResponseDto updateCalendar(Long id, CalendarRequestDto requestDto, Parent parent) {
         Calendar calendar = calendarRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CalendarException(CalendarErrorCode.CALENDAR_NOT_FOUND));
 
         if (!calendar.getParent().getId().equals(parent.getId())) {
-            throw new SecurityException("해당 일정에 대한 수정 권한이 없습니다.");
+            throw new CalendarException(CalendarErrorCode.NO_CALENDAR_ACCESS);
         }
 
         calendar.update(
@@ -68,10 +69,10 @@ public class CalendarService {
     // 5. 일정 삭제
     public void deleteCalendar(Long id, Parent parent) {
         Calendar calendar = calendarRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CalendarException(CalendarErrorCode.CALENDAR_NOT_FOUND));
 
         if (!calendar.getParent().getId().equals(parent.getId())) {
-            throw new SecurityException("해당 일정에 대한 삭제 권한이 없습니다.");
+            throw new CalendarException(CalendarErrorCode.NO_CALENDAR_ACCESS);
         }
 
         calendarRepository.delete(calendar);
