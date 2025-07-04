@@ -38,7 +38,7 @@ public class FeverReportController {
 
     @GetMapping("/list/{childId}")
     @Operation(summary = "발열 리포트 목록 조회", description = "발열 리포트 10개를 조회합니다.")
-    @Parameter(name = "cursor", description = "데이터가 시작하는 부분을 표시합니다.", example = "0")
+    @Parameter(name = "cursor", description = "데이터가 시작하는 부분을 표시합니다. 0부터 시작합니다.", example = "0")
     @Parameter(name = "size", description = "size만큼 데이터를 가져옵니다.", example = "10")
     public CustomResponse<FeverReportResponseDTO.FeverReportListViewDTO> getFeverReportPage(@AuthParent Parent parent,
   @PathVariable("childId") long childId, @RequestParam(name = "cursor") @CheckCursor Long cursor, @RequestParam(name = "size") @CheckSize Integer size) {
