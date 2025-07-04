@@ -55,6 +55,9 @@ public class FeverReportQueryServiceImpl implements FeverReportQueryService {
         if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
             throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
         }
+        if (cursor == 0) {
+            cursor = Long.MAX_VALUE;
+        }
         Pageable pageable = PageRequest.of(0, size);
         Slice<FeverReport> feverReports = feverReportRepository.findFeverReportCursorPagination(childId,cursor,pageable);
         List<FeverReport> feverReportList = feverReports.toList();

@@ -46,6 +46,9 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
         if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
             throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
         }
+        if (cursor == 0) {
+            cursor = Long.MAX_VALUE;
+        }
         Pageable pageable = PageRequest.of(0, size);
         Slice<RoomCondition> roomConditionList = roomConditionRepository.findRoomConditionCursorPagination(childId, cursor, pageable);
         List<RoomCondition> roomConditions = roomConditionList.toList();
