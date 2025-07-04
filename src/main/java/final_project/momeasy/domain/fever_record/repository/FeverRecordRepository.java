@@ -15,7 +15,9 @@ import java.util.Optional;
 
 public interface FeverRecordRepository extends JpaRepository<FeverRecord, Long> {
     Optional<FeverRecord> findTopByChildIdOrderByCreatedAtDesc(Long childId);
-    Slice<FeverRecord> findAllByChildIdOrderByCreatedAtDesc(Long childId, Pageable pageable);
+
+    @Query("SELECT fr FROM FeverRecord fr JOIN FETCH fr.child c WHERE c.id = :childId and fr.id < :cursor ORDER BY fr.id DESC")
+    Slice<FeverRecord> findFeverRecordCursorPagination(Long childId, Long cursor, Pageable pageable);
 
     @Query("SELECT fr FROM FeverRecord fr WHERE fr.child.id  = :childId AND fr.fever>=37.0 ORDER BY fr.createdAt DESC LIMIT 1")
     Optional<FeverRecord> findRecentFeverRecord(Long childId);

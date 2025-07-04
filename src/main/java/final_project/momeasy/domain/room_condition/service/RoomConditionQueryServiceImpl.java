@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,19 +41,25 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
     }
 
     @Override
-    public List<RoomConditionResponseDTO.RoomConditionViewDTO> getRoomConditionPage(Long childId, int page, Parent parent) {
+    public RoomConditionResponseDTO.RoomConditionListViewDTO getRoomConditionPage(Long childId, Long cursor, Integer size, Parent parent) {
         childRepository.findById(childId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
         if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
             throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
         }
-        Pageable pageable = PageRequest.of(page, 10);
-        Slice<RoomCondition> roomConditionList = roomConditionRepository.findAllByChildIdOrderByCreatedAtDesc(childId, pageable);
+        Pageable pageable = PageRequest.of(0, size);
+        Slice<RoomCondition> roomConditionList = roomConditionRepository.findRoomConditionCursorPagination(childId, cursor, pageable);
+        List<RoomCondition> roomConditions = roomConditionList.toList();
+        List<RoomConditionResponseDTO.RoomConditionViewDTO> roomConditionViewDTOS = roomConditions.stream().map(RoomConditionConverter::toRoomConditionViewDTO).toList();
         if(roomConditionList.isEmpty()){
             throw new RoomConditionException(RoomConditionErrorCode.NOT_FOUND);
         }
-        List<RoomConditionResponseDTO.RoomConditionViewDTO> roomConditionViewDTOList = roomConditionList.stream()
-                .map(RoomConditionConverter::toRoomConditionViewDTO).toList();
-        return roomConditionViewDTOList;
+
+        Long nextCursor = null;
+        if(!roomConditions.isEmpty() && roomConditionList.hasNext()) {
+            nextCursor = roomConditions.get(roomConditions.size()-1).getId();
+        }
+        
+        return RoomConditionConverter.toRoomConditionListViewDTO(roomConditionViewDTOS,roomConditionList.hasNext(),nextCursor);
     }
 
     @Override

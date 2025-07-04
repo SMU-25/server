@@ -8,7 +8,7 @@ import java.util.List;
 public interface RoomConditionQueryService {
     RoomConditionResponseDTO.RoomConditionViewDTO getRoomCondition(Long childId, Parent parent);
 
-    List<RoomConditionResponseDTO.RoomConditionViewDTO> getRoomConditionPage(Long childId, int page, Parent parent);
+    RoomConditionResponseDTO.RoomConditionListViewDTO getRoomConditionPage(Long childId, Long cursor, Integer size, Parent parent);
 
     List<RoomConditionResponseDTO.RoomConditionGrpahDTO> getRoomConditionGraphDay1(Long childId, Parent parent);
 

@@ -15,7 +15,9 @@ import java.util.Optional;
 
 public interface RoomConditionRepository extends JpaRepository<RoomCondition, Long> {
     Optional<RoomCondition> findTopByChildIdOrderByCreatedAtDesc(Long childId);
-    Slice<RoomCondition> findAllByChildIdOrderByCreatedAtDesc(Long childId, Pageable pageable);
+
+    @Query("SELECT rc FROM RoomCondition rc JOIN FETCH rc.child c WHERE c.id = :childId AND rc.id <:cursor ORDER BY rc.id DESC ")
+    Slice<RoomCondition> findRoomConditionCursorPagination(Long childId, Long cursor, Pageable pageable);
 
     @Transactional
     @Modifying

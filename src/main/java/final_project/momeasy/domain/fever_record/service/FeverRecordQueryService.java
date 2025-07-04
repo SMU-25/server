@@ -10,7 +10,7 @@ public interface FeverRecordQueryService {
 
     FeverRecordResponseDTO.FeverRecordViewDTO getRecentHighFeverRecord(Long childId, Parent parent);
 
-    List<FeverRecordResponseDTO.FeverRecordViewDTO> getFeverRecordPage(Long childId, int page, Parent parent);
+    FeverRecordResponseDTO.FeverRecordListViewDTO getFeverRecordPage(Long childId, Long cursor, Integer size, Parent parent);
 
     List<FeverRecordResponseDTO.FeverRecordGraphDTO> getFeverRecordGraphDay1(Long childId, Parent parent);
 

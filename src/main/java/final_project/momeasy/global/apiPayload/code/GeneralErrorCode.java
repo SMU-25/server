@@ -19,6 +19,10 @@ public enum GeneralErrorCode implements BaseErrorCode {
 
     INTERNAL_SERVER_ERROR_500(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 내부 오류가 발생했습니다"),
 
+    NOT_VALID_CURSOR(HttpStatus.BAD_REQUEST, "CURSOR400", "유효하지 않은 커서 값 입니다."),
+
+    NOT_VALID_SIZE(HttpStatus.BAD_REQUEST, "SIZE400","유효하지 않은 사이즈 값 입니다."),
+
     // 유효성 검사
     VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "VALID400_0", "잘못된 파라미터 입니다.")
     ;
