@@ -83,7 +83,7 @@ public class CalendarService {
         int month = date.getMonthValue();
         int day = date.getDayOfMonth();
 
-        List<Calendar> calendars = calendarRepository.findByYearMonthDayAndParentId(year, month, day, parent.getId());
+        List<Calendar> calendars = calendarRepository.findByYearMonthDayAndParent(year, month, day, parent);
         return calendars.stream()
                 .map(CalendarResponseDto::fromEntity)
                 .toList();
