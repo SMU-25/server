@@ -3,13 +3,13 @@ package final_project.momeasy.domain.calendar.controller;
 import final_project.momeasy.domain.calendar.dto.CalendarRequestDto;
 import final_project.momeasy.domain.calendar.dto.CalendarResponseDto;
 import final_project.momeasy.domain.calendar.service.CalendarService;
+import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.global.apiPayload.CustomResponse;
-import final_project.momeasy.global.security.CustomUserDetails;
+import final_project.momeasy.global.security.annotation.AuthParent;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -26,9 +26,8 @@ public class CalendarController {
     @PostMapping
     public CustomResponse<CalendarResponseDto> createCalendar(
             @RequestBody @Valid CalendarRequestDto requestDto,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long parentId = userDetails.getParent().getId();
-        CalendarResponseDto response = calendarService.createCalendar(requestDto, parentId);
+            @AuthParent Parent parent) {
+        CalendarResponseDto response = calendarService.createCalendar(requestDto, parent);
         return CustomResponse.onSuccess(HttpStatus.CREATED, response);
     }
 
@@ -42,9 +41,8 @@ public class CalendarController {
     @Operation(summary = "내 캘린더 일정 전체 조회")
     @GetMapping("/my")
     public CustomResponse<List<CalendarResponseDto>> getMyCalendars(
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long parentId = userDetails.getParent().getId();
-        List<CalendarResponseDto> response = calendarService.getCalendarsByParent(parentId);
+            @AuthParent Parent parent) {
+        List<CalendarResponseDto> response = calendarService.getCalendarsByParent(parent);
         return CustomResponse.onSuccess(response);
     }
 
@@ -53,9 +51,8 @@ public class CalendarController {
     public CustomResponse<CalendarResponseDto> updateCalendar(
             @PathVariable Long calendarId,
             @RequestBody @Valid CalendarRequestDto requestDto,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long parentId = userDetails.getParent().getId();
-        CalendarResponseDto response = calendarService.updateCalendar(calendarId, requestDto, parentId);
+            @AuthParent Parent parent) {
+        CalendarResponseDto response = calendarService.updateCalendar(calendarId, requestDto, parent);
         return CustomResponse.onSuccess(response);
     }
 
@@ -63,9 +60,8 @@ public class CalendarController {
     @DeleteMapping("/{calendarId}")
     public CustomResponse<Void> deleteCalendar(
             @PathVariable Long calendarId,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long parentId = userDetails.getParent().getId();
-        calendarService.deleteCalendar(calendarId, parentId);
+            @AuthParent Parent parent) {
+        calendarService.deleteCalendar(calendarId, parent);
         return CustomResponse.onSuccess(HttpStatus.NO_CONTENT, null);
     }
 
@@ -73,9 +69,8 @@ public class CalendarController {
     @GetMapping("/search")
     public CustomResponse<List<CalendarResponseDto>> searchCalendars(
             @RequestParam String keyword,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long parentId = userDetails.getParent().getId();
-        List<CalendarResponseDto> response = calendarService.searchCalendars(parentId, keyword);
+            @AuthParent Parent parent) {
+        List<CalendarResponseDto> response = calendarService.searchCalendars(parent, keyword);
         return CustomResponse.onSuccess(response);
     }
 
@@ -83,10 +78,9 @@ public class CalendarController {
     @GetMapping("/date")
     public CustomResponse<List<CalendarResponseDto>> getCalendarsByDate(
             @RequestParam String date,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long parentId = userDetails.getParent().getId();
+            @AuthParent Parent parent) {
         LocalDate localDate = LocalDate.parse(date);
-        List<CalendarResponseDto> response = calendarService.getCalendarsByDate(parentId, localDate);
+        List<CalendarResponseDto> response = calendarService.getCalendarsByDate(parent, localDate);
         return CustomResponse.onSuccess(response);
     }
 }
