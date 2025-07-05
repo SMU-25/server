@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.calendar.service;
 
+import final_project.momeasy.domain.calendar.converter.CalendarConverter;
 import final_project.momeasy.domain.calendar.dto.CalendarRequestDto;
 import final_project.momeasy.domain.calendar.dto.CalendarResponseDto;
 import final_project.momeasy.domain.calendar.entity.Calendar;
@@ -21,28 +22,22 @@ public class CalendarService {
 
     // 1. 일정 추가
     public CalendarResponseDto createCalendar(CalendarRequestDto requestDto, Parent parent) {
-        Calendar calendar = Calendar.builder()
-                .scheduleDate(requestDto.getScheduleDate())
-                .title(requestDto.getTitle())
-                .content(requestDto.getContent())
-                .parent(parent)
-                .build();
-
+        Calendar calendar = CalendarConverter.toEntity(requestDto, parent);
         Calendar saved = calendarRepository.save(calendar);
-        return CalendarResponseDto.fromEntity(saved);
+        return CalendarConverter.toResponseDto(saved);
     }
 
     // 2. 일정 단건 조회
     public CalendarResponseDto getCalendar(Long id) {
         Calendar calendar = calendarRepository.findById(id)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.CALENDAR_NOT_FOUND));
-        return CalendarResponseDto.fromEntity(calendar);
+        return CalendarConverter.toResponseDto(calendar);
     }
 
     // 3. 로그인한 사용자 기준 전체 일정 조회
     public List<CalendarResponseDto> getCalendarsByParent(Parent parent) {
         return calendarRepository.findByParent(parent).stream()
-                .map(CalendarResponseDto::fromEntity)
+                .map(CalendarConverter::toResponseDto)
                 .toList();
     }
 
@@ -63,7 +58,7 @@ public class CalendarService {
 
         calendarRepository.save(calendar);
 
-        return CalendarResponseDto.fromEntity(calendar);
+        return CalendarConverter.toResponseDto(calendar);
     }
 
     // 5. 일정 삭제
@@ -86,7 +81,7 @@ public class CalendarService {
 
         List<Calendar> calendars = calendarRepository.findByYearMonthDayAndParent(year, month, day, parent);
         return calendars.stream()
-                .map(CalendarResponseDto::fromEntity)
+                .map(CalendarConverter::toResponseDto)
                 .toList();
     }
 
@@ -97,7 +92,7 @@ public class CalendarService {
                 .toList();
 
         return calendars.stream()
-                .map(CalendarResponseDto::fromEntity)
+                .map(CalendarConverter::toResponseDto)
                 .toList();
     }
 }
