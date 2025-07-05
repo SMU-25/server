@@ -10,6 +10,7 @@ import final_project.momeasy.domain.calendar.repository.CalendarRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ public class CalendarService {
     private final CalendarRepository calendarRepository;
 
     // 1. 일정 추가
+    @Transactional
     public CalendarResponseDto createCalendar(CalendarRequestDto requestDto, Parent parent) {
         Calendar calendar = CalendarConverter.toEntity(requestDto, parent);
         Calendar saved = calendarRepository.save(calendar);
@@ -25,6 +27,7 @@ public class CalendarService {
     }
 
     // 2. 일정 수정
+    @Transactional
     public CalendarResponseDto updateCalendar(Long id, CalendarRequestDto requestDto, Parent parent) {
         Calendar calendar = calendarRepository.findById(id)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.CALENDAR_NOT_FOUND));
@@ -45,6 +48,7 @@ public class CalendarService {
     }
 
     // 3. 일정 삭제
+    @Transactional
     public void deleteCalendar(Long id, Parent parent) {
         Calendar calendar = calendarRepository.findById(id)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.CALENDAR_NOT_FOUND));
