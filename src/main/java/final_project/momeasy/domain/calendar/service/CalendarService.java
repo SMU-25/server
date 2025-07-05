@@ -11,9 +11,6 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class CalendarService {
@@ -27,21 +24,7 @@ public class CalendarService {
         return CalendarConverter.toResponseDto(saved);
     }
 
-    // 2. 일정 단건 조회
-    public CalendarResponseDto getCalendar(Long id) {
-        Calendar calendar = calendarRepository.findById(id)
-                .orElseThrow(() -> new CalendarException(CalendarErrorCode.CALENDAR_NOT_FOUND));
-        return CalendarConverter.toResponseDto(calendar);
-    }
-
-    // 3. 로그인한 사용자 기준 전체 일정 조회
-    public List<CalendarResponseDto> getCalendarsByParent(Parent parent) {
-        return calendarRepository.findByParent(parent).stream()
-                .map(CalendarConverter::toResponseDto)
-                .toList();
-    }
-
-    // 4. 일정 수정
+    // 2. 일정 수정
     public CalendarResponseDto updateCalendar(Long id, CalendarRequestDto requestDto, Parent parent) {
         Calendar calendar = calendarRepository.findById(id)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.CALENDAR_NOT_FOUND));
@@ -61,7 +44,7 @@ public class CalendarService {
         return CalendarConverter.toResponseDto(calendar);
     }
 
-    // 5. 일정 삭제
+    // 3. 일정 삭제
     public void deleteCalendar(Long id, Parent parent) {
         Calendar calendar = calendarRepository.findById(id)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.CALENDAR_NOT_FOUND));
@@ -71,28 +54,5 @@ public class CalendarService {
         }
 
         calendarRepository.delete(calendar);
-    }
-
-    // 6. 날짜 + 로그인 사용자 기준 일정 조회
-    public List<CalendarResponseDto> getCalendarsByDate(Parent parent, LocalDate date) {
-        int year = date.getYear();
-        int month = date.getMonthValue();
-        int day = date.getDayOfMonth();
-
-        List<Calendar> calendars = calendarRepository.findByYearMonthDayAndParent(year, month, day, parent);
-        return calendars.stream()
-                .map(CalendarConverter::toResponseDto)
-                .toList();
-    }
-
-    // 7. 제목 검색 + 로그인 사용자 기준 일정 조회
-    public List<CalendarResponseDto> searchCalendars(Parent parent, String keyword) {
-        List<Calendar> calendars = calendarRepository.findByTitleContainingIgnoreCase(keyword).stream()
-                .filter(c -> c.getParent().getId().equals(parent.getId()))
-                .toList();
-
-        return calendars.stream()
-                .map(CalendarConverter::toResponseDto)
-                .toList();
     }
 }
