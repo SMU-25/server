@@ -14,10 +14,12 @@ public enum CalendarErrorCode implements BaseErrorCode {
     INVALID_DELETE_REQUEST(HttpStatus.BAD_REQUEST, "CALENDAR400_2", "요청한 일정 정보를 삭제할 수 없습니다."),
 
     // 401 Unauthorized
-    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "CALENDAR401", "일정에 접근할 권한이 없습니다."),
+    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "CALENDAR401_1", "일정에 접근할 권한이 없습니다."),
+    NO_CALENDAR_ACCESS(HttpStatus.UNAUTHORIZED, "CALENDAR401_2", "해당 일정에 접근할 수 없습니다."),
 
     // 404 Not Found
-    NOT_FOUND(HttpStatus.NOT_FOUND, "CALENDAR404", "해당 일정을 찾을 수 없습니다."),
+    NOT_FOUND(HttpStatus.NOT_FOUND, "CALENDAR404_1", "해당 일정을 찾을 수 없습니다."),
+    SEARCH_NO_RESULT(HttpStatus.NOT_FOUND, "CALENDAR404_2", "검색 결과가 존재하지 않습니다."),
 
     // 409 Conflict
     DUPLICATE_SCHEDULE(HttpStatus.CONFLICT, "CALENDAR409", "해당 날짜에 이미 일정이 존재합니다."),
