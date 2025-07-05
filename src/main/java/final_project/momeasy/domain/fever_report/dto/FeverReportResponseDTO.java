@@ -61,7 +61,7 @@ public class FeverReportResponseDTO {
     @Getter
     @Builder
     public static class FeverReportCreateDTO {
-
+        private Long reportId;
         private List<SymptomType> symptoms;
         private String etc_symptom;
         private String outing;
