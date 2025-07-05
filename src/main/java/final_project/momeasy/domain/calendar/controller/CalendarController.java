@@ -58,11 +58,11 @@ public class CalendarController {
 
     @Operation(summary = "캘린더 일정 삭제")
     @DeleteMapping("/{calendarId}")
-    public CustomResponse<Void> deleteCalendar(
+    public CustomResponse<String> deleteCalendar(
             @PathVariable Long calendarId,
             @AuthParent Parent parent) {
         calendarService.deleteCalendar(calendarId, parent);
-        return CustomResponse.onSuccess(HttpStatus.NO_CONTENT, null);
+        return CustomResponse.onSuccess(HttpStatus.OK, "캘린더 일정이 삭제되었습니다.");
     }
 
     @Operation(summary = "키워드로 일정 검색")
