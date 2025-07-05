@@ -65,6 +65,7 @@ public class FeverReportConverter {
                 .outing(feverReport.getOuting())
                 .special(feverReport.getSpecial())
                 .etc_symptom(feverReport.getEtc_symptom())
+                .reportId(feverReport.getId())
                 .symptoms(feverReport.getFeverReportSymptoms().stream().map(FeverReportSymptom -> FeverReportSymptom.getSymptom().getSymptom()).toList())
                 .createdAt(feverReport.getCreatedAt())
                 .day1(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY1))
