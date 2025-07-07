@@ -21,7 +21,6 @@ public class ParentResponseDTO {
     public record ParentDetailResponseDTO(
             String name,
             String email,
-            String password,
             LocalDate birthdate,
             Gender gender,
             SocialType socialType

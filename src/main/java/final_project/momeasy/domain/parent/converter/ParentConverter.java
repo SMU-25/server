@@ -51,7 +51,6 @@ public class ParentConverter {
         return ParentResponseDTO.ParentDetailResponseDTO.builder()
                 .name(parent.getName())
                 .email(parent.getEmail())
-                .password(parent.getPassword())
                 .gender(parent.getGender())
                 .birthdate(parent.getBirthdate())
                 .socialType(parent.getSocialType())
