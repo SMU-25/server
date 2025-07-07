@@ -47,26 +47,23 @@ public class HomecamController {
         return CustomResponse.onSuccess(HttpStatus.NO_CONTENT,"홈캠 삭제 완료");
     }
 
-    @PostMapping("/{childId}")
+    @PostMapping
     @Operation(summary = "홈캠 생성", description = "홈캠을 생성합니다. 기기 추가 화면에서 사용되는 API입니다.")
     public CustomResponse<HomecamResponseDTO.HomecamDTO> createHomecam(
             @AuthParent Parent parent,
-            @RequestBody HomecamRequestDTO.HomecamCreateDTO homecamRegisterDTO,
-            @Parameter(description = "홈캠을 사용할 아이 ID")
-            @PathVariable("childId") Long childId){
-        HomecamResponseDTO.HomecamDTO homecam = homecamService.createHomecam(homecamRegisterDTO,parent, childId);
+            @RequestBody HomecamRequestDTO.HomecamCreateDTO homecamRegisterDTO
+            ){
+        HomecamResponseDTO.HomecamDTO homecam = homecamService.createHomecam(homecamRegisterDTO,parent);
         return CustomResponse.onSuccess(HttpStatus.CREATED,homecam);
     }
 
-    @PatchMapping("/{childId}/{homecamId}")
+    @PatchMapping("/{homecamId}")
     @Operation(summary = "홈캠 수정", description = "홈캠을 수정합니다. 기기 수정에서 사용되는 API입니다.")
     public CustomResponse<String> updateHomecam(
             @AuthParent Parent parent,
             @RequestBody HomecamRequestDTO.HomecamUpdateDTO homecamRegisterDTO,
-            @Parameter(description = "홈캠을 사용할 아이 ID")
-            @PathVariable("childId") long childId,
             @PathVariable("homecamId") long homecamId){
-        homecamService.updateHomecam(homecamRegisterDTO,parent,childId,homecamId);
-        return CustomResponse.onSuccess(HttpStatus.CREATED,"홈캠 수정 완료");
+        homecamService.updateHomecam(homecamRegisterDTO,parent,homecamId);
+        return CustomResponse.onSuccess("홈캠 수정 완료");
     }
 }

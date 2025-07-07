@@ -108,7 +108,8 @@ public class HomecamServiceImpl implements HomecamService {
     }
 
     @Override
-    public HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamCreateDTO homecamRequestDTO, Parent parent, Long childId) {
+    public HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamCreateDTO homecamRequestDTO, Parent parent) {
+        Long childId = homecamRequestDTO.getChildId();
         Child child = childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
         if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
             throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
@@ -122,7 +123,8 @@ public class HomecamServiceImpl implements HomecamService {
     }
 
     @Override
-    public void updateHomecam(HomecamRequestDTO.HomecamUpdateDTO homecamUpdateDTO, Parent parent, Long childId, Long homecamId) {
+    public void updateHomecam(HomecamRequestDTO.HomecamUpdateDTO homecamUpdateDTO, Parent parent, Long homecamId) {
+        Long childId = homecamUpdateDTO.getChildId();
         Homecam homecam = homecamRepository.findById(homecamId).orElseThrow(()->new HomecamException(HomecamErrorCode.NOT_FOUND));
         Child child = childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
         if(!homecam.getParent().equals(parent)) {
