@@ -21,7 +21,7 @@ public class IllnessController {
 
     @GetMapping
     @Operation(summary = "질환 목록 조회", description = "시스템에 등록된 모든 질환 항목을 조회합니다.")
-    public ResponseEntity<CustomResponse<List<IllnessResponse>>> getAllIllnesses(@AuthParent Parent _parent) {
+    public ResponseEntity<CustomResponse<List<IllnessResponse>>> getAllIllnesses(@AuthParent Parent parent) {
         List<IllnessResponse> response = illnessService.getAllIllnesses();
         return ResponseEntity.ok(CustomResponse.onSuccess(response));
     }
