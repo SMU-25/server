@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.parent.controller;
 
+import final_project.momeasy.domain.parent.dto.request.ParentRequestDTO;
 import final_project.momeasy.domain.parent.dto.response.ParentResponseDTO;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.service.command.ParentCommandService;
@@ -30,6 +31,13 @@ public class ParentController {
             @AuthParent Parent parent) {
         Long parentId = parent.getId();
         return CustomResponse.onSuccess(parentQueryService.getParentDetail(parentId));
+    }
+
+    @PatchMapping
+    public CustomResponse<String> updateParent(@AuthParent Parent parent, @RequestBody ParentRequestDTO.ParentUpdateRequestDTO dto) {
+        Long parentId = parent.getId();
+        parentCommandService.updateParent(parentId, dto);
+        return CustomResponse.onSuccess(HttpStatus.CREATED, "회원 정보 수정 완료");
     }
 
 

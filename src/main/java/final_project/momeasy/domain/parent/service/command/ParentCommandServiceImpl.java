@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.parent.service.command;
 
+import final_project.momeasy.common.enums.SocialType;
 import final_project.momeasy.domain.parent.converter.ParentConverter;
 import final_project.momeasy.domain.parent.dto.request.ParentRequestDTO;
 import final_project.momeasy.domain.parent.dto.response.ParentResponseDTO;
@@ -7,6 +8,8 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.exception.ParentErrorCode;
 import final_project.momeasy.domain.parent.exception.ParentException;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
+import final_project.momeasy.global.auth.exception.AuthErrorCode;
+import final_project.momeasy.global.auth.exception.AuthException;
 import final_project.momeasy.global.util.mail.verification.exception.VerificationCodeErrorCode;
 import final_project.momeasy.global.util.mail.verification.exception.VerificationCodeException;
 import final_project.momeasy.global.util.mail.verification.service.VerificationCodeService;
@@ -53,6 +56,26 @@ public class ParentCommandServiceImpl implements ParentCommandService {
                 .orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
 
         parent.softDelete();
+    }
+
+    @Override
+    public void updateParent(Long parentId, ParentRequestDTO.ParentUpdateRequestDTO dto) {
+        Parent parent = parentRepository.findByIdNotDeleted(parentId)
+                .orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
+
+        if (parent.getSocialType() == SocialType.LOCAL) {
+            if (dto.newPassword() != null) {
+                parent.updatePassword(passwordEncoder.encode(dto.newPassword()));
+            }
+        } else {
+            if (dto.newPassword() != null) {
+                throw new AuthException(AuthErrorCode.SOCIAL_USER_CANNOT_UPDATE_PASSWORD);
+            }
+        }
+
+        parent.updateInfo(dto.name(), dto.birthdate(), dto.gender());
+
+        parentRepository.save(parent);
     }
 
 }
