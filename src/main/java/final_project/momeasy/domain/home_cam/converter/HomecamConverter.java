@@ -11,6 +11,8 @@ public class HomecamConverter {
                 .homecamId(homecam.getId())
                 .name(homecam.getName())
                 .place(homecam.getPlace())
+                .childId(homecam.getChild().getId())
+                .childName(homecam.getChild().getName())
                 .createdAt(homecam.getCreatedAt())
                 .serialNum(homecam.getSerialNum())
                 .build();
@@ -21,6 +23,10 @@ public class HomecamConverter {
                 .name(homecam.getName())
                 .place(homecam.getPlace())
                 .video_url(homecam.getVideo_url())
+                .childId(homecam.getChild().getId())
+                .childName(homecam.getChild().getName())
+                .createdAt(homecam.getCreatedAt())
+                .serialNum(homecam.getSerialNum())
                 .build();
     }
 

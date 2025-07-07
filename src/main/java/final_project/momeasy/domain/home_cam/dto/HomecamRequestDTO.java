@@ -9,23 +9,26 @@ public class HomecamRequestDTO {
     @Getter
     @Builder
     public static class HomecamCreateDTO {
-        @NotNull(message = "기기 번호는 필수 입력 값입니다.")
+        @NotNull(message = "홈캠 번호는 필수 입력 값입니다.")
         @JsonProperty("serial_num")
         private String serial_num;
 
-        @NotBlank(message = "기기 이름은 필수 입력 값입니다.")
+        @NotBlank(message = "홈캠 이름은 필수 입력 값입니다.")
         @JsonProperty("name")
         private String name;
 
         @NotBlank(message = "설치 장소는 필수 입력 값입니다.")
         @JsonProperty("place")
         private String place;
+
+        @NotBlank(message = "아이는 필수 입력 값입니다.")
+        private Long childId;
     }
 
     @Getter
     @Builder
     public static class HomecamUpdateDTO {
-        @NotBlank(message = "기기 이름은 필수 입력 값입니다.")
+        @NotBlank(message = "홈캠 이름은 필수 입력 값입니다.")
         @JsonProperty("name")
         private String name;
 
@@ -33,6 +36,11 @@ public class HomecamRequestDTO {
         @JsonProperty("place")
         private String place;
 
+        @NotBlank(message = "아이는 필수 입력 값입니다.")
+        private Long childId;
 
+        @NotNull(message = "홈캠 번호는 필수 입력 값입니다.")
+        @JsonProperty("serial_num")
+        private String serial_num;
     }
 }

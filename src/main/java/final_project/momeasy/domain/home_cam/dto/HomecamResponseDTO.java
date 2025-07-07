@@ -11,8 +11,10 @@ public class HomecamResponseDTO {
         private Long homecamId;
         private String name;
         private String place;
-        private LocalDateTime createdAt;
+        private Long childId;
+        private String childName;
         private String serialNum;
+        private LocalDateTime createdAt;
     }
 
     @Getter
@@ -20,6 +22,10 @@ public class HomecamResponseDTO {
     public static class HomecamDetailDTO {
         private String name;
         private String place;
+        private Long childId;
+        private String childName;
+        private String serialNum;
         private String video_url;
+        private LocalDateTime createdAt;
     }
 }
