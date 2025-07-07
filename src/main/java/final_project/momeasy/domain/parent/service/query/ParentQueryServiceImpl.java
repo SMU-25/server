@@ -19,7 +19,7 @@ public class ParentQueryServiceImpl implements ParentQueryService {
 
     @Override
     public ParentResponseDTO.ParentDetailResponseDTO getParentDetail(Long parentId) {
-        Parent parent = parentRepository.findById(parentId)
+        Parent parent = parentRepository.findByIdNotDeleted(parentId)
                 .orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
 
         return ParentConverter.toParentDetailResponseDTO(parent);
