@@ -7,8 +7,8 @@ import final_project.momeasy.domain.parent.entity.Parent;
 public interface HomecamService {
     void deleteHomecam(Long homecamId, Parent parent);
 
-    HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamCreateDTO homecamRequestDTO, Parent parent, Long childId);
+    HomecamResponseDTO.HomecamDTO createHomecam(HomecamRequestDTO.HomecamCreateDTO homecamRequestDTO, Parent parent);
 
-    void updateHomecam(HomecamRequestDTO.HomecamUpdateDTO homecamUpdateDTO, Parent parent, Long childId, Long homecamId);
+    void updateHomecam(HomecamRequestDTO.HomecamUpdateDTO homecamUpdateDTO, Parent parent, Long homecamId);
 
 }
