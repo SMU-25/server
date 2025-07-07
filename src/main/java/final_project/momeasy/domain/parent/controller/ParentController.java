@@ -1,6 +1,7 @@
 package final_project.momeasy.domain.parent.controller;
 
 import final_project.momeasy.domain.parent.dto.response.ParentResponseDTO;
+import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.service.command.ParentCommandService;
 import final_project.momeasy.domain.parent.service.query.ParentQueryService;
 import final_project.momeasy.global.apiPayload.CustomResponse;
@@ -19,16 +20,16 @@ public class ParentController {
     private final ParentQueryService parentQueryService;
 
     @DeleteMapping
-    public CustomResponse<String> deleteParent(@AuthParent CustomUserDetails customUserDetails) {
-        Long parentId = customUserDetails.getParent().getId();
+    public CustomResponse<String> deleteParent(@AuthParent Parent parent) {
+        Long parentId = parent.getId();
         parentCommandService.deleteParent(parentId);
         return CustomResponse.onSuccess(HttpStatus.NO_CONTENT, "회원 탈퇴 완료");
     }
 
     @GetMapping
     public CustomResponse<ParentResponseDTO.ParentDetailResponseDTO> getParent(
-            @AuthParent CustomUserDetails customUserDetails) {
-        Long parentId = customUserDetails.getParent().getId();
+            @AuthParent Parent parent) {
+        Long parentId = parent.getId();
         return CustomResponse.onSuccess(parentQueryService.getParentDetail(parentId));
     }
 
