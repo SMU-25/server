@@ -1,4 +1,6 @@
 package final_project.momeasy.domain.illness.dto;
 
-public class IllnessResponse {
-}
+public record IllnessResponse(
+        String code,
+        String name
+) {}
