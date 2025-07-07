@@ -5,7 +5,6 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.service.command.ParentCommandService;
 import final_project.momeasy.domain.parent.service.query.ParentQueryService;
 import final_project.momeasy.global.apiPayload.CustomResponse;
-import final_project.momeasy.global.security.CustomUserDetails;
 import final_project.momeasy.global.security.annotation.AuthParent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
