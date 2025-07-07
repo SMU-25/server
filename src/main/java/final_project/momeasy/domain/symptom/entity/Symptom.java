@@ -15,22 +15,24 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class Symptom {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private SymptomType symptom;
+    private SymptomType symptomType;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "symptom", cascade = CascadeType.ALL)
     @Builder.Default
     private List<FeverReportSymptom> feverReportSymptoms = new ArrayList<>();
 
     public void addFeverReport(FeverReport feverReport) {
-        FeverReportSymptom feverReportSymptom =
-                FeverReportSymptom.builder().
-                        feverreport(feverReport).
-                        symptom(this).build();
+        FeverReportSymptom feverReportSymptom = FeverReportSymptom.builder()
+                .feverreport(feverReport)
+                .symptom(this)
+                .build();
         this.feverReportSymptoms.add(feverReportSymptom);
         feverReport.getFeverReportSymptoms().add(feverReportSymptom);
     }

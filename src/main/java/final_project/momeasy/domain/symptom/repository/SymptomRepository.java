@@ -1,6 +1,5 @@
 package final_project.momeasy.domain.symptom.repository;
 
-import final_project.momeasy.domain.illness.entity.Illness;
 import final_project.momeasy.domain.symptom.entity.Symptom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
