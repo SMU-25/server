@@ -30,7 +30,7 @@ public class CalendarService {
     @Transactional
     public CalendarResponseDto updateCalendar(Long id, CalendarRequestDto requestDto, Parent parent) {
         Calendar calendar = calendarRepository.findById(id)
-                .orElseThrow(() -> new CalendarException(CalendarErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new CalendarException(CalendarErrorCode.CALENDAR_NOT_FOUND));
 
         if (!calendar.getParent().getId().equals(parent.getId())) {
             throw new CalendarException(CalendarErrorCode.NO_CALENDAR_ACCESS);
@@ -51,7 +51,7 @@ public class CalendarService {
     @Transactional
     public void deleteCalendar(Long id, Parent parent) {
         Calendar calendar = calendarRepository.findById(id)
-                .orElseThrow(() -> new CalendarException(CalendarErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new CalendarException(CalendarErrorCode.CALENDAR_NOT_FOUND));
 
         if (!calendar.getParent().getId().equals(parent.getId())) {
             throw new CalendarException(CalendarErrorCode.NO_CALENDAR_ACCESS);
