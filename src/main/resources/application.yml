@@ -81,6 +81,19 @@ jwt:
   token:
     access-expiration-time: 3600000     # 1 hour (ms)
     refresh-expiration-time: 86400000   # 24 hours (ms)
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-22
+    s3:
+      bucket: ${AWS_BUCKET_NAME}
+    stack:
+      auto: false
+
 ---
 spring:
   config:
@@ -152,6 +165,18 @@ jwt:
   token:
     access-expiration-time: 3600000     # 1 hour (ms)
     refresh-expiration-time: 86400000   # 24 hours (ms)
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: ${AWS_BUCKET_NAME}
+    stack:
+      auto: false
 
 logging.level:
   org.hibernate.SQL: debug

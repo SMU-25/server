@@ -7,10 +7,16 @@ import final_project.momeasy.domain.parent.service.command.ParentCommandService;
 import final_project.momeasy.domain.parent.service.query.ParentQueryService;
 import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.security.annotation.AuthParent;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
+
+@Tag(name = "Parent", description = "부모(회원) API by 현빈")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/my")
@@ -40,5 +46,12 @@ public class ParentController {
         return CustomResponse.onSuccess(HttpStatus.CREATED, "회원 정보 수정 완료");
     }
 
-
+    @PatchMapping("/profile-image")
+    public CustomResponse<?> updateProfileImage(
+            @AuthParent Parent parent,
+            @RequestPart MultipartFile profileImage
+            ) throws IOException {
+        String profileUrl = parentCommandService.updateProfileImage(parent.getId(), profileImage);
+        return CustomResponse.onSuccess(profileUrl);
+    }
 }
