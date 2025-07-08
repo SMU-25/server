@@ -10,17 +10,22 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface FeverRecordRepository extends JpaRepository<FeverRecord, Long> {
     Optional<FeverRecord> findTopByChildIdOrderByCreatedAtDesc(Long childId);
-    Slice<FeverRecord> findAllByChildIdOrderByCreatedAtDesc(Long childId, Pageable pageable);
 
-    @Query("SELECT fr FROM FeverRecord fr WHERE fr.child.id  = :childId AND fr.fever>=37.5 ORDER BY fr.createdAt DESC LIMIT 1")
+    @Query("SELECT fr FROM FeverRecord fr JOIN FETCH fr.child c WHERE c.id = :childId and fr.id < :cursor ORDER BY fr.id DESC")
+    Slice<FeverRecord> findFeverRecordCursorPagination(Long childId, Long cursor, Pageable pageable);
+
+    @Query("SELECT fr FROM FeverRecord fr WHERE fr.child.id  = :childId AND fr.fever>=37.0 ORDER BY fr.createdAt DESC LIMIT 1")
     Optional<FeverRecord> findRecentFeverRecord(Long childId);
 
     @Transactional
     @Modifying
     @Query("DELETE FROM FeverRecord fr WHERE fr.createdAt < :time") //스케줄링(@Scheduled)과 함께 사용, 7일 분량의 데이터만 저장
     void deleteByCreatedAtBefore(@Param("time") LocalDateTime time);
+
+    List<FeverRecord> findByChildIdAndCreatedAtBetween(Long childId, LocalDateTime start, LocalDateTime end);
 }

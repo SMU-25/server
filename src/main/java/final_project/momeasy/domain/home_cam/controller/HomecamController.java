@@ -8,6 +8,7 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.security.annotation.AuthParent;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,32 +19,22 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/homecams")
-@Tag(name = "Homecam", description = "홈캠 API")
+@Tag(name = "Homecam", description = "홈캠 API by 김준형")
 public class HomecamController {
-    // security 완성되면 @AuthenticatedMember 추가하기
     private final HomecamQueryService homecamQueryService;
     private final HomecamService homecamService;
 
     @GetMapping("/{homecamId}")
-    @Operation(summary = "홈캠 상세 조회", description = "homecam 1개를 조회합니다.")
-    public CustomResponse<HomecamResponseDTO.HomecamDTO> getHomecam(
+    @Operation(summary = "홈캠 상세 조회", description = "homecam 1개를 조회합니다. 홈캠 화면에서 사용되는 API입니다.")
+    public CustomResponse<HomecamResponseDTO.HomecamDetailDTO> getHomecam(
             @AuthParent Parent parent,
             @PathVariable("homecamId") long homecamId) {
-        HomecamResponseDTO.HomecamDTO homecam = homecamQueryService.getHomecamById(homecamId,parent);
-        return CustomResponse.onSuccess(homecam);
-    }
-
-    @GetMapping("/urls/{homecamId}")
-    @Operation(summary = "홈캠 cctv URL 조회", description = "홈캠의 cctv URL을 조회합니다.")
-    public CustomResponse<HomecamResponseDTO.HomecamVideoDTO> getHomecamVideo(
-            @AuthParent Parent parent,
-            @PathVariable("homecamId") long homecamId) {
-        HomecamResponseDTO.HomecamVideoDTO homecam = homecamQueryService.getHomecamVideoById(homecamId, parent);
+        HomecamResponseDTO.HomecamDetailDTO homecam = homecamQueryService.getHomecamById(homecamId,parent);
         return CustomResponse.onSuccess(homecam);
     }
 
     @GetMapping("/list")
-    @Operation(summary = "홈캠 목록 조회", description = "homecam을 전체 조회합니다.")
+    @Operation(summary = "홈캠 목록 조회", description = "homecam을 전체 조회합니다. 기기 목록 화면에서 사용되는 API입니다.")
     public CustomResponse<List<HomecamResponseDTO.HomecamDTO>> getHomecams(@AuthParent Parent parent) {
         List<HomecamResponseDTO.HomecamDTO> homecamList = homecamQueryService.getHomecamListByParent(parent);
         return CustomResponse.onSuccess(homecamList);
@@ -56,12 +47,23 @@ public class HomecamController {
         return CustomResponse.onSuccess(HttpStatus.NO_CONTENT,"홈캠 삭제 완료");
     }
 
-    @PostMapping("/{childId}")
-    @Operation(summary = "홈캠 생성", description = "홈캠을 생성합니다.")
+    @PostMapping
+    @Operation(summary = "홈캠 생성", description = "홈캠을 생성합니다. 기기 추가 화면에서 사용되는 API입니다.")
     public CustomResponse<HomecamResponseDTO.HomecamDTO> createHomecam(
             @AuthParent Parent parent,
-            @RequestBody HomecamRequestDTO.HomecamRegisterDTO homecamRegisterDTO, @PathVariable("childId") Long childId){
-        HomecamResponseDTO.HomecamDTO homecam = homecamService.createHomecam(homecamRegisterDTO,parent, childId);
+            @RequestBody HomecamRequestDTO.HomecamCreateDTO homecamRegisterDTO
+            ){
+        HomecamResponseDTO.HomecamDTO homecam = homecamService.createHomecam(homecamRegisterDTO,parent);
         return CustomResponse.onSuccess(HttpStatus.CREATED,homecam);
+    }
+
+    @PatchMapping("/{homecamId}")
+    @Operation(summary = "홈캠 수정", description = "홈캠을 수정합니다. 기기 수정에서 사용되는 API입니다.")
+    public CustomResponse<String> updateHomecam(
+            @AuthParent Parent parent,
+            @RequestBody HomecamRequestDTO.HomecamUpdateDTO homecamRegisterDTO,
+            @PathVariable("homecamId") long homecamId){
+        homecamService.updateHomecam(homecamRegisterDTO,parent,homecamId);
+        return CustomResponse.onSuccess("홈캠 수정 완료");
     }
 }

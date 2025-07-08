@@ -1,9 +1,6 @@
 package final_project.momeasy.domain.room_condition.service;
 
-import final_project.momeasy.domain.child.entity.Child;
-import final_project.momeasy.domain.child.repository.ChildRepository;
-import final_project.momeasy.domain.room_condition.entity.RoomCondition;
-import final_project.momeasy.domain.room_condition.repository.RoomConditionBulkRepository;
+
 import final_project.momeasy.domain.room_condition.repository.RoomConditionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Slf4j
 @Service
@@ -21,26 +17,6 @@ import java.util.List;
 @Transactional
 public class RoomConditionService {
     private final RoomConditionRepository roomConditionRepository;
-    private final ChildRepository childRepository;
-    private final RoomConditionBulkRepository roomConditionBulkRepository;
-
-    // // 아이에게 홈캠이 있는지 예외 처리 필요, for문에 센서로 데이터 입력 받아야함
-    @Scheduled(cron = "0 * * * * *")
-    public void createRoomCondition() {
-        log.info("Starting scheduled create Room Condition");
-        List<Child> childList = childRepository.findByHomecamIsNotNull();
-        List<RoomCondition> roomConditions = new ArrayList<>();
-        for(Child child : childList){
-            RoomCondition roomCondition = RoomCondition.builder()
-                    .temperature(36.5f)
-                    .humidity(50.0f)
-                    .child(child)
-                    .build();
-            roomConditions.add(roomCondition);
-        }
-        roomConditionBulkRepository.saveAll(roomConditions);
-        log.info("Ending scheduled create Room Condition");
-    }
 
     @Scheduled(cron = "0 0 0 * * *")
     public void deleteRoomCondition(){
