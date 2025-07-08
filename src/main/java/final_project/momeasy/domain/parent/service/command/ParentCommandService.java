@@ -8,4 +8,6 @@ public interface ParentCommandService {
     ParentResponseDTO.ParentCreateResponseDTO createParent(ParentRequestDTO.ParentCreateRequestDTO parentCreateRequestDTO);
 
     void deleteParent(Long parentId);
+
+    void updateParent(Long parentId, ParentRequestDTO.ParentUpdateRequestDTO dto);
 }

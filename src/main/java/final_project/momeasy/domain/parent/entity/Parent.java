@@ -105,4 +105,13 @@ public class Parent extends BaseEntity {
         this.deletedAt = null;
     }
 
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
+    public void updateInfo(String name, LocalDate birthdate, Gender gender) {
+        this.name = name;
+        this.birthdate = birthdate;
+        this.gender = gender;
+    }
 }
