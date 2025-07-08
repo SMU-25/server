@@ -114,4 +114,8 @@ public class Parent extends BaseEntity {
         this.birthdate = birthdate;
         this.gender = gender;
     }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 }
