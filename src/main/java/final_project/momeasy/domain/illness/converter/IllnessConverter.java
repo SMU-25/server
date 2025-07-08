@@ -8,7 +8,7 @@ public class IllnessConverter {
     public static IllnessResponse toDto(Illness illness) {
         return new IllnessResponse(
                 illness.getIllnessType().name(),
-                illness.getIllnessType().getIllnessName()
+                illness.getIllnessType().getIllness()
         );
     }
 }
