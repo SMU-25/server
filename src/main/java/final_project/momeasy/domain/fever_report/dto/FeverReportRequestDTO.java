@@ -20,4 +20,16 @@ public class FeverReportRequestDTO {
         @NotNull(message = "외출 기록은 필수 입력 값입니다.")
         private String outing;
     }
+
+    @Getter
+    @Builder
+    public static class FeverReportUpdateDTO {
+        @NotBlank(message = "증상은 필수 입력 값입니다.")
+        private List<SymptomType> symptoms;
+
+        private String etc_symptom;
+
+        @NotNull(message = "외출 기록은 필수 입력 값입니다.")
+        private String outing;
+    }
 }

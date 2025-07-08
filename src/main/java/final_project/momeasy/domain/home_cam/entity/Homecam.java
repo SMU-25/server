@@ -1,12 +1,11 @@
 package final_project.momeasy.domain.home_cam.entity;
 
 import final_project.momeasy.domain.child.entity.Child;
+import final_project.momeasy.domain.home_cam.dto.HomecamRequestDTO;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -19,8 +18,8 @@ public class Homecam extends BaseEntity {
 
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String serial_num;
+    @Column(name = "serial_num",nullable = false, unique = true)
+    private String serialNum;
 
     private String place;
 
@@ -42,5 +41,14 @@ public class Homecam extends BaseEntity {
     public void setChild(Child child) {
         this.child = child;
         child.setHomecam(this);
+    }
+
+    public void setVideo_url(String video_url) {
+        this.video_url = video_url;
+    }
+
+    public void update(HomecamRequestDTO.HomecamUpdateDTO updateDTO) {
+        this.name = updateDTO.getName();
+        this.place = updateDTO.getPlace();
     }
 }

@@ -10,4 +10,6 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
     Optional<Token> findByRefreshToken(String token);
 
     void deleteByEmail(String email);
+
+    Optional<Token> findByEmail(String email);
 }

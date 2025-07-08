@@ -15,11 +15,14 @@ import java.util.Optional;
 
 public interface RoomConditionRepository extends JpaRepository<RoomCondition, Long> {
     Optional<RoomCondition> findTopByChildIdOrderByCreatedAtDesc(Long childId);
-    Slice<RoomCondition> findAllByChildIdOrderByCreatedAtDesc(Long childId, Pageable pageable);
+
+    @Query("SELECT rc FROM RoomCondition rc JOIN FETCH rc.child c WHERE c.id = :childId AND rc.id <:cursor ORDER BY rc.id DESC ")
+    Slice<RoomCondition> findRoomConditionCursorPagination(Long childId, Long cursor, Pageable pageable);
 
     @Transactional
     @Modifying
     @Query("DELETE FROM RoomCondition rc WHERE rc.createdAt < :time") //스케줄링(@Scheduled)과 함께 사용, 30일 분량의 데이터만 저장
     void deleteByCreatedAtBefore(@Param("time") LocalDateTime time);
 
+    List<RoomCondition> findByChildIdAndCreatedAtBetween(Long childId, LocalDateTime start, LocalDateTime end);
 }

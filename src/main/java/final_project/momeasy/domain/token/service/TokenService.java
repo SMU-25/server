@@ -32,4 +32,9 @@ public class TokenService {
     public Optional<Token> findByRefreshToken(String token) {
         return tokenRepository.findByRefreshToken(token);
     }
+
+    @Transactional(readOnly = true)
+    public Optional<Token> findByEmail(String email) {
+        return tokenRepository.findByEmail(email);
+    }
 }

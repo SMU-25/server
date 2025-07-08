@@ -1,6 +1,7 @@
 package final_project.momeasy.domain.child.repository;
 
 import final_project.momeasy.domain.child.entity.Child;
+import final_project.momeasy.domain.home_cam.entity.Homecam;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +25,6 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
             WHERE c.id = :childId AND pc.parent.id = :parentId
                                   AND c.deletedAt IS NULL""")
     boolean existsByChildIdAndParentId(@Param("childId") Long childId, @Param("parentId") Long parentId);
+
+    Optional<Child> findByHomecam(Homecam homecam);
 }
