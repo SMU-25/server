@@ -14,12 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+
 public class CalendarService {
 
     private final CalendarRepository calendarRepository;
 
     // 1. 일정 추가
-    @Transactional
     public CalendarResponseDto createCalendar(CalendarRequestDto requestDto, Parent parent) {
         Calendar calendar = CalendarConverter.toEntity(requestDto, parent);
         Calendar saved = calendarRepository.save(calendar);
@@ -27,7 +28,6 @@ public class CalendarService {
     }
 
     // 2. 일정 수정
-    @Transactional
     public CalendarResponseDto updateCalendar(Long id, CalendarRequestDto requestDto, Parent parent) {
         Calendar calendar = calendarRepository.findById(id)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.NOT_FOUND));
@@ -42,13 +42,10 @@ public class CalendarService {
                 requestDto.getContent()
         );
 
-        calendarRepository.save(calendar);
-
         return CalendarConverter.toResponseDto(calendar);
     }
 
     // 3. 일정 삭제
-    @Transactional
     public void deleteCalendar(Long id, Parent parent) {
         Calendar calendar = calendarRepository.findById(id)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.NOT_FOUND));
