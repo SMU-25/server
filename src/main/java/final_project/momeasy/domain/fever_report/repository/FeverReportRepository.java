@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FeverReportRepository extends JpaRepository<FeverReport, Long> {
+    @Query("select fr from FeverReport fr where fr.id =:id and fr.child.deletedAt is null")
     Optional<FeverReport> findById(Long id);
 
-    @Query("SELECT fr FROM FeverReport fr JOIN FETCH fr.child c WHERE c.id =:childId AND fr.id <:cursor ORDER BY fr.id DESC")
+    @Query("SELECT fr FROM FeverReport fr JOIN FETCH fr.child c WHERE c.id =:childId AND fr.child.deletedAt is null and  fr.id <:cursor ORDER BY fr.id DESC")
     Slice<FeverReport> findFeverReportCursorPagination(Long childId, Long cursor, Pageable pageable);
 
+    @Query("select fr from FeverReport fr join fetch fr.child c where c.id =:childId and fr.child.deletedAt is null order by fr.id desc")
     List<FeverReport> findAllByChildIdOrderByIdDesc(Long ChildId);
 }
