@@ -163,8 +163,8 @@ spring:
 jwt:
   secretKey: ${SECRET_KEY}
   token:
-    access-expiration-time: 3600000     # 1 hour (ms)
-    refresh-expiration-time: 86400000   # 24 hours (ms)
+    access-expiration-time: ${ACCESS_TOKEN_EXPIRATION}
+    refresh-expiration-time: ${REFRESH_TOKEN_EXPIRATION}
 
 cloud:
   aws:
