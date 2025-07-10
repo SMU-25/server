@@ -18,7 +18,7 @@ public class SymptomInitializer implements CommandLineRunner {
         if (symptomRepository.count() == 0) {
             for (SymptomType type : SymptomType.values()) {
                 Symptom symptom = Symptom.builder()
-                        .symptomType(type)
+                        .symptom(type)
                         .build();
                 symptomRepository.save(symptom);
             }

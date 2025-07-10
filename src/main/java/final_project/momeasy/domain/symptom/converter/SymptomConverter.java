@@ -7,8 +7,8 @@ public class SymptomConverter {
 
     public static SymptomResponse toDto(Symptom symptom) {
         return new SymptomResponse(
-                symptom.getSymptomType().name(),             // "FEVER"
-                symptom.getSymptomType().getSymptom()        // "발열(38도 이상)"
+                symptom.getSymptom().name(),             // "FEVER"
+                symptom.getSymptom().getSymptom()        // "발열(38도 이상)"
         );
     }
 }
