@@ -22,7 +22,7 @@ public class Symptom {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private SymptomType symptomType;
+    private SymptomType symptom;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "symptom", cascade = CascadeType.ALL)
     @Builder.Default
