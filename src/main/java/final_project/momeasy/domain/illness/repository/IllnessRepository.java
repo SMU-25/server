@@ -1,6 +1,5 @@
 package final_project.momeasy.domain.illness.repository;
 
-
 import final_project.momeasy.common.enums.IllnessType;
 import final_project.momeasy.domain.illness.entity.Illness;
 import org.springframework.data.jpa.repository.JpaRepository;

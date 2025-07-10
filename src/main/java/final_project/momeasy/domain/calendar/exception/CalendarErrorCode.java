@@ -8,12 +8,24 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @Getter
 public enum CalendarErrorCode implements BaseErrorCode {
-    UPDATE_FAILED(HttpStatus.BAD_REQUEST, "CALENDAR400_1", "캘린더 정보를 수정할 수 없습니다"),
-    DELETE_FAILED(HttpStatus.BAD_REQUEST, "CALENDAR400_2", "캘린더 정보를 삭제할 수 없습니다."),
-    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "CALENDAR401", "캘린더에 접근할 수 있는 권한이 없습니다."),
-    NOT_FOUND(HttpStatus.NOT_FOUND, "CALENDAR404", "캘린더를 찾을 수 없습니다."),
-    ALREADY_ADD(HttpStatus.CONFLICT, "CALENDAR409", "이미 등록된 캘린더입니다."),
-    INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "CALENDAR500", "캘린더 처리 중 서버 오류가 발생했습니다.");
+
+    // 400 Bad Request
+    INVALID_UPDATE_REQUEST(HttpStatus.BAD_REQUEST, "CALENDAR400_1", "요청한 일정 정보가 유효하지 않아 수정할 수 없습니다."),
+    INVALID_DELETE_REQUEST(HttpStatus.BAD_REQUEST, "CALENDAR400_2", "요청한 일정 정보를 삭제할 수 없습니다."),
+
+    // 401 Unauthorized
+    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "CALENDAR401_1", "일정에 접근할 권한이 없습니다."),
+    NO_CALENDAR_ACCESS(HttpStatus.UNAUTHORIZED, "CALENDAR401_2", "해당 일정에 접근할 수 없습니다."),
+
+    // 404 Not Found
+    NOT_FOUND(HttpStatus.NOT_FOUND, "CALENDAR404_1", "해당 일정을 찾을 수 없습니다."),
+    SEARCH_NO_RESULT(HttpStatus.NOT_FOUND, "CALENDAR404_2", "검색 결과가 존재하지 않습니다."),
+
+    // 409 Conflict
+    DUPLICATE_SCHEDULE(HttpStatus.CONFLICT, "CALENDAR409", "해당 날짜에 이미 일정이 존재합니다."),
+
+    // 500 Internal Server Error
+    INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "CALENDAR500", "서버 내부 오류로 일정 처리에 실패했습니다.");
 
     private final HttpStatus status;
     private final String code;
