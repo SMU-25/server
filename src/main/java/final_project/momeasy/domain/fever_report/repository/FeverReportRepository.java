@@ -17,5 +17,5 @@ public interface FeverReportRepository extends JpaRepository<FeverReport, Long> 
     Slice<FeverReport> findFeverReportCursorPagination(Long childId, Long cursor, Pageable pageable);
 
     @Query("select fr from FeverReport fr join fetch fr.child c where c.id =:childId and fr.child.deletedAt is null order by fr.id desc")
-    List<FeverReport> findAllByChildIdOrderByIdDesc(Long ChildId);
+    List<FeverReport> findAllByChildIdOrderByIdDesc(Long childId);
 }
