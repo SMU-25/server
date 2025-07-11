@@ -74,6 +74,7 @@ public class AuthController {
         return CustomResponse.onSuccess(responseDTO);
     }
 
+    @Operation(summary = "비밀번호 재설정 (임시 비밀번호 메일 발급)")
     @PostMapping("/reset-password")
     public CustomResponse<String> resetPassword(
             @RequestBody OAuthRequestDTO.ResetPasswordRequestDTO requestDTO
