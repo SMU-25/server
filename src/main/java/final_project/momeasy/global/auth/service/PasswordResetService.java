@@ -1,9 +1,12 @@
 package final_project.momeasy.global.auth.service;
 
+import final_project.momeasy.common.enums.SocialType;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.exception.ParentErrorCode;
 import final_project.momeasy.domain.parent.exception.ParentException;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
+import final_project.momeasy.global.auth.exception.AuthErrorCode;
+import final_project.momeasy.global.auth.exception.AuthException;
 import final_project.momeasy.global.util.mail.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +26,10 @@ public class PasswordResetService {
         // 사용자 조회
         Parent parent = parentRepository.findByEmail(email)
                 .orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
+
+        if (parent.getSocialType() != SocialType.LOCAL) {
+            throw new AuthException(AuthErrorCode.SOCIAL_USER_CANNOT_UPDATE_PASSWORD);
+        }
 
         // 임시 비밀번호 생성
         String tempPassword = generateTempPassword(8);
