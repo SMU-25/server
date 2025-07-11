@@ -34,4 +34,13 @@ public class MailServiceImpl implements MailService {
         sendMail(email, subject, body);
     }
 
+    @Override
+    public void sendTempPassword(String email, String tempPassword) {
+        String subject = "[맘편해] 임시 비밀번호입니다.";
+        String body = "임시 비밀번호: " + tempPassword + "\n로그인 후 마이페이지에서 꼭 비밀번호 재설정이 필요합니다.";
+
+        sendMail(email, subject, body);
+
+    }
+
 }
