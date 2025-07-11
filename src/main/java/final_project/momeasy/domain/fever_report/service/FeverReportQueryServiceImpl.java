@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.fever_report.service;
 
+import final_project.momeasy.common.enums.IllnessType;
 import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.child.exception.ChildErrorCode;
 import final_project.momeasy.domain.child.exception.ChildException;
@@ -14,6 +15,7 @@ import final_project.momeasy.domain.fever_report.exception.FeverReportException;
 import final_project.momeasy.domain.fever_report.repository.FeverReportRepository;
 import final_project.momeasy.domain.humidity_graph.entity.HumidityGraph;
 import final_project.momeasy.domain.humidity_graph.repository.HumidityGraphRepositoy;
+import final_project.momeasy.domain.illness.repository.IllnessRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.temperature_graph.entity.TemperatureGraph;
 import final_project.momeasy.domain.temperature_graph.repository.TemperatureGraphRepository;
@@ -33,6 +35,7 @@ public class FeverReportQueryServiceImpl implements FeverReportQueryService {
     private final FeverGraphRepository feverGraphRepository;
     private final HumidityGraphRepositoy humidityGraphRepositoy;
     private final TemperatureGraphRepository temperatureGraphRepository;
+    private final IllnessRepository illnessRepository;
 
     @Override
     public FeverReportResponseDTO.FeverReportDetailViewDTO getFeverReport(Parent parent, Long reportId) {
@@ -44,8 +47,9 @@ public class FeverReportQueryServiceImpl implements FeverReportQueryService {
         List<FeverGraph> feverGraphs = feverGraphRepository.findByFeverReport(feverReport);
         List<HumidityGraph> humidityGraphs = humidityGraphRepositoy.findByFeverReport(feverReport);
         List<TemperatureGraph> temperatureGraphs = temperatureGraphRepository.findByFeverReport(feverReport);
+        List<IllnessType>  illnesses = child.getChildIllnesses().stream().map(ChildIllness -> ChildIllness.getIllness().getIllnessType()).toList();
         return FeverReportConverter.toFeverReportDetailDTO(
-                feverReport,feverGraphs, humidityGraphs,temperatureGraphs
+                feverReport,feverGraphs, humidityGraphs,temperatureGraphs,illnesses
         );
     }
 

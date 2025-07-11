@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.fever_report.service;
 
+import final_project.momeasy.common.enums.IllnessType;
 import final_project.momeasy.common.enums.SymptomType;
 import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.child.exception.ChildErrorCode;
@@ -17,6 +18,7 @@ import final_project.momeasy.domain.fever_report.repository.FeverReportRepositor
 import final_project.momeasy.domain.fever_report.repository.FeverReportSymptomRepository;
 import final_project.momeasy.domain.humidity_graph.entity.HumidityGraph;
 import final_project.momeasy.domain.humidity_graph.service.HumidityGraphService;
+import final_project.momeasy.domain.illness.repository.IllnessRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.symptom.entity.Symptom;
 import final_project.momeasy.domain.symptom.repository.SymptomRepository;
@@ -35,6 +37,7 @@ import java.util.List;
 public class FeverReportServiceImpl implements FeverReportService {
     private final FeverReportRepository feverReportRepository;
     private final FeverReportSymptomRepository feverReportSymptomRepository;
+    private final IllnessRepository illnessRepository;
     private final ChildRepository childRepository;
     private final SymptomRepository symptomRepository;
     private final FeverGraphService feverGraphService;
@@ -73,8 +76,9 @@ public class FeverReportServiceImpl implements FeverReportService {
         List<FeverGraph> feverGraphs = feverGraphService.createFeverRecordGraph(feverReport.getId(), parent, ChildId);
         List<HumidityGraph> humidityGraphs = humidityGraphService.createHumidityRecordGraph(feverReport.getId(), parent, ChildId);
         List<TemperatureGraph> temperatureGraphs = temperatureGraphService.createTemperatureRecordGraph(feverReport.getId(), parent, ChildId);
+        List<IllnessType>  illnesses = child.getChildIllnesses().stream().map(ChildIllness -> ChildIllness.getIllness().getIllnessType()).toList();
         return FeverReportConverter.toFeverReportCreateDTO(
-                feverReport,feverGraphs,humidityGraphs,temperatureGraphs
+                feverReport,feverGraphs,humidityGraphs,temperatureGraphs,illnesses
         );
     }
 
