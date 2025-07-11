@@ -1,6 +1,5 @@
 package final_project.momeasy.domain.notification.dto;
 
-import final_project.momeasy.common.enums.NotificationType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
