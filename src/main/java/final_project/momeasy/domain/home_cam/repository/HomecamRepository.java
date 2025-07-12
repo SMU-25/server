@@ -17,6 +17,6 @@ public interface HomecamRepository extends JpaRepository<Homecam, Long> {
     @Query("select h from Homecam h where h.child.id =:childId and h.child.deletedAt is null")
     Optional<Homecam> findByChildId(Long childId);
 
-    @Query("select h from Homecam h where h.serialNum =: serial_num and h.child.deletedAt is null")
-    Optional<Homecam> findBySerialNum(String serial_num);
+    @Query("select h from Homecam h where h.serialNum =:serialNum and h.child.deletedAt is null")
+    Optional<Homecam> findBySerialNum(String serialNum);
 }
