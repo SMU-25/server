@@ -10,4 +10,9 @@ public class OAuthRequestDTO {
             String accessToken
     ) {
     }
+
+    public record ResetPasswordRequestDTO(
+            String email
+    ) {
+    }
 }

@@ -15,7 +15,7 @@ public enum AuthErrorCode implements BaseErrorCode {
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "AUTH401_4", "접근 권한이 없습니다."),
     SOCIAL_USER_CANNOT_LOGIN(HttpStatus.UNAUTHORIZED, "AUTH401_5", "소셜 로그인 사용자는 로컬 로그인할 수 없습니다."),
     SOCIAL_USER_CANNOT_UPDATE_PASSWORD(HttpStatus.UNAUTHORIZED, "AUTH401_6", "소셜 로그인 사용자는 비밀번호를 변경할 수 없습니다."),
-    OAUTH_TOKEN_FAIL(HttpStatus.BAD_REQUEST, "AUTH400_1", "소셜 토큰 변환에 실패했습니다."),
+    OAUTH_TOKEN_FAIL(HttpStatus.BAD_REQUEST, "AUTH400_1", "소셜 로그인 토큰 발급 중 오류가 발생했습니다."),
     OAUTH_USER_INFO_FAIL(HttpStatus.BAD_REQUEST, "AUTH400_2", "소셜 사용자 정보 조회에 실패했습니다."),
     OAUTH_EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "AUTH400_3", "이메일 정보를 찾을 수 없습니다."),
     OAUTH_LOGIN_FAIL(HttpStatus.BAD_REQUEST, "AUTH400_4", "로그인에 실패했습니다."),

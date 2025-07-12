@@ -8,6 +8,7 @@ import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.auth.dto.request.OAuthRequestDTO;
 import final_project.momeasy.global.auth.dto.response.OAuthResponseDTO;
 import final_project.momeasy.global.auth.service.OAuthLoginService;
+import final_project.momeasy.global.auth.service.PasswordResetService;
 import final_project.momeasy.global.security.dto.request.LoginRequestDTO;
 import final_project.momeasy.global.security.jwt.JwtUtil;
 import final_project.momeasy.global.security.jwt.exception.JwtErrorCode;
@@ -30,6 +31,7 @@ public class AuthController {
 
     private final ParentCommandService parentCommandService;
     private final OAuthLoginService oAuthLoginService;
+    private final PasswordResetService passwordResetService;
     private final JwtUtil jwtUtil;
     private final TokenService tokenService;
 
@@ -70,5 +72,14 @@ public class AuthController {
         CookieUtil.addRefreshTokenToCookie(response, refreshToken);
 
         return CustomResponse.onSuccess(responseDTO);
+    }
+
+    @Operation(summary = "비밀번호 재설정 (임시 비밀번호 메일 발급)")
+    @PostMapping("/reset-password")
+    public CustomResponse<String> resetPassword(
+            @RequestBody OAuthRequestDTO.ResetPasswordRequestDTO requestDTO
+    ) {
+        passwordResetService.resetPassword(requestDTO.email());
+        return CustomResponse.onSuccess(HttpStatus.OK, "임시 비밀번호가 메일로 전송되었습니다.");
     }
 }
