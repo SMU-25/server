@@ -164,6 +164,10 @@ spring:
       host: ${EC2_PRIVATE_IP}
       port: 6379
 
+  ai:
+    openai:
+      api-key: ${OPENAI_KEY}
+
 jwt:
   secretKey: ${SECRET_KEY}
   token:
