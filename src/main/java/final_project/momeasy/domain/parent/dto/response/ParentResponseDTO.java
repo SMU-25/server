@@ -23,7 +23,8 @@ public class ParentResponseDTO {
             String email,
             LocalDate birthdate,
             Gender gender,
-            SocialType socialType
+            SocialType socialType,
+            String profileImage
     ) {
     }
 }

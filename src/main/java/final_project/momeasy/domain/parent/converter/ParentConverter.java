@@ -54,6 +54,7 @@ public class ParentConverter {
                 .gender(parent.getGender())
                 .birthdate(parent.getBirthdate())
                 .socialType(parent.getSocialType())
+                .profileImage(parent.getProfileImage())
                 .build();
     }
 }
