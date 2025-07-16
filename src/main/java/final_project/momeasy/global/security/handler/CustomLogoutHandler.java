@@ -1,6 +1,8 @@
 package final_project.momeasy.global.security.handler;
 
 import final_project.momeasy.domain.token.service.TokenService;
+import final_project.momeasy.global.auth.exception.AuthErrorCode;
+import final_project.momeasy.global.auth.exception.AuthException;
 import final_project.momeasy.global.security.jwt.JwtUtil;
 import final_project.momeasy.global.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,14 +28,14 @@ public class CustomLogoutHandler implements LogoutHandler {
         // access token 추출
         String accessToken = jwtUtil.extractAccessToken(request);
 
-        if (accessToken != null) {
-            try {
-                jwtUtil.validateToken(accessToken);
-                // TODO: access token 블랙리스팅
-            } catch (Exception e) {
-                log.warn("[ LogoutHandler ] access token 유효성 검증 실패: {}", e.getMessage());
-            }
+        if (accessToken == null) {
+            log.warn("[ LogoutHandler ] 유효하지 않은 access token으로 로그아웃 시도");
+            throw new AuthException(AuthErrorCode.UNAUTHORIZED_ACCESS);
         }
+
+        jwtUtil.validateToken(accessToken);
+
+        // TODO: access token 블랙리스팅
 
         // refresh token 추출
         String refreshToken = CookieUtil.getCookieValue(request, "refreshToken");

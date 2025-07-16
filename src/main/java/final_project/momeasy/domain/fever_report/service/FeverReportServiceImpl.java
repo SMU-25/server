@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.fever_report.service;
 
+import final_project.momeasy.common.enums.IllnessType;
 import final_project.momeasy.common.enums.SymptomType;
 import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.child.exception.ChildErrorCode;
@@ -22,6 +23,7 @@ import final_project.momeasy.domain.symptom.entity.Symptom;
 import final_project.momeasy.domain.symptom.repository.SymptomRepository;
 import final_project.momeasy.domain.temperature_graph.entity.TemperatureGraph;
 import final_project.momeasy.domain.temperature_graph.service.TemperatureGraphService;
+import final_project.momeasy.global.ai.SummaryAiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,7 @@ public class FeverReportServiceImpl implements FeverReportService {
     private final FeverGraphService feverGraphService;
     private final HumidityGraphService humidityGraphService;
     private final TemperatureGraphService temperatureGraphService;
+    private final SummaryAiService summaryAiService;
 
     @Override
     public void deleteFeverReport(Parent parent, Long FeverReportId) {
@@ -51,14 +54,13 @@ public class FeverReportServiceImpl implements FeverReportService {
         feverReportRepository.deleteById(FeverReportId);
     }
 
-    // TODO: 특이 사항에 AI 소견 기능 넣기
     @Override
     public FeverReportResponseDTO.FeverReportCreateDTO createFeverReport(Parent parent, FeverReportRequestDTO.FeverReportCreateDTO feverReportRequestDTO, Long ChildId) {
         Child child = childRepository.findById(ChildId).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
         if (!childRepository.existsByChildIdAndParentId(ChildId, parent.getId())) {
             throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
         }
-        String special = "특이 사항";
+        String special = summaryAiService.create_summary(feverReportRequestDTO,child.getId());
         FeverReport feverReport = FeverReportConverter.toFeverReport(feverReportRequestDTO,special);
         feverReport.setChild(child);
         feverReportRepository.save(feverReport);
@@ -73,12 +75,12 @@ public class FeverReportServiceImpl implements FeverReportService {
         List<FeverGraph> feverGraphs = feverGraphService.createFeverRecordGraph(feverReport.getId(), parent, ChildId);
         List<HumidityGraph> humidityGraphs = humidityGraphService.createHumidityRecordGraph(feverReport.getId(), parent, ChildId);
         List<TemperatureGraph> temperatureGraphs = temperatureGraphService.createTemperatureRecordGraph(feverReport.getId(), parent, ChildId);
+        List<IllnessType>  illnesses = child.getChildIllnesses().stream().map(ChildIllness -> ChildIllness.getIllness().getIllnessType()).toList();
         return FeverReportConverter.toFeverReportCreateDTO(
-                feverReport,feverGraphs,humidityGraphs,temperatureGraphs
+                feverReport,feverGraphs,humidityGraphs,temperatureGraphs,illnesses
         );
     }
 
-    // TODO: 특이 사항에 AI 소견 기능 넣기
     @Override
     public void updateFeverReport(Parent parent, Long FeverReportId, FeverReportRequestDTO.FeverReportUpdateDTO feverReportRequestDTO) {
         FeverReport feverReport = feverReportRepository.findById(FeverReportId).orElseThrow(()->new FeverReportException(FeverReportErrorCode.NOT_FOUND));
@@ -86,7 +88,7 @@ public class FeverReportServiceImpl implements FeverReportService {
         if (!childRepository.existsByChildIdAndParentId(child.getId(), parent.getId())) {
             throw new FeverReportException(FeverReportErrorCode.UNAUTHORIZED_ACCESS);
         }
-        String special = "특이 사항";
+        String special = summaryAiService.update_summary(feverReportRequestDTO,child.getId());
         feverReport.updateFeverReport(feverReportRequestDTO,special);
         feverReport.getFeverReportSymptoms().clear();
         feverReportSymptomRepository.deleteByFeverreportId(FeverReportId);

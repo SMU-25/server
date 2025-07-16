@@ -2,6 +2,7 @@ package final_project.momeasy.domain.fever_report.converter;
 
 
 import final_project.momeasy.common.enums.DayRange;
+import final_project.momeasy.common.enums.IllnessType;
 import final_project.momeasy.domain.fever_graph.converter.FeverGraphConverter;
 import final_project.momeasy.domain.fever_graph.entity.FeverGraph;
 import final_project.momeasy.domain.fever_report.dto.FeverReportRequestDTO;
@@ -46,12 +47,13 @@ public class FeverReportConverter {
 
 
     public static FeverReportResponseDTO.FeverReportDetailViewDTO toFeverReportDetailDTO(FeverReport feverReport,
-         List<FeverGraph> feverGraphs, List<HumidityGraph> humidityGraphs, List<TemperatureGraph> temperatureGraphs) {
+        List<FeverGraph> feverGraphs, List<HumidityGraph> humidityGraphs, List<TemperatureGraph> temperatureGraphs, List<IllnessType> illnesses) {
         return FeverReportResponseDTO.FeverReportDetailViewDTO.builder()
                 .outing(feverReport.getOuting())
                 .special(feverReport.getSpecial())
                 .etc_symptom(feverReport.getEtc_symptom())
                 .symptoms(feverReport.getFeverReportSymptoms().stream().map(FeverReportSymptom -> FeverReportSymptom.getSymptom().getSymptom()).toList())
+                .illnesses(illnesses)
                 .createdAt(feverReport.getCreatedAt())
                 .day1(getGraphGroupViewDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY1))
                 .day3(getGraphGroupViewDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY3))
@@ -60,13 +62,14 @@ public class FeverReportConverter {
     }
 
     public static FeverReportResponseDTO.FeverReportCreateDTO toFeverReportCreateDTO(FeverReport feverReport,
-         List<FeverGraph> feverGraphs, List<HumidityGraph> humidityGraphs, List<TemperatureGraph> temperatureGraphs) {
+         List<FeverGraph> feverGraphs, List<HumidityGraph> humidityGraphs, List<TemperatureGraph> temperatureGraphs, List<IllnessType> illnesses) {
         return FeverReportResponseDTO.FeverReportCreateDTO.builder()
                 .outing(feverReport.getOuting())
                 .special(feverReport.getSpecial())
                 .etc_symptom(feverReport.getEtc_symptom())
                 .reportId(feverReport.getId())
                 .symptoms(feverReport.getFeverReportSymptoms().stream().map(FeverReportSymptom -> FeverReportSymptom.getSymptom().getSymptom()).toList())
+                .illnesses(illnesses)
                 .createdAt(feverReport.getCreatedAt())
                 .day1(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY1))
                 .day3(getGraphGroupCreateDTO(feverGraphs,humidityGraphs,temperatureGraphs,DayRange.DAY3))

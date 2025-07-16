@@ -7,6 +7,7 @@ import final_project.momeasy.domain.child.dto.response.ChildResponseDTO;
 import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.child.exception.ChildErrorCode;
 import final_project.momeasy.domain.child.exception.ChildException;
+import final_project.momeasy.domain.child.repository.ChildIllnessRepository;
 import final_project.momeasy.domain.child.repository.ChildRepository;
 import final_project.momeasy.domain.illness.entity.Illness;
 import final_project.momeasy.domain.illness.repository.IllnessRepository;
@@ -26,6 +27,7 @@ public class ChildCommandServiceImpl implements ChildCommandService {
     private final ChildRepository childRepository;
     private final ParentRepository parentRepository;
     private final IllnessRepository illnessRepository;
+    private final ChildIllnessRepository childIllnessRepository;
 
     @Override
     public ChildResponseDTO.ChildCreateResponseDTO createChild(ChildRequestDTO.ChildCreateRequestDTO dto, Long parentId) {
@@ -81,9 +83,12 @@ public class ChildCommandServiceImpl implements ChildCommandService {
         // update
         child.update(dto);
 
-        child.getChildIllnesses().clear(); // 기존 연관관계 제거
+        // 기존 연관관계 제거
+        childIllnessRepository.deleteByChild(child);
+        // 영속성 컨텍스트에서 연관관계 삭제
+        child.getChildIllnesses().clear();
 
-        // child-illness 연관관계 설정
+        // child-illness 연관관계 >새롭게< 설정
         for (IllnessType illnessType : dto.illnessTypes()) {
             Illness illness = illnessRepository.findByIllnessType(illnessType)
                     .orElseGet(() -> illnessRepository.save(

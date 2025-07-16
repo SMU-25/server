@@ -20,4 +20,13 @@ public class ParentRequestDTO {
         SocialType socialType;
         Gender gender;
     }
+
+    @Builder
+    public record ParentUpdateRequestDTO(
+            String name,
+            LocalDate birthdate,
+            Gender gender,
+            String newPassword
+    ) {
+    }
 }

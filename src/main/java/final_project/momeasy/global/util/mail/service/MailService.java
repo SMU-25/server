@@ -5,4 +5,6 @@ public interface MailService {
     void sendMail(String to, String subject, String body);
 
     void sendVerificationCode(String email);
+
+    void sendTempPassword(String email, String tempPassword);
 }

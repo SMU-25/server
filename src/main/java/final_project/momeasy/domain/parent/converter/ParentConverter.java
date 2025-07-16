@@ -46,4 +46,16 @@ public class ParentConverter {
                 .socialType(profile.getSocialType())
                 .build();
     }
+
+    public static ParentResponseDTO.ParentDetailResponseDTO toParentDetailResponseDTO(
+            Parent parent, String profileImageUrl) {
+        return ParentResponseDTO.ParentDetailResponseDTO.builder()
+                .name(parent.getName())
+                .email(parent.getEmail())
+                .gender(parent.getGender())
+                .birthdate(parent.getBirthdate())
+                .socialType(parent.getSocialType())
+                .profileImage(profileImageUrl)
+                .build();
+    }
 }

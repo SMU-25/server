@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.fever_report.dto;
 
+import final_project.momeasy.common.enums.IllnessType;
 import final_project.momeasy.common.enums.SymptomType;
 import final_project.momeasy.domain.fever_graph.dto.FeverGraphResponseDTO;
 import final_project.momeasy.domain.humidity_graph.dto.HumidityGraphResponseDTO;
@@ -40,6 +41,7 @@ public class FeverReportResponseDTO {
     public static class FeverReportDetailViewDTO {
 
         private List<SymptomType> symptoms;
+        private List<IllnessType> illnesses;
         private String etc_symptom;
         private String outing;
         private String special;
@@ -63,6 +65,7 @@ public class FeverReportResponseDTO {
     public static class FeverReportCreateDTO {
         private Long reportId;
         private List<SymptomType> symptoms;
+        private List<IllnessType> illnesses;
         private String etc_symptom;
         private String outing;
         private String special;

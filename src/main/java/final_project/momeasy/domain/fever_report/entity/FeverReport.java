@@ -23,6 +23,7 @@ public class FeverReport extends BaseEntity {
 
     private String etc_symptom;
 
+    @Lob
     private String special;
 
     @Column(nullable = false)
