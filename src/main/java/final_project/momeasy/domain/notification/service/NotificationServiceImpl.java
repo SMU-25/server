@@ -9,8 +9,6 @@ import final_project.momeasy.domain.notification.exception.NotificationException
 import final_project.momeasy.domain.notification.repository.NotificationRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.global.apiPayload.CursorResponse;
-import final_project.momeasy.global.fcm.entity.FcmToken;
-import final_project.momeasy.global.fcm.service.FcmService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +22,6 @@ import java.util.List;
 public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final FcmService fcmService;
 
     @Override
     @Transactional
@@ -61,7 +58,6 @@ public class NotificationServiceImpl implements NotificationService {
         notification.markAsRead();
     }
 
-    // 직접 파라미터 전달 방식
     @Transactional
     public void createNotification(Parent parent, Child child, String message, Float fever, Float temperature, Float humidity) {
         Notification notification = NotificationConverter.from(
@@ -75,12 +71,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         notificationRepository.save(notification);
 
-        List<FcmToken> tokens = parent.getFcmTokens();
-        if (!tokens.isEmpty()) {
-            String token = tokens.get(0).getToken();
-            fcmService.sendNotification(token, "케어 알림", message);
-        } else {
-            System.out.println("⚠️ FCM 토큰 없음 - 푸시 생략");
-        }
+        // FCM 전송 제거됨
+        System.out.println("ℹ️ 알림 저장 완료 (FCM 전송 로직은 제거됨): " + message);
     }
 }
