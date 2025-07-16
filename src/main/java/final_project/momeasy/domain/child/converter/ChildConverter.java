@@ -16,7 +16,6 @@ public class ChildConverter {
                 .weight(dto.weight())
                 .gender(dto.gender())
                 .seizure(dto.seizure())
-                .profileImage(dto.profileImage())
                 .build();
     }
 

@@ -15,9 +15,13 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.exception.ParentErrorCode;
 import final_project.momeasy.domain.parent.exception.ParentException;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
+import final_project.momeasy.global.util.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +32,13 @@ public class ChildCommandServiceImpl implements ChildCommandService {
     private final ParentRepository parentRepository;
     private final IllnessRepository illnessRepository;
     private final ChildIllnessRepository childIllnessRepository;
+    private final S3Uploader s3Uploader;
 
     @Override
-    public ChildResponseDTO.ChildCreateResponseDTO createChild(ChildRequestDTO.ChildCreateRequestDTO dto, Long parentId) {
+    public ChildResponseDTO.ChildCreateResponseDTO createChild(
+            ChildRequestDTO.ChildCreateRequestDTO dto,
+            MultipartFile profileImage,
+            Long parentId) {
 
         Parent parent = parentRepository.findById(parentId)
                 .orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
@@ -38,6 +46,8 @@ public class ChildCommandServiceImpl implements ChildCommandService {
         Child child = ChildConverter.toChild(dto);
 
         // TODO: 아이 중복 추가 예외 처리
+
+        uploadAndSetProfileImage(child, profileImage);
 
         childRepository.save(child);
 
@@ -72,7 +82,11 @@ public class ChildCommandServiceImpl implements ChildCommandService {
     }
 
     @Override
-    public void updateChild(Long childId, Parent parent, ChildRequestDTO.ChildUpdateRequestDTO dto) {
+    public void updateChild(
+            Long childId,
+            Parent parent,
+            ChildRequestDTO.ChildUpdateRequestDTO dto,
+            MultipartFile profileImage) {
         Child child = childRepository.findById(childId)
                 .orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
 
@@ -82,6 +96,9 @@ public class ChildCommandServiceImpl implements ChildCommandService {
 
         // update
         child.update(dto);
+
+        // update profile image
+        uploadAndSetProfileImage(child, profileImage);
 
         // 기존 연관관계 제거
         childIllnessRepository.deleteByChild(child);
@@ -98,6 +115,22 @@ public class ChildCommandServiceImpl implements ChildCommandService {
                     ));
 
             child.addIllness(illness);
+        }
+
+    }
+
+    // 이미지 업로드 메서드
+    private void uploadAndSetProfileImage(Child child, MultipartFile profileImage) {
+        if (profileImage == null || profileImage.isEmpty()) {
+            return; // 이미지 추가를 안 했을 경우 아무것도 안 하고 넘어감
+        }
+
+        // 새로운 이미지 업로드
+        try {
+            String fileName = s3Uploader.upload(profileImage, "profile");
+            child.updateProfileImage(fileName);
+        } catch (IOException e) {
+            throw new ChildException(ChildErrorCode.INTERNAL_ERROR);
         }
 
     }

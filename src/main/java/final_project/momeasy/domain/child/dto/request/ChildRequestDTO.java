@@ -18,7 +18,6 @@ public class ChildRequestDTO {
             Float weight,
             Gender gender,
             Seizure seizure,
-            String profileImage,
             List<IllnessType> illnessTypes
     ) {
     }
@@ -30,7 +29,6 @@ public class ChildRequestDTO {
             Float weight,
             Gender gender,
             Seizure seizure,
-            String profileImage,
             List<IllnessType> illnessTypes
     ) {
     }
