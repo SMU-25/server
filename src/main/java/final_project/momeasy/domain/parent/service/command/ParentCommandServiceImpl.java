@@ -8,6 +8,7 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.parent.exception.ParentErrorCode;
 import final_project.momeasy.domain.parent.exception.ParentException;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
+import final_project.momeasy.domain.setting.entity.Setting;
 import final_project.momeasy.global.auth.exception.AuthErrorCode;
 import final_project.momeasy.global.auth.exception.AuthException;
 import final_project.momeasy.global.util.mail.verification.exception.VerificationCodeErrorCode;
@@ -46,6 +47,10 @@ public class ParentCommandServiceImpl implements ParentCommandService {
 
         // DTO -> Parent
         Parent parent = ParentConverter.toParent(dto, passwordEncoder);
+
+        // 기본 알림 설정 생성 및 연동
+        Setting setting = Setting.createDefault();
+        parent.setSetting(setting);
 
         // DB에 저장
         parentRepository.save(parent);
