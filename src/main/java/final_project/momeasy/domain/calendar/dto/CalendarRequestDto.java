@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class CalendarRequestDto {
 
     @NotNull(message = "날짜는 필수입니다.")
-    private LocalDate scheduleDate;
+    private LocalDate recordDate;
 
     @NotBlank(message = "제목은 필수입니다.")
     private String title;

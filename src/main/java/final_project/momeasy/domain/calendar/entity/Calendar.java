@@ -19,7 +19,7 @@ public class Calendar extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate scheduleDate;
+    private LocalDate recordDate;
 
     @Column(nullable = false)
     private String title;
@@ -35,8 +35,8 @@ public class Calendar extends BaseEntity {
         parent.getCalendars().add(this);
     }
 
-    public void update(LocalDate scheduleDate, String title, String content) {
-        this.scheduleDate = scheduleDate;
+    public void update(LocalDate recordDate, String title, String content) {
+        this.recordDate = recordDate;
         this.title = title;
         this.content = content;
     }

@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Builder
 public class CalendarResponseDto {
     private Long calendarId;
-    private LocalDate scheduleDate;
+    private LocalDate recordDate;
     private String title;
     private String content;
 }

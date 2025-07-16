@@ -12,8 +12,8 @@ import java.util.List;
 public interface CalendarRepository extends JpaRepository<Calendar, Long> {
 
     // 날짜 + 부모 기준
-    @Query("SELECT c FROM Calendar c WHERE c.scheduleDate = :date AND c.parent = :parent")
-    List<Calendar> findByScheduleDateAndParent(@Param("date") LocalDate date,
+    @Query("SELECT c FROM Calendar c WHERE c.recordDate = :date AND c.parent = :parent")
+    List<Calendar> findByRecordDateAndParent(@Param("date") LocalDate date,
                                                @Param("parent") Parent parent);
 
     // 제목에 키워드 포함 (대소문자 무시)
