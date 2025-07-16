@@ -104,7 +104,10 @@ public class Child extends BaseEntity {
         this.weight = dto.weight();
         this.gender = dto.gender();
         this.seizure = dto.seizure();
-        this.profileImage = dto.profileImage();
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
 }
