@@ -37,7 +37,7 @@ public class CalendarService {
         }
 
         calendar.update(
-                requestDto.getScheduleDate(),
+                requestDto.getRecordDate(),
                 requestDto.getTitle(),
                 requestDto.getContent()
         );

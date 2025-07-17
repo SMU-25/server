@@ -35,7 +35,7 @@ public class CalendarQueryService {
 
     // 3. 날짜 기반 일정 조회
     public List<CalendarResponseDto> getCalendarsByDate(Parent parent, LocalDate date) {
-        List<Calendar> calendars = calendarRepository.findByScheduleDateAndParent(date, parent);
+        List<Calendar> calendars = calendarRepository.findByRecordDateAndParent(date, parent);
         return calendars.stream()
                 .map(CalendarConverter::toResponseDto)
                 .toList();
