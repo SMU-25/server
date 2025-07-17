@@ -7,6 +7,7 @@ import final_project.momeasy.domain.child.exception.ChildErrorCode;
 import final_project.momeasy.domain.child.exception.ChildException;
 import final_project.momeasy.domain.child.repository.ChildRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
+import final_project.momeasy.global.util.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class ChildQueryServiceImpl implements ChildQueryService {
 
     private final ChildRepository childRepository;
+    private final S3Uploader s3Uploader;
 
     @Override
     public ChildResponseDTO.ChildDetailResponseDTO getChild(Long childId, Parent parent) {
@@ -30,7 +32,12 @@ public class ChildQueryServiceImpl implements ChildQueryService {
             throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
         }
 
-        return ChildConverter.toChildDetailResponseDTO(child);
+        String profileImagePath = parent.getProfileImage();
+        String profileImageUrl = (profileImagePath != null)
+                ? s3Uploader.getPresignedUrl(profileImagePath)
+                : null;
+
+        return ChildConverter.toChildDetailResponseDTO(child, profileImageUrl);
     }
 
     @Override
@@ -38,7 +45,14 @@ public class ChildQueryServiceImpl implements ChildQueryService {
         List<Child> children = childRepository.findByParentId(parent.getId());
 
         return children.stream()
-                .map(ChildConverter::toChildSimpleResponseDTO)
+                .map(child -> {
+                    String profileImagePath = parent.getProfileImage();
+                    String profileImageUrl = (profileImagePath != null)
+                            ? s3Uploader.getPresignedUrl(profileImagePath)
+                            : null;
+
+                    return ChildConverter.toChildSimpleResponseDTO(child, profileImageUrl);
+                })
                 .collect(Collectors.toList());
     }
 }

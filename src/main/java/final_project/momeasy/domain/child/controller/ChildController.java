@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,9 +27,12 @@ public class ChildController {
 
     @Operation(summary = "아이 추가")
     @PostMapping
-    public CustomResponse<ChildResponseDTO.ChildCreateResponseDTO> createChild(@RequestBody ChildRequestDTO.ChildCreateRequestDTO createDTO, @AuthParent Parent parent) {
+    public CustomResponse<ChildResponseDTO.ChildCreateResponseDTO> createChild(
+            @RequestPart("dto") ChildRequestDTO.ChildCreateRequestDTO createDTO,
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
+            @AuthParent Parent parent) {
         return CustomResponse.onSuccess(
-                HttpStatus.CREATED, childCommandService.createChild(createDTO, parent.getId()));
+                HttpStatus.CREATED, childCommandService.createChild(createDTO, profileImage, parent.getId()));
     }
 
     @Operation(summary = "아이 삭제")
@@ -40,10 +44,12 @@ public class ChildController {
 
     @Operation(summary = "아이 정보 수정")
     @PatchMapping("/{childId}")
-    public CustomResponse<String> updateChild(@PathVariable Long childId,
-                                         @RequestBody ChildRequestDTO.ChildUpdateRequestDTO dto,
-                                         @AuthParent Parent parent) {
-        childCommandService.updateChild(childId, parent, dto);
+    public CustomResponse<String> updateChild(
+            @PathVariable Long childId,
+            @RequestPart("dto") ChildRequestDTO.ChildUpdateRequestDTO updateDTO,
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
+            @AuthParent Parent parent) {
+        childCommandService.updateChild(childId, parent, updateDTO, profileImage);
         return CustomResponse.onSuccess(HttpStatus.OK, "아이 정보 수정 완료");
     }
 
