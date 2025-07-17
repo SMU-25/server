@@ -9,11 +9,11 @@ import java.io.IOException;
 
 public interface ChildCommandService {
 
-    ChildResponseDTO.ChildCreateResponseDTO createChild(ChildRequestDTO.ChildCreateRequestDTO dto, MultipartFile profileImage, Long parentId);
+    ChildResponseDTO.ChildCreateResponseDTO createChild(ChildRequestDTO.ChildCreateRequestDTO dto, Long parentId);
 
     void deleteChild(Long childId, Parent parent);
 
-    void updateChild(Long childId, Parent parent, ChildRequestDTO.ChildUpdateRequestDTO dto, MultipartFile profileImage);
+    void updateChild(Long childId, Parent parent, ChildRequestDTO.ChildUpdateRequestDTO dto);
 
     String updateChildProfileImage(Long childId, Parent parent, MultipartFile profileImage) throws IOException;
 }
