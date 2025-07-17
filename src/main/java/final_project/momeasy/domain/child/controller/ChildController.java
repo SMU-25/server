@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -28,11 +29,10 @@ public class ChildController {
     @Operation(summary = "아이 추가")
     @PostMapping
     public CustomResponse<ChildResponseDTO.ChildCreateResponseDTO> createChild(
-            @RequestPart("dto") ChildRequestDTO.ChildCreateRequestDTO createDTO,
-            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
+            @RequestBody ChildRequestDTO.ChildCreateRequestDTO createDTO,
             @AuthParent Parent parent) {
         return CustomResponse.onSuccess(
-                HttpStatus.CREATED, childCommandService.createChild(createDTO, profileImage, parent.getId()));
+                HttpStatus.CREATED, childCommandService.createChild(createDTO, parent.getId()));
     }
 
     @Operation(summary = "아이 삭제")
@@ -46,10 +46,9 @@ public class ChildController {
     @PatchMapping("/{childId}")
     public CustomResponse<String> updateChild(
             @PathVariable Long childId,
-            @RequestPart("dto") ChildRequestDTO.ChildUpdateRequestDTO updateDTO,
-            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
+            @RequestBody ChildRequestDTO.ChildUpdateRequestDTO updateDTO,
             @AuthParent Parent parent) {
-        childCommandService.updateChild(childId, parent, updateDTO, profileImage);
+        childCommandService.updateChild(childId, parent, updateDTO);
         return CustomResponse.onSuccess(HttpStatus.OK, "아이 정보 수정 완료");
     }
 
@@ -65,4 +64,13 @@ public class ChildController {
         return CustomResponse.onSuccess(HttpStatus.OK, childQueryService.getChildren(parent));
     }
 
+    @PatchMapping("/{childId}/profile-image")
+    public CustomResponse<?> uploadChildProfileImage(
+            @PathVariable Long childId,
+            @RequestPart MultipartFile profileImage,
+            @AuthParent Parent parent
+            ) throws IOException {
+        String profileUrl = childCommandService.updateChildProfileImage(childId, parent, profileImage);
+        return CustomResponse.onSuccess(HttpStatus.OK, profileUrl);
+    }
 }

@@ -37,7 +37,6 @@ public class ChildCommandServiceImpl implements ChildCommandService {
     @Override
     public ChildResponseDTO.ChildCreateResponseDTO createChild(
             ChildRequestDTO.ChildCreateRequestDTO dto,
-            MultipartFile profileImage,
             Long parentId) {
 
         Parent parent = parentRepository.findById(parentId)
@@ -46,8 +45,6 @@ public class ChildCommandServiceImpl implements ChildCommandService {
         Child child = ChildConverter.toChild(dto);
 
         // TODO: 아이 중복 추가 예외 처리
-
-        uploadAndSetProfileImage(child, profileImage);
 
         childRepository.save(child);
 
@@ -85,8 +82,8 @@ public class ChildCommandServiceImpl implements ChildCommandService {
     public void updateChild(
             Long childId,
             Parent parent,
-            ChildRequestDTO.ChildUpdateRequestDTO dto,
-            MultipartFile profileImage) {
+            ChildRequestDTO.ChildUpdateRequestDTO dto
+    ) {
         Child child = childRepository.findById(childId)
                 .orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
 
@@ -96,9 +93,6 @@ public class ChildCommandServiceImpl implements ChildCommandService {
 
         // update
         child.update(dto);
-
-        // update profile image
-        uploadAndSetProfileImage(child, profileImage);
 
         // 기존 연관관계 제거
         childIllnessRepository.deleteByChild(child);
@@ -119,19 +113,27 @@ public class ChildCommandServiceImpl implements ChildCommandService {
 
     }
 
-    // 이미지 업로드 메서드
-    private void uploadAndSetProfileImage(Child child, MultipartFile profileImage) {
-        if (profileImage == null || profileImage.isEmpty()) {
-            return; // 이미지 추가를 안 했을 경우 아무것도 안 하고 넘어감
+    @Override
+    public String updateChildProfileImage(Long childId, Parent parent, MultipartFile profileImage) throws IOException {
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
+
+        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
+            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        // 기존 이미지 있으면 삭제
+        if (child.getProfileImage() != null) {
+            s3Uploader.delete(child.getProfileImage());
         }
 
         // 새로운 이미지 업로드
-        try {
-            String fileName = s3Uploader.upload(profileImage, "profile");
-            child.updateProfileImage(fileName);
-        } catch (IOException e) {
-            throw new ChildException(ChildErrorCode.INTERNAL_ERROR);
-        }
+        String fileName = s3Uploader.upload(profileImage, "profile");
+        child.updateProfileImage(fileName);
+
+        childRepository.save(child);
+
+        return s3Uploader.getPresignedUrl(fileName);
 
     }
 }
