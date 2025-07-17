@@ -16,7 +16,6 @@ public class ChildConverter {
                 .weight(dto.weight())
                 .gender(dto.gender())
                 .seizure(dto.seizure())
-                .profileImage(dto.profileImage())
                 .build();
     }
 
@@ -27,7 +26,7 @@ public class ChildConverter {
                 .build();
     }
 
-    public static ChildResponseDTO.ChildDetailResponseDTO toChildDetailResponseDTO(Child child) {
+    public static ChildResponseDTO.ChildDetailResponseDTO toChildDetailResponseDTO(Child child, String profileImageUrl) {
         return ChildResponseDTO.ChildDetailResponseDTO.builder()
                 .name(child.getName())
                 .birthdate(child.getBirthdate())
@@ -35,18 +34,18 @@ public class ChildConverter {
                 .weight(child.getWeight())
                 .gender(child.getGender())
                 .seizure(child.getSeizure())
-                .profileImage(child.getProfileImage())
+                .profileImage(profileImageUrl)
                 .illnessTypes(child.getChildIllnesses().stream()
                         .map(childIllness -> childIllness.getIllness().getIllnessType())
                         .collect(Collectors.toUnmodifiableList()))
                 .build();
     }
 
-    public static ChildResponseDTO.ChildSimpleResponseDTO toChildSimpleResponseDTO(Child child) {
+    public static ChildResponseDTO.ChildSimpleResponseDTO toChildSimpleResponseDTO(Child child, String profileImageUrl) {
         return ChildResponseDTO.ChildSimpleResponseDTO.builder()
                 .childId(child.getId())
                 .name(child.getName())
-                .profileImage(child.getProfileImage())
+                .profileImage(profileImageUrl)
                 .build();
     }
 

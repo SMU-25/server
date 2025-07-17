@@ -10,7 +10,7 @@ public class CalendarConverter {
     public static CalendarResponseDto toResponseDto(Calendar calendar) {
         return CalendarResponseDto.builder()
                 .calendarId(calendar.getId())
-                .scheduleDate(calendar.getScheduleDate())
+                .recordDate(calendar.getRecordDate())
                 .title(calendar.getTitle())
                 .content(calendar.getContent())
                 .build();
@@ -18,7 +18,7 @@ public class CalendarConverter {
 
     public static Calendar toEntity(CalendarRequestDto dto, Parent parent) {
         return Calendar.builder()
-                .scheduleDate(dto.getScheduleDate())
+                .recordDate(dto.getRecordDate())
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .parent(parent)
