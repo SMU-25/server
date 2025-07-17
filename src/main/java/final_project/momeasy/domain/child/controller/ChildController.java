@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -65,4 +66,13 @@ public class ChildController {
         return CustomResponse.onSuccess(HttpStatus.OK, childQueryService.getChildren(parent));
     }
 
+    @PatchMapping("/{childId}/profile-image")
+    public CustomResponse<?> uploadChildProfileImage(
+            @PathVariable Long childId,
+            @RequestPart MultipartFile profileImage,
+            @AuthParent Parent parent
+            ) throws IOException {
+        String profileUrl = childCommandService.updateChildProfileImage(childId, parent, profileImage);
+        return CustomResponse.onSuccess(HttpStatus.OK, profileUrl);
+    }
 }

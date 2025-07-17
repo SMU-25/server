@@ -119,19 +119,27 @@ public class ChildCommandServiceImpl implements ChildCommandService {
 
     }
 
-    // 이미지 업로드 메서드
-    private void uploadAndSetProfileImage(Child child, MultipartFile profileImage) {
-        if (profileImage == null || profileImage.isEmpty()) {
-            return; // 이미지 추가를 안 했을 경우 아무것도 안 하고 넘어감
+    @Override
+    public String updateChildProfileImage(Long childId, Parent parent, MultipartFile profileImage) throws IOException {
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
+
+        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
+            throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        // 기존 이미지 있으면 삭제
+        if (child.getProfileImage() != null) {
+            s3Uploader.delete(child.getProfileImage());
         }
 
         // 새로운 이미지 업로드
-        try {
-            String fileName = s3Uploader.upload(profileImage, "profile");
-            child.updateProfileImage(fileName);
-        } catch (IOException e) {
-            throw new ChildException(ChildErrorCode.INTERNAL_ERROR);
-        }
+        String fileName = s3Uploader.upload(profileImage, "profile");
+        child.updateProfileImage(fileName);
+
+        childRepository.save(child);
+
+        return s3Uploader.getPresignedUrl(fileName);
 
     }
 }
