@@ -32,7 +32,7 @@ public class ChildQueryServiceImpl implements ChildQueryService {
             throw new ChildException(ChildErrorCode.UNAUTHORIZED_ACCESS);
         }
 
-        String profileImagePath = parent.getProfileImage();
+        String profileImagePath = child.getProfileImage();
         String profileImageUrl = (profileImagePath != null)
                 ? s3Uploader.getPresignedUrl(profileImagePath)
                 : null;
@@ -46,7 +46,7 @@ public class ChildQueryServiceImpl implements ChildQueryService {
 
         return children.stream()
                 .map(child -> {
-                    String profileImagePath = parent.getProfileImage();
+                    String profileImagePath = child.getProfileImage();
                     String profileImageUrl = (profileImagePath != null)
                             ? s3Uploader.getPresignedUrl(profileImagePath)
                             : null;
