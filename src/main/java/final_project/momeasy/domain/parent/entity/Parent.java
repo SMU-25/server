@@ -23,6 +23,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class Parent extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -71,7 +72,7 @@ public class Parent extends BaseEntity {
     @Builder.Default
     private List<Calendar> calendars = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY,mappedBy = "parent")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     private Setting setting;
 
     // 연관 관계 메서드
