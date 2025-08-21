@@ -11,14 +11,15 @@ import java.time.LocalDate;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE) // 외부에서 무분별한 생성 방지
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Calendar extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    // 자바 필드명은 recordDate 유지, DB 컬럼만 schedule_date로 매핑
+    @Column(name = "schedule_date", nullable = false)
     private LocalDate recordDate;
 
     @Column(nullable = false)

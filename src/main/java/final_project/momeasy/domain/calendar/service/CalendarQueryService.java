@@ -19,21 +19,18 @@ public class CalendarQueryService {
 
     private final CalendarRepository calendarRepository;
 
-    // 1. 일정 단건 조회
     public CalendarResponseDto getCalendar(Long id) {
         Calendar calendar = calendarRepository.findById(id)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.NOT_FOUND));
         return CalendarConverter.toResponseDto(calendar);
     }
 
-    // 2. 내 전체 일정 조회
     public List<CalendarResponseDto> getCalendarsByParent(Parent parent) {
         return calendarRepository.findByParent(parent).stream()
                 .map(CalendarConverter::toResponseDto)
                 .toList();
     }
 
-    // 3. 날짜 기반 일정 조회
     public List<CalendarResponseDto> getCalendarsByDate(Parent parent, LocalDate date) {
         List<Calendar> calendars = calendarRepository.findByRecordDateAndParent(date, parent);
         return calendars.stream()
@@ -41,7 +38,6 @@ public class CalendarQueryService {
                 .toList();
     }
 
-    // 4. 키워드 기반 일정 검색
     public List<CalendarResponseDto> searchCalendars(Parent parent, String keyword) {
         List<Calendar> calendars = calendarRepository.findByTitleContainingIgnoreCase(keyword).stream()
                 .filter(c -> c.getParent().getId().equals(parent.getId()))
