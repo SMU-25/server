@@ -18,8 +18,7 @@ public class Calendar extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 자바 필드명은 recordDate 유지, DB 컬럼만 schedule_date로 매핑
-    @Column(name = "schedule_date", nullable = false)
+    @Column(name = "record_date", nullable = false)
     private LocalDate recordDate;
 
     @Column(nullable = false)
