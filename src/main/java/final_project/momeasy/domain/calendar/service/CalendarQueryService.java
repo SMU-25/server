@@ -9,46 +9,48 @@ import final_project.momeasy.domain.calendar.repository.CalendarRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CalendarQueryService {
 
     private final CalendarRepository calendarRepository;
+    private final CalendarConverter converter;
 
-    public CalendarResponseDto getCalendar(Long id) {
-        Calendar calendar = calendarRepository.findById(id)
+    public CalendarResponseDto getCalendar(Long id, Parent parent) {
+        Calendar calendar = calendarRepository.findByIdAndParent(id, parent)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.NOT_FOUND));
-        return CalendarConverter.toResponseDto(calendar);
+        return converter.toResponseDto(calendar);
     }
 
     public List<CalendarResponseDto> getCalendarsByParent(Parent parent) {
         return calendarRepository.findByParent(parent).stream()
-                .map(CalendarConverter::toResponseDto)
+                .map(converter::toResponseDto)
                 .toList();
     }
 
-    public List<CalendarResponseDto> getCalendarsByDate(Parent parent, LocalDate date) {
-        List<Calendar> calendars = calendarRepository.findByRecordDateAndParent(date, parent);
-        return calendars.stream()
-                .map(CalendarConverter::toResponseDto)
+    public List<CalendarResponseDto> getCalendarsByRecordDate(Parent parent, LocalDate date) {
+        return calendarRepository.findByRecordDateAndParent(date, parent).stream()
+                .map(converter::toResponseDto)
+                .toList();
+    }
+
+    public List<CalendarResponseDto> getCalendarsByScheduleDate(Parent parent, LocalDate scheduleDate) {
+        return calendarRepository.findByScheduleDateAndParent(scheduleDate, parent).stream()
+                .map(converter::toResponseDto)
                 .toList();
     }
 
     public List<CalendarResponseDto> searchCalendars(Parent parent, String keyword) {
-        List<Calendar> calendars = calendarRepository.findByTitleContainingIgnoreCase(keyword).stream()
-                .filter(c -> c.getParent().getId().equals(parent.getId()))
-                .toList();
-
+        var calendars = calendarRepository.findByTitleContainingIgnoreCaseAndParent(keyword, parent);
         if (calendars.isEmpty()) {
             throw new CalendarException(CalendarErrorCode.SEARCH_NO_RESULT);
         }
-
-        return calendars.stream()
-                .map(CalendarConverter::toResponseDto)
-                .toList();
+        return calendars.stream().map(converter::toResponseDto).toList();
     }
 }

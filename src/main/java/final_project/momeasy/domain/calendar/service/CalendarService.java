@@ -14,15 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional // 클래스 상단 트랜잭션(쓰기)
 public class CalendarService {
 
     private final CalendarRepository calendarRepository;
+    private final CalendarConverter converter;
 
     public CalendarResponseDto createCalendar(CalendarRequestDto requestDto, Parent parent) {
-        Calendar calendar = CalendarConverter.toEntity(requestDto, parent);
-        Calendar saved = calendarRepository.save(calendar);
-        return CalendarConverter.toResponseDto(saved);
+        Calendar saved = calendarRepository.save(converter.toEntity(requestDto, parent));
+        return converter.toResponseDto(saved);
     }
 
     public CalendarResponseDto updateCalendar(Long id, CalendarRequestDto requestDto, Parent parent) {
@@ -33,13 +33,8 @@ public class CalendarService {
             throw new CalendarException(CalendarErrorCode.NO_CALENDAR_ACCESS);
         }
 
-        calendar.update(
-                requestDto.getRecordDate(),
-                requestDto.getTitle(),
-                requestDto.getContent()
-        );
-
-        return CalendarConverter.toResponseDto(calendar);
+        converter.apply(calendar, requestDto); // 더티체킹
+        return converter.toResponseDto(calendar);
     }
 
     public void deleteCalendar(Long id, Parent parent) {

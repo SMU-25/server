@@ -10,6 +10,7 @@ import final_project.momeasy.global.security.annotation.AuthParent;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,14 +30,17 @@ public class CalendarController {
     public CustomResponse<CalendarResponseDto> createCalendar(
             @RequestBody @Valid CalendarRequestDto requestDto,
             @AuthParent Parent parent) {
-        CalendarResponseDto response = calendarService.createCalendar(requestDto, parent);
-        return CustomResponse.onSuccess(HttpStatus.CREATED, response);
+        var response = calendarService.createCalendar(requestDto, parent);
+        // 컨벤션: 성공은 OK 사용
+        return CustomResponse.onSuccess(HttpStatus.OK, response);
     }
 
     @Operation(summary = "캘린더 일정 단건 조회")
     @GetMapping("/{calendarId}")
-    public CustomResponse<CalendarResponseDto> getCalendar(@PathVariable Long calendarId) {
-        CalendarResponseDto response = calendarQueryService.getCalendar(calendarId);
+    public CustomResponse<CalendarResponseDto> getCalendar(
+            @PathVariable Long calendarId,
+            @AuthParent Parent parent) {
+        var response = calendarQueryService.getCalendar(calendarId, parent);
         return CustomResponse.onSuccess(response);
     }
 
@@ -44,7 +48,7 @@ public class CalendarController {
     @GetMapping("/my")
     public CustomResponse<List<CalendarResponseDto>> getMyCalendars(
             @AuthParent Parent parent) {
-        List<CalendarResponseDto> response = calendarQueryService.getCalendarsByParent(parent);
+        var response = calendarQueryService.getCalendarsByParent(parent);
         return CustomResponse.onSuccess(response);
     }
 
@@ -54,7 +58,7 @@ public class CalendarController {
             @PathVariable Long calendarId,
             @RequestBody @Valid CalendarRequestDto requestDto,
             @AuthParent Parent parent) {
-        CalendarResponseDto response = calendarService.updateCalendar(calendarId, requestDto, parent);
+        var response = calendarService.updateCalendar(calendarId, requestDto, parent);
         return CustomResponse.onSuccess(response);
     }
 
@@ -72,17 +76,16 @@ public class CalendarController {
     public CustomResponse<List<CalendarResponseDto>> searchCalendars(
             @RequestParam String keyword,
             @AuthParent Parent parent) {
-        List<CalendarResponseDto> response = calendarQueryService.searchCalendars(parent, keyword);
+        var response = calendarQueryService.searchCalendars(parent, keyword);
         return CustomResponse.onSuccess(response);
     }
 
-    @Operation(summary = "날짜로 일정 조회")
-    @GetMapping("/date")
-    public CustomResponse<List<CalendarResponseDto>> getCalendarsByDate(
-            @RequestParam String date,
+    @Operation(summary = "일정 날짜(scheduleDate)로 일정 조회")
+    @GetMapping("/schedule-date")
+    public CustomResponse<List<CalendarResponseDto>> getCalendarsByScheduleDate(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @AuthParent Parent parent) {
-        LocalDate localDate = LocalDate.parse(date);
-        List<CalendarResponseDto> response = calendarQueryService.getCalendarsByDate(parent, localDate);
+        var response = calendarQueryService.getCalendarsByScheduleDate(parent, date);
         return CustomResponse.onSuccess(response);
     }
 }
