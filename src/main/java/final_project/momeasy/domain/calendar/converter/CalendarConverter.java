@@ -4,24 +4,37 @@ import final_project.momeasy.domain.calendar.dto.CalendarRequestDto;
 import final_project.momeasy.domain.calendar.dto.CalendarResponseDto;
 import final_project.momeasy.domain.calendar.entity.Calendar;
 import final_project.momeasy.domain.parent.entity.Parent;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CalendarConverter {
 
-    public static CalendarResponseDto toResponseDto(Calendar calendar) {
-        return CalendarResponseDto.builder()
-                .calendarId(calendar.getId())
-                .recordDate(calendar.getRecordDate())
-                .title(calendar.getTitle())
-                .content(calendar.getContent())
-                .build();
+    public Calendar toEntity(CalendarRequestDto dto, Parent parent) {
+        return Calendar.create(
+                dto.getRecordDate(),
+                dto.getScheduleDate(),
+                dto.getTitle(),
+                dto.getContent(),
+                parent
+        );
     }
 
-    public static Calendar toEntity(CalendarRequestDto dto, Parent parent) {
-        return Calendar.builder()
-                .recordDate(dto.getRecordDate())
-                .title(dto.getTitle())
-                .content(dto.getContent())
-                .parent(parent)
+    public void apply(Calendar target, CalendarRequestDto dto) {
+        target.update(
+                dto.getRecordDate(),
+                dto.getScheduleDate(),
+                dto.getTitle(),
+                dto.getContent()
+        );
+    }
+
+    public CalendarResponseDto toResponseDto(Calendar entity) {
+        return CalendarResponseDto.builder()
+                .calendarId(entity.getId())
+                .recordDate(entity.getRecordDate())
+                .scheduleDate(entity.getScheduleDate())
+                .title(entity.getTitle())
+                .content(entity.getContent())
                 .build();
     }
 }

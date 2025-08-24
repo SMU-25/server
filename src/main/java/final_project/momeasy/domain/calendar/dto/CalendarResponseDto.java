@@ -10,6 +10,7 @@ import java.time.LocalDate;
 public class CalendarResponseDto {
     private Long calendarId;
     private LocalDate recordDate;
+    private LocalDate scheduleDate;
     private String title;
     private String content;
 }
