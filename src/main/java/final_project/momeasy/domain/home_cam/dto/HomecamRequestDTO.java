@@ -38,9 +38,5 @@ public class HomecamRequestDTO {
 
         @NotBlank(message = "아이는 필수 입력 값입니다.")
         private Long childId;
-
-        @NotNull(message = "홈캠 번호는 필수 입력 값입니다.")
-        @JsonProperty("serial_num")
-        private String serial_num;
     }
 }
