@@ -8,7 +8,6 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.security.annotation.AuthParent;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,6 +37,15 @@ public class HomecamController {
     public CustomResponse<List<HomecamResponseDTO.HomecamDTO>> getHomecams(@AuthParent Parent parent) {
         List<HomecamResponseDTO.HomecamDTO> homecamList = homecamQueryService.getHomecamListByParent(parent);
         return CustomResponse.onSuccess(homecamList);
+    }
+
+    @GetMapping("/graph/{homecamId}")
+    @Operation(summary = "홈캠 그래프 조회", description = "홈캠 화면에서 온습도,체온 그래프를 조회합니다. 홈캠 화면에서 사용되는 API입니다.")
+    public CustomResponse<HomecamResponseDTO.HomecamGraphDTO> getGraph(
+            @AuthParent Parent parent,
+            @PathVariable("homecamId") long homecamId) {
+        HomecamResponseDTO.HomecamGraphDTO homecamGraph = homecamQueryService.getHomecamGraphById(homecamId,parent);
+        return CustomResponse.onSuccess(homecamGraph);
     }
 
     @DeleteMapping("/{homecamId}")
