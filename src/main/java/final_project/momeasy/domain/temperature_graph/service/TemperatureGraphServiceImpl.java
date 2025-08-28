@@ -6,6 +6,7 @@ import final_project.momeasy.domain.fever_report.exception.FeverReportErrorCode;
 import final_project.momeasy.domain.fever_report.exception.FeverReportException;
 import final_project.momeasy.domain.fever_report.repository.FeverReportRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
+import final_project.momeasy.domain.temperature_graph.dto.TemperatureGraphResponseDTO;
 import final_project.momeasy.domain.temperature_graph.entity.TemperatureGraph;
 import final_project.momeasy.domain.temperature_graph.repository.TemperatureGraphRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,26 @@ public class TemperatureGraphServiceImpl implements TemperatureGraphService {
         return temperatureGraphs;
     }
 
+    @Override
+    public List<TemperatureGraphResponseDTO.TemperatureGraphHomecamViewDTO> getTemperatureRecordHomecamGraph(Parent parent, Long childId) {
+        List<TemperatureGraphResponseDTO.TemperatureGraphHomecamViewDTO> temperatureGraphs = new ArrayList<>();
+        // 범위 day1
+        for(int t = 0 ; t <24 ; t+=3){
+            temperatureGraphs.add(buildHomecamTemperatureGraph(0, DayRange.DAY1,t, t, childId));
+        }
+        // 범위 day3
+        for (int d = 2; d >= 0; d--) {
+            temperatureGraphs.add(buildHomecamTemperatureGraph(d, DayRange.DAY3,0, 6,childId));   // 새벽
+            temperatureGraphs.add(buildHomecamTemperatureGraph(d, DayRange.DAY3,6, 12,childId));  // 오전
+            temperatureGraphs.add(buildHomecamTemperatureGraph(d, DayRange.DAY3,12, 24,childId)); // 오후
+        }
+        // 범위 day7
+        for(int d = 6; d>=0; d--){
+            temperatureGraphs.add(buildHomecamTemperatureGraph(d, DayRange.DAY7,0, 24,childId));
+        }
+        return temperatureGraphs;
+    }
+
     private TemperatureGraph buildTemperatureGraph(FeverReport feverReport, int dayOffset, DayRange dayRange , int startHour, int endHour, Long childId) {
         float avg = dayRange == DayRange.DAY1 ? avgTemperature.getTemperatureAvgBy3Hour(startHour, childId) : avgTemperature.getTemperatureAvgByDayAndTimeRange(dayOffset, startHour, endHour, childId);
         TemperatureGraph temperatureGraph = TemperatureGraph.builder()
@@ -54,5 +75,14 @@ public class TemperatureGraphServiceImpl implements TemperatureGraphService {
                 .build();
         temperatureGraph.setFeverReport(feverReport);
         return temperatureGraph;
+    }
+
+    private TemperatureGraphResponseDTO.TemperatureGraphHomecamViewDTO buildHomecamTemperatureGraph(int dayOffset, DayRange dayRange , int startHour, int endHour, Long childId) {
+        float avg = dayRange == DayRange.DAY1 ? avgTemperature.getTemperatureAvgBy3Hour(startHour, childId) : avgTemperature.getTemperatureAvgByDayAndTimeRange(dayOffset, startHour, endHour, childId);
+        return TemperatureGraphResponseDTO.TemperatureGraphHomecamViewDTO.builder()
+                .avgtemperature(avg)
+                .dayRange(dayRange)
+                .build();
+
     }
 }
