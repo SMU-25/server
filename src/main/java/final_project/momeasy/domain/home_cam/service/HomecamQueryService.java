@@ -9,4 +9,6 @@ public interface HomecamQueryService {
     HomecamResponseDTO.HomecamDetailDTO getHomecamById(Long homecamId, Parent parent);
 
     List<HomecamResponseDTO.HomecamDTO> getHomecamListByParent(Parent parent);
+
+    HomecamResponseDTO.HomecamGraphDTO getHomecamGraphById(Long homecamId, Parent parent);
 }
