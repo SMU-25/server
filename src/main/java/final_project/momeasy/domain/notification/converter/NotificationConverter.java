@@ -12,7 +12,6 @@ public class NotificationConverter {
         return NotificationResponse.from(notification);
     }
 
-    // 직접 파라미터 전달 방식
     public static Notification from(
             Parent parent,
             Child child,
@@ -21,9 +20,7 @@ public class NotificationConverter {
             Float temperature,
             Float humidity
     ) {
-        return Notification.builder()
-                .parent(parent)
-                .child(child)
+        Notification notification = Notification.builder()
                 .type(NotificationType.CARE)
                 .message(message)
                 .fever(fever)
@@ -31,5 +28,9 @@ public class NotificationConverter {
                 .humidity(humidity)
                 .isRead(false)
                 .build();
+
+        notification.setParent(parent);
+        notification.setChild(child);
+        return notification;
     }
 }
