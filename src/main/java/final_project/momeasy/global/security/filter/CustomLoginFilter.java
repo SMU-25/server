@@ -79,12 +79,10 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         // refresh token DB에 저장
         tokenService.saveOrUpdate(customUserDetails.getUsername(), refreshToken);
 
-        // refresh token은 쿠키로 전달
-        CookieUtil.addRefreshTokenToCookie(response, refreshToken);
-
         // Client에게 줄 Response build
         LoginResponseDTO loginResponse = LoginResponseDTO.builder()
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
 
         // Custom Response 작성
