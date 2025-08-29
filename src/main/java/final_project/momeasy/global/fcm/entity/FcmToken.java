@@ -24,7 +24,7 @@ public class FcmToken extends BaseEntity {
     @JoinColumn(name = "parent_id", nullable = false)
     private Parent parent;
 
-    @Column(nullable = false, unique = true, length = 2048)
+    @Column(nullable = false, unique = true, length = 512)
     private String token;
 
     @Enumerated(EnumType.STRING)
