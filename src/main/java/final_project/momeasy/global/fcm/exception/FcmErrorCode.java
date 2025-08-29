@@ -3,6 +3,7 @@ package final_project.momeasy.global.fcm.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+
 @Getter
 public enum FcmErrorCode {
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "FCM 토큰을 찾을 수 없습니다."),

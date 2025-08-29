@@ -40,6 +40,7 @@ public class FcmService {
         doSend(targetToken, message);
     }
 
+
     @Async
     public void sendAnnouncementToTopic(String topic, String title, String body, String deeplink, String type) {
         AndroidConfig android = AndroidConfig.builder()
