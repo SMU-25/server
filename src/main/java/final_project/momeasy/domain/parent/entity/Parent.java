@@ -76,7 +76,7 @@ public class Parent extends BaseEntity {
     @Builder.Default
     private List<FcmToken> fcmTokens = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
     private Setting setting;
 
     // 연관 관계 메서드
