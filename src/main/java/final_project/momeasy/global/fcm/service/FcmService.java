@@ -1,7 +1,15 @@
 package final_project.momeasy.global.fcm.service;
 
-import com.google.firebase.ErrorCode;
-import com.google.firebase.messaging.*;
+import com.google.firebase.messaging.AndroidConfig;
+import com.google.firebase.messaging.AndroidNotification;
+import com.google.firebase.messaging.Aps;
+import com.google.firebase.messaging.ApsAlert;
+import com.google.firebase.messaging.ApnsConfig;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.MessagingErrorCode;
+import com.google.firebase.messaging.Notification;
 import final_project.momeasy.common.enums.DeviceType;
 import final_project.momeasy.global.fcm.exception.FcmErrorCode;
 import final_project.momeasy.global.fcm.exception.FcmException;
@@ -37,7 +45,10 @@ public class FcmService {
         AndroidConfig android = AndroidConfig.builder()
                 .setPriority(AndroidConfig.Priority.HIGH)
                 .setNotification(AndroidNotification.builder()
-                        .setTitle(title).setBody(body).setChannelId("announcement").build())
+                        .setTitle(title)
+                        .setBody(body)
+                        .setChannelId("announcement")
+                        .build())
                 .putData("deeplink", deeplink == null ? "" : deeplink)
                 .putData("type", type == null ? "" : type)
                 .build();
@@ -89,15 +100,14 @@ public class FcmService {
             String response = FirebaseMessaging.getInstance().send(message);
             log.info("FCM sent: {}", response);
         } catch (FirebaseMessagingException e) {
-            MessagingErrorCode mcode = e.getMessagingErrorCode();
-            ErrorCode gcode = e.getErrorCode();
-            log.warn("FCM failed: mcode={}, gcode={}, msg={}", mcode, gcode, e.getMessage());
+            MessagingErrorCode code = e.getMessagingErrorCode(); // ✅ Admin SDK 권장 방식
+            log.warn("FCM failed: code={}, msg={}", code, e.getMessage(), e);
 
-            if (mcode == MessagingErrorCode.UNREGISTERED && targetTokenOrNull != null) {
+            if (code == MessagingErrorCode.UNREGISTERED && targetTokenOrNull != null) {
                 tokenService.deleteTokenSilentlyIfExists(targetTokenOrNull);
                 throw new FcmException(FcmErrorCode.UNREGISTERED_TOKEN);
             }
-            if (gcode == ErrorCode.INVALID_ARGUMENT) {
+            if (code == MessagingErrorCode.INVALID_ARGUMENT) {
                 throw new FcmException(FcmErrorCode.INVALID_REQUEST);
             }
             throw new FcmException(FcmErrorCode.UNKNOWN_SENDER_ERROR);
