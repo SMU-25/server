@@ -9,6 +9,7 @@ import final_project.momeasy.domain.home_cam.entity.Homecam;
 import final_project.momeasy.domain.notification.entity.Notification;
 import final_project.momeasy.domain.setting.entity.Setting;
 import final_project.momeasy.global.entity.BaseEntity;
+import final_project.momeasy.global.fcm.entity.FcmToken;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +24,6 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class Parent extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -72,7 +72,11 @@ public class Parent extends BaseEntity {
     @Builder.Default
     private List<Calendar> calendars = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<FcmToken> fcmTokens = new ArrayList<>();
+
+    @OneToOne(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
     private Setting setting;
 
     // 연관 관계 메서드
@@ -89,6 +93,11 @@ public class Parent extends BaseEntity {
     public void setSetting(Setting setting) {
         this.setting = setting;
         setting.setParent(this);
+    }
+
+    public void addFcmToken(FcmToken token) {
+        this.fcmTokens.add(token);
+        token.setParent(this);
     }
 
     // soft delete
