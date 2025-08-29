@@ -2,6 +2,7 @@ package final_project.momeasy.global.fcm.exception;
 
 import lombok.Getter;
 
+
 @Getter
 public class FcmException extends RuntimeException {
     private final FcmErrorCode errorCode;

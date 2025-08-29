@@ -6,6 +6,7 @@ import final_project.momeasy.common.enums.DeviceType;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Entity
 @Table(name = "fcm_token", indexes = {
         @Index(name = "idx_fcm_token_parent", columnList = "parent_id")
