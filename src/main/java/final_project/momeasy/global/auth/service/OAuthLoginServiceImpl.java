@@ -50,11 +50,17 @@ public class OAuthLoginServiceImpl implements OAuthLoginService {
 
         // JWT 발급
         CustomUserDetails userDetails = new CustomUserDetails(parent);
+
+        log.info("[ OAuthLoginServiceImpl > JwtUtil ] AccessToken 발급");
         String accessJwt = jwtUtil.generateJwtAccessToken(userDetails);
+        log.info("[ OAuthLoginServiceImpl > JwtUtil ] RefreshToken 발급");
         String refreshJwt = jwtUtil.generateRefreshToken(userDetails);
 
         tokenService.saveOrUpdate(parent.getEmail(), refreshJwt);
 
-        return new OAuthResponseDTO.OAuthLoginResponseDTO(accessJwt);
+        return OAuthResponseDTO.OAuthLoginResponseDTO.builder()
+                .accessToken(accessJwt)
+                .refreshToken(refreshJwt)
+                .build();
     }
 }
