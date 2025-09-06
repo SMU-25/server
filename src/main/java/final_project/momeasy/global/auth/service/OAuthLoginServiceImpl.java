@@ -8,6 +8,8 @@ import final_project.momeasy.global.auth.client.SocialOAuthApiClient;
 import final_project.momeasy.global.auth.dto.ParentProfile;
 import final_project.momeasy.global.auth.dto.request.OAuthRequestDTO;
 import final_project.momeasy.global.auth.dto.response.OAuthResponseDTO;
+import final_project.momeasy.global.auth.exception.AuthErrorCode;
+import final_project.momeasy.global.auth.exception.AuthException;
 import final_project.momeasy.global.security.CustomUserDetails;
 import final_project.momeasy.global.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +34,7 @@ public class OAuthLoginServiceImpl implements OAuthLoginService {
         SocialOAuthApiClient client = socialOAuthApiClients.stream()
                 .filter(c -> c.supports(oAuthLoginRequestDTO.provider()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("지원하지 않는 소셜 로그인입니다: " + oAuthLoginRequestDTO.provider()));
+                .orElseThrow(() -> new AuthException(AuthErrorCode.UNSUPPORTED_SOCIAL_PROVIDER));
 
         // 사용자 정보 요청
         ParentProfile profile = client.fetchProfile(oAuthLoginRequestDTO.accessToken());

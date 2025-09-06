@@ -19,6 +19,7 @@ public enum AuthErrorCode implements BaseErrorCode {
     OAUTH_USER_INFO_FAIL(HttpStatus.BAD_REQUEST, "AUTH400_2", "소셜 사용자 정보 조회에 실패했습니다."),
     OAUTH_EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "AUTH400_3", "이메일 정보를 찾을 수 없습니다."),
     OAUTH_LOGIN_FAIL(HttpStatus.BAD_REQUEST, "AUTH400_4", "로그인에 실패했습니다."),
+    UNSUPPORTED_SOCIAL_PROVIDER(HttpStatus.BAD_REQUEST, "AUTH400_5", "지원하지 않는 소셜 로그인입니다."),
     ACCOUNT_DISABLED(HttpStatus.FORBIDDEN, "AUTH403", "계정이 비활성화 되었습니다."),
     ACCOUNT_LOCKED(HttpStatus.LOCKED, "AUTH423", "계정이 잠금 상태입니다."),
     LOGIN_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "AUTH500", "인증에 실패했습니다.");
