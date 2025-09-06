@@ -2,8 +2,6 @@ package final_project.momeasy.global.security;
 
 import final_project.momeasy.common.enums.SocialType;
 import final_project.momeasy.domain.parent.entity.Parent;
-import final_project.momeasy.domain.parent.exception.ParentErrorCode;
-import final_project.momeasy.domain.parent.exception.ParentException;
 import final_project.momeasy.domain.parent.repository.ParentRepository;
 import final_project.momeasy.global.auth.exception.AuthErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         log.info("[ CustomUserDetailsService loadUserByUsername() ] email을 이용하여 user를 검색합니다.");
 
         Parent parent = parentRepository.findByEmail(email)
-                .orElseThrow(() -> new ParentException(ParentErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new UsernameNotFoundException(AuthErrorCode.WRONG_ID.getMessage()));
 
         // 소셜 로그인 유저일 경우 로그인 불가 예외
         if (parent.getSocialType() != SocialType.LOCAL) {
