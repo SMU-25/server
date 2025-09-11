@@ -5,6 +5,7 @@ import final_project.momeasy.global.fcm.dto.FcmTokenRequest;
 import final_project.momeasy.global.fcm.service.FcmTokenService;
 import final_project.momeasy.global.security.CustomUserDetails;
 import final_project.momeasy.global.security.annotation.AuthParent;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/fcm-token")
 @RequiredArgsConstructor
+@Tag(name = "FcmToken", description = "FcmToken API by 정현")
 public class FcmTokenController {
 
     private final FcmTokenService tokenService;
