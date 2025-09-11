@@ -12,9 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-
-@RequestMapping("/api/notifications")
 @Tag(name = "Notification", description = "공지 API by 정현")
+@RequestMapping("/api/notifications")
 @RequiredArgsConstructor
 public class NotificationController {
 

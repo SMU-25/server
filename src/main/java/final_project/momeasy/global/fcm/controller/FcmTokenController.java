@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/fcm-token")
+@Tag(name = "FcmToken", description = "파이어베이스 API by 정현")
 @RequiredArgsConstructor
-@Tag(name = "FcmToken", description = "FcmToken API by 정현")
 public class FcmTokenController {
 
     private final FcmTokenService tokenService;

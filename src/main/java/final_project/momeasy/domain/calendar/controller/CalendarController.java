@@ -20,8 +20,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/calendars")
 @Tag(name = "Calendar", description = "캘린더 API by 정현")
+@RequestMapping("/api/calendars")
 public class CalendarController {
 
     private final CalendarService calendarService;

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/announcements")
-@Tag(name = "Announcement", description = "공지/이벤트 API by 정현")
 @RequiredArgsConstructor
+@Tag(name = "Announcement", description = "공지/이벤트 API by 정현")
 public class AnnouncementController {
 
     private final AnnouncementService announcementService;

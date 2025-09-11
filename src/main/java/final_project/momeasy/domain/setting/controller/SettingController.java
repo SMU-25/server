@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/settings")
-@RequiredArgsConstructor
 @Tag(name = "Setting", description = "설정 API by 정현")
+@RequiredArgsConstructor
 public class SettingController {
 
     private final SettingService settingService;
