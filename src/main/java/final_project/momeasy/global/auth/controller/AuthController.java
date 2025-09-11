@@ -31,13 +31,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-@Tag(name = "Auth", description = "인증 관련 API")
+@Tag(name = "Auth", description = "인증 관련 API by 현빈")
 public class AuthController {
 
     private final ParentCommandService parentCommandService;

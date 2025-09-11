@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/children")
-@Tag(name = "Child", description = "아이 API")
+@Tag(name = "Child", description = "아이 API by 현빈")
 public class ChildController {
 
     private final ChildCommandService childCommandService;
