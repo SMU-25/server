@@ -71,19 +71,9 @@ public class AuthController {
     @Operation(summary = "소셜 로그인 (KAKAO, NAVER)")
     @PostMapping("/social-login")
     public CustomResponse<OAuthResponseDTO.OAuthLoginResponseDTO> socialLogin(
-            @RequestBody OAuthRequestDTO.OAuthLoginRequestDTO requestDTO,
-            HttpServletResponse response) {
+            @RequestBody OAuthRequestDTO.OAuthLoginRequestDTO reqDTO) {
 
-        OAuthResponseDTO.OAuthLoginResponseDTO responseDTO = oAuthLoginService.login(requestDTO);
-
-        String email = jwtUtil.getEmail(responseDTO.accessToken());
-        String refreshToken = tokenService.findByEmail(email)
-                .orElseThrow(() -> new JwtException(JwtErrorCode.MISSING_TOKEN))
-                .getRefreshToken();
-
-        CookieUtil.addRefreshTokenToCookie(response, refreshToken);
-
-        return CustomResponse.onSuccess(responseDTO);
+        return CustomResponse.onSuccess(oAuthLoginService.login(reqDTO));
     }
 
     @Operation(summary = "비밀번호 재설정 (임시 비밀번호 메일 발급)")

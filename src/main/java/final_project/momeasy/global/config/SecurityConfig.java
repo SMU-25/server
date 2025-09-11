@@ -73,7 +73,11 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/swagger-resources/**",
-            "/api/auth/**",
+            "/api/auth/login",
+            "/api/auth/social-login",
+            "/api/auth/signup",
+            "/api/auth/reset-password",
+            "/api/auth/refresh",
             "/api/email/**",
             "/login/**"
     };

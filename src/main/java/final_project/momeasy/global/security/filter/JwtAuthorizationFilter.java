@@ -34,6 +34,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final ParentRepository parentRepository;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String uri = request.getRequestURI();
+        return uri.startsWith("/api/auth/login")
+                || uri.startsWith("/api/auth/social-login")
+                || uri.startsWith("/api/auth/refresh")
+                || uri.equals("/api/auth/signup")
+                || uri.equals("/api/auth/reset-password");
+    }
+
+    @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
