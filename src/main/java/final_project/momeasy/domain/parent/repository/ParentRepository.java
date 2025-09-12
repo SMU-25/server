@@ -14,4 +14,5 @@ public interface ParentRepository extends JpaRepository<Parent, Long> {
     @Query("SELECT p from Parent p WHERE p.id = :parentId AND p.deletedAt IS NULL")
     Optional<Parent> findByIdNotDeleted(@Param("parentId") Long id);
 
+    Optional<Parent> findByEmailAndDeletedAtIsNull(String email);
 }
