@@ -7,12 +7,14 @@ import final_project.momeasy.domain.setting.service.SettingService;
 import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.security.annotation.AuthParent;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/settings")
+@Tag(name = "Setting", description = "설정 API by 정현")
 @RequiredArgsConstructor
 public class SettingController {
 

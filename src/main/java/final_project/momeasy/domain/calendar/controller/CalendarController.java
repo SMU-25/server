@@ -7,6 +7,7 @@ import final_project.momeasy.domain.calendar.service.CalendarQueryService;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.security.annotation.AuthParent;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Calendar", description = "캘린더 API by 정현")
 @RequestMapping("/api/calendars")
 public class CalendarController {
 

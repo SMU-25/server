@@ -7,11 +7,12 @@ import final_project.momeasy.global.apiPayload.CustomResponse;
 import final_project.momeasy.global.apiPayload.CursorResponse;
 import final_project.momeasy.global.security.annotation.AuthParent;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-
+@Tag(name = "Notification", description = "공지 API by 정현")
 @RequestMapping("/api/notifications")
 @RequiredArgsConstructor
 public class NotificationController {
