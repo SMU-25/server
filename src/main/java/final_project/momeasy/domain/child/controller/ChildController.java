@@ -64,6 +64,7 @@ public class ChildController {
         return CustomResponse.onSuccess(HttpStatus.OK, childQueryService.getChildren(parent));
     }
 
+    @Operation(summary = "아이 프로필 사진 업로드")
     @PatchMapping("/{childId}/profile-image")
     public CustomResponse<?> uploadChildProfileImage(
             @PathVariable Long childId,

@@ -1,5 +1,8 @@
 package final_project.momeasy.global.util.mail.service;
 
+import final_project.momeasy.domain.parent.exception.ParentErrorCode;
+import final_project.momeasy.domain.parent.exception.ParentException;
+import final_project.momeasy.domain.parent.repository.ParentRepository;
 import final_project.momeasy.global.util.mail.verification.service.VerificationCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MailServiceImpl implements MailService {
 
+    private final ParentRepository parentRepository;
     private final JavaMailSender mailSender;
     private final VerificationCodeService verificationCodeService;
 
@@ -26,6 +30,11 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendVerificationCode(String email) {
+
+        if (parentRepository.existsByEmail(email)) {
+            throw new ParentException(ParentErrorCode.DUPLICATE_EMAIL);
+        }
+
         String code = verificationCodeService.generateAndStoreCode(email);
 
         String subject = "[맘편해] 이메일 인증 코드입니다.";
