@@ -13,7 +13,8 @@ public enum ParentErrorCode implements BaseErrorCode {
     IMAGE_NOT_PROVIDED(HttpStatus.BAD_REQUEST, "PARENT400_2", "프로필 이미지가 제공되지 않았습니다."),
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "PARENT409_1", "이미 사용 중인 이메일입니다."),
     DUPLICATE_ID(HttpStatus.CONFLICT, "PARENT409_2", "이미 사용 중인 아이디입니다."),
-    NOT_FOUND(HttpStatus.NOT_FOUND, "PARENT404", "회원을 찾을 수 없습니다.");
+    NOT_FOUND(HttpStatus.NOT_FOUND, "PARENT404", "회원을 찾을 수 없습니다."),
+    SOFT_DELETED(HttpStatus.NOT_FOUND, "PARENT404_1", "삭제된 회원입니다."),;
 
     private final HttpStatus status;
     private final String code;
