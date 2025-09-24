@@ -51,7 +51,7 @@ public class HomecamServiceImpl implements HomecamService {
         List<RoomCondition> roomConditions = new ArrayList<>();
         for(String line : batch){
             String[] parts = line.split("::");
-            if(parts.length != 3){
+            if(parts.length < 2){
                 log.warn("error data format: {}", line);
                 continue;
             }
@@ -61,37 +61,49 @@ public class HomecamServiceImpl implements HomecamService {
                 homecam.setVideo_url(parts[2]);
                 continue;
             }
-            String[] env = parts[1].split(",");
-            float humidity = Float.parseFloat(env[0]);
-            float temperature = Float.parseFloat(env[1]);
 
             Homecam homecam = homecamRepository.findBySerialNum(boardId).orElseThrow(()->new HomecamException(HomecamErrorCode.NOT_FOUND));
             Child child = childRepository.findByHomecam(homecam).orElseThrow(()->new ChildException(ChildErrorCode.NOT_FOUND));
 
-            if(parts.length >= 3){
-                double sum = 0.0;
-                int count = 0;
-                String[] tempValues = parts[2].split(",");
-                for(String val: tempValues){
-                    sum += Float.parseFloat(val);
-                    count++;
+            try{
+                String[] env = parts[1].split(",");
+                if(env.length>=2) {
+                    float humidity = Float.parseFloat(env[0]);
+                    float temperature = Float.parseFloat(env[1]);
+                    RoomCondition roomCondition = RoomCondition.builder()
+                            .temperature(temperature)
+                            .humidity(humidity)
+                            .child(child)
+                            .build();
+                    roomConditions.add(roomCondition);
                 }
-                float avgFever = (float) (count > 0 ? sum/count: 0.0);
-                avgFever = Math.round(avgFever * 10) / 10.0f;
-
-                FeverRecord feverRecord = FeverRecord.builder()
-                        .fever(avgFever)
-                        .child(child)
-                        .build();
-                feverRecords.add(feverRecord);
+            } catch(Exception e){
+                log.warn("error data format: {}", line);
             }
 
-            RoomCondition roomCondition = RoomCondition.builder()
-                    .temperature(temperature)
-                    .humidity(humidity)
-                    .child(child)
-                    .build();
-            roomConditions.add(roomCondition);
+            if(parts.length>=3 && parts[2]!=null && !parts[2].isBlank()){
+                try {
+                    double sum = 0.0;
+                    int count = 0;
+                    String[] tempValues = parts[2].split(",");
+                    for (String val : tempValues) {
+                        sum += Float.parseFloat(val);
+                        count++;
+                    }
+                    if (count > 0) {
+                        float avgFever = (float) (count > 0 ? sum / count : 0.0);
+                        avgFever = Math.round(avgFever * 10) / 10.0f;
+
+                        FeverRecord feverRecord = FeverRecord.builder()
+                                .fever(avgFever)
+                                .child(child)
+                                .build();
+                        feverRecords.add(feverRecord);
+                    }
+                }catch(Exception e){
+                    log.warn("FeverRecord parse error: {}",line);
+                }
+            }
         }
         feverRecordBulkRepository.saveAll(feverRecords);
         roomConditionBulkRepository.saveAll(roomConditions);
