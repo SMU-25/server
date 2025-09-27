@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.fever_record.service;
 
+import final_project.momeasy.common.enums.RecordState;
 import final_project.momeasy.domain.child.exception.ChildErrorCode;
 import final_project.momeasy.domain.child.exception.ChildException;
 import final_project.momeasy.domain.child.repository.ChildRepository;
@@ -29,13 +30,13 @@ public class FeverRecordQueryServiceImpl implements FeverRecordQueryService {
     private final AvgFever avgFever;
 
     @Override
-    public FeverRecordResponseDTO.FeverRecordViewDTO getFeverRecord(Long childId, Parent parent) {
+    public FeverRecordResponseDTO.FeverRecordStateViewDTO getFeverRecord(Long childId, Parent parent) {
         childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
         if(!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
             throw new FeverRecordException(FeverRecordErrorCode.UNAUTHORIZED_ACCESS);
         }
         FeverRecord feverRecord = feverRecordRepository.findTopByChildIdOrderByCreatedAtDesc(childId).orElseThrow(() -> new FeverRecordException(FeverRecordErrorCode.NOT_FOUND));
-        return FeverRecordConverter.toFeverRecordResponseDTO(feverRecord);
+        return FeverRecordConverter.toFeverRecordStateResponseDTO(feverRecord);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class FeverRecordQueryServiceImpl implements FeverRecordQueryService {
         if(!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
             throw new FeverRecordException(FeverRecordErrorCode.UNAUTHORIZED_ACCESS);
         }
-        FeverRecord feverRecord = feverRecordRepository.findRecentFeverRecord(childId).orElseThrow(() -> new FeverRecordException(FeverRecordErrorCode.NOT_FOUND));
+        FeverRecord feverRecord = feverRecordRepository.findRecentFeverRecord(childId, RecordState.HUMAN).orElseThrow(() -> new FeverRecordException(FeverRecordErrorCode.NOT_FOUND));
         return FeverRecordConverter.toFeverRecordResponseDTO(feverRecord);
     }
 
@@ -58,7 +59,7 @@ public class FeverRecordQueryServiceImpl implements FeverRecordQueryService {
             cursor = Long.MAX_VALUE;
         }
         Pageable pageable = PageRequest.of(0,size);
-        Slice<FeverRecord> feverRecords = feverRecordRepository.findFeverRecordCursorPagination(childId,cursor,pageable);
+        Slice<FeverRecord> feverRecords = feverRecordRepository.findFeverRecordCursorPagination(childId,RecordState.HUMAN, cursor,pageable);
         List<FeverRecord> feverRecordList = feverRecords.toList();
         List<FeverRecordResponseDTO.FeverRecordViewDTO> feverRecordViewDTOList = feverRecordList.stream().map(FeverRecordConverter::toFeverRecordResponseDTO).toList();
 

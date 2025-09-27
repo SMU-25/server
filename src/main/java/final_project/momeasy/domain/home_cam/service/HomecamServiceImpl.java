@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.home_cam.service;
 
+import final_project.momeasy.common.enums.RecordState;
 import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.child.exception.ChildErrorCode;
 import final_project.momeasy.domain.child.exception.ChildException;
@@ -49,6 +50,7 @@ public class HomecamServiceImpl implements HomecamService {
         }
         List<FeverRecord> feverRecords = new ArrayList<>();
         List<RoomCondition> roomConditions = new ArrayList<>();
+
         for(String line : batch){
             String[] parts = line.split("::");
             if(parts.length < 2){
@@ -94,9 +96,14 @@ public class HomecamServiceImpl implements HomecamService {
                         float avgFever = (float) (count > 0 ? sum / count : 0.0);
                         avgFever = Math.round(avgFever * 10) / 10.0f;
 
+                        RecordState state = (avgFever < 35.0 || avgFever > 41.0)
+                                ? RecordState.NOT_HUMAN
+                                : RecordState.HUMAN;
+                        log.info("fever: {}, RecordState: {}", avgFever, state);
                         FeverRecord feverRecord = FeverRecord.builder()
                                 .fever(avgFever)
                                 .child(child)
+                                .recordState(state)
                                 .build();
                         feverRecords.add(feverRecord);
                     }

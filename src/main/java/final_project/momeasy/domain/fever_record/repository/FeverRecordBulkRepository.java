@@ -23,7 +23,7 @@ public class FeverRecordBulkRepository {
 
     @Transactional
     public void saveAll(List<FeverRecord> FeverRecords) {
-        String sql = "INSERT INTO fever_record (child_id, fever, created_at) VALUES (?,?,?)";
+        String sql = "INSERT INTO fever_record (child_id, fever, created_at, record_state) VALUES (?,?,?,?)";
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -33,6 +33,7 @@ public class FeverRecordBulkRepository {
                 ps.setLong(1,feverRecord.getChild().getId());
                 ps.setFloat(2,feverRecord.getFever());
                 ps.setTimestamp(3, now);
+                ps.setString(4, feverRecord.getRecordState().name());
             }
             @Override
             public int getBatchSize() {

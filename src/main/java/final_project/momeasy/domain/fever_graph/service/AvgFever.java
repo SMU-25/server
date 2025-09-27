@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.fever_graph.service;
 
+import final_project.momeasy.common.enums.RecordState;
 import final_project.momeasy.domain.fever_record.entity.FeverRecord;
 import final_project.momeasy.domain.fever_record.repository.FeverRecordRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class AvgFever {
         LocalDateTime end = (time == 21)
                 ?LocalDate.now().plusDays(1).atStartOfDay()
                 :LocalDate.now().atTime(time+3,0);
-        List<FeverRecord> feverRecords = feverRecordRepository.findByChildIdAndCreatedAtBetween(childId,start,end);
+        List<FeverRecord> feverRecords = feverRecordRepository.findByChildIdAndRecordStateAndCreatedAtBetween(childId, RecordState.HUMAN, start,end);
         return (float) Math.round(
                 feverRecords.stream()
                         .mapToDouble(FeverRecord::getFever)
@@ -34,7 +35,7 @@ public class AvgFever {
         LocalDateTime end = (time2 == 24)
                 ? now.plusDays(1).atStartOfDay()
                 : now.atTime(time2, 0);
-        List<FeverRecord> feverRecords = feverRecordRepository.findByChildIdAndCreatedAtBetween(childId, start,end);
+        List<FeverRecord> feverRecords = feverRecordRepository.findByChildIdAndRecordStateAndCreatedAtBetween(childId, RecordState.HUMAN, start,end);
         return (float) Math.round(
                 feverRecords.stream()
                         .mapToDouble(FeverRecord::getFever)

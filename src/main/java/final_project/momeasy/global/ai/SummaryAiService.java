@@ -1,5 +1,6 @@
 package final_project.momeasy.global.ai;
 
+import final_project.momeasy.common.enums.RecordState;
 import final_project.momeasy.domain.fever_record.entity.FeverRecord;
 import final_project.momeasy.domain.fever_record.exception.FeverRecordErrorCode;
 import final_project.momeasy.domain.fever_record.exception.FeverRecordException;
@@ -31,7 +32,7 @@ public class SummaryAiService {
 
     private String generateSummary(String outing, Long childId) {
         // 최근 발열 기록
-        FeverRecord feverRecord = feverRecordRepository.findRecentFeverRecord(childId)
+        FeverRecord feverRecord = feverRecordRepository.findRecentFeverRecord(childId, RecordState.HUMAN)
                 .orElseThrow(() -> new FeverRecordException(FeverRecordErrorCode.NOT_FOUND));
         float recentHighFever = feverRecord.getFever();
         LocalDateTime highFeverTime = feverRecord.getCreatedAt();
@@ -44,7 +45,7 @@ public class SummaryAiService {
         float humidity = roomCondition.getHumidity();
 
         // 최근 체온 측정
-        FeverRecord recentFeverRecord = feverRecordRepository.findTopByChildIdOrderByCreatedAtDesc(childId)
+        FeverRecord recentFeverRecord = feverRecordRepository.findTopByChildIdAndRecordStateOrderByCreatedAtDesc(childId,RecordState.HUMAN)
                 .orElseThrow(() -> new FeverRecordException(FeverRecordErrorCode.NOT_FOUND));
         float recentFever = recentFeverRecord.getFever();
         LocalDateTime recentFeverTime = recentFeverRecord.getCreatedAt();
