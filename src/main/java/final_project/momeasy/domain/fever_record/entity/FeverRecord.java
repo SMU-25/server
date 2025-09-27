@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.fever_record.entity;
 
+import final_project.momeasy.common.enums.RecordState;
 import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -16,6 +17,10 @@ public class FeverRecord extends BaseEntity {
 
     @Column(nullable = false)
     private float fever;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RecordState recordState;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id",nullable = false)
