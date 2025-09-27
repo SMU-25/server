@@ -26,8 +26,8 @@ public class FeverRecordController {
 
     @GetMapping("/{childId}")
     @Operation(summary = "최근 체온 기록 조회", description = "홈 화면에서 최근 체온을 표시할 때 사용되는 API입니다.")
-    public CustomResponse<FeverRecordResponseDTO.FeverRecordViewDTO> getFeverRecord(@PathVariable("childId") Long childId, @AuthParent Parent parent) {
-        FeverRecordResponseDTO.FeverRecordViewDTO feverRecordViewDTO = feverRecordQueryService.getFeverRecord(childId, parent);
+    public CustomResponse<FeverRecordResponseDTO.FeverRecordStateViewDTO> getFeverRecord(@PathVariable("childId") Long childId, @AuthParent Parent parent) {
+        FeverRecordResponseDTO.FeverRecordStateViewDTO feverRecordViewDTO = feverRecordQueryService.getFeverRecord(childId, parent);
         return CustomResponse.onSuccess(feverRecordViewDTO);
     }
 

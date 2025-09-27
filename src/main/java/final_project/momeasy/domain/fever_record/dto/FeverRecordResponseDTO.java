@@ -1,5 +1,6 @@
 package final_project.momeasy.domain.fever_record.dto;
 
+import final_project.momeasy.common.enums.RecordState;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class FeverRecordResponseDTO {
+    @Getter
+    @Builder
+    public static class FeverRecordStateViewDTO{
+        private float fever;
+        private RecordState state;
+        private LocalDateTime createdAt;
+    }
+
     @Getter
     @Builder
     public static class FeverRecordViewDTO{
