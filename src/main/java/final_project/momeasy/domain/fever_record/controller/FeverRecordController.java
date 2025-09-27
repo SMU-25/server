@@ -59,7 +59,9 @@ public class FeverRecordController {
     }
 
     @GetMapping("/graph1/{childId}")
-    @Operation(summary = "1일 체온 기록 그래프 조회", description = "1일 그래프를 위한 기록을 조회합니다. 홈캠에서 사용되는 API입니다.")
+    @Operation(summary = "1일 체온 기록 그래프 조회", description = "1일 그래프를 위한 기록을 조회합니다. 홈캠에서 사용되는 API입니다." +
+            "\n result는 시간 내림차순 형태입니다. 인덱스 0이 가장 오래된 오늘, 0~3시 데이터입니다.<br>"+
+            "0~3시, 3~6시, 6~9시, ... ,21시~0시")
     public CustomResponse<List<FeverRecordResponseDTO.FeverRecordGraphDTO>> getFeverRecordGraphDay1(
             @PathVariable("childId") Long childId, @AuthParent Parent parent) {
         List<FeverRecordResponseDTO.FeverRecordGraphDTO> feverRecordViewList =
@@ -68,7 +70,9 @@ public class FeverRecordController {
     }
 
     @GetMapping("/graph3/{childId}")
-    @Operation(summary = "3일 체온 기록 그래프 조회", description = "3일 그래프를 위한 기록을 조회합니다. 홈캠에서 사용되는 API입니다.")
+    @Operation(summary = "3일 체온 기록 그래프 조회", description = "3일 그래프를 위한 기록 조회을 조회합니다. 홈캠에서 사용되는 API입니다." +
+            "\n result는 시간 내림차순 형태입니다. 인덱스 0이 가장 오래된 3일전, 새벽 데이터입니다.<br>"+
+            "새벽(0~6시), 오전(6시~12시), 오후(12시~0시)")
     public CustomResponse<List<FeverRecordResponseDTO.FeverRecordGraphDTO>> getFeverRecordGraphDay3(
             @PathVariable("childId") Long childId, @AuthParent Parent parent) {
         List<FeverRecordResponseDTO.FeverRecordGraphDTO> feverRecordViewList =
@@ -77,7 +81,10 @@ public class FeverRecordController {
     }
 
     @GetMapping("/graph7/{childId}")
-    @Operation(summary = "7일 체온 기록 그래프 조회", description = "7일 그래프를 위한 기록을 조회합니다. 홈캠에서 사용되는 API입니다.")
+    @Operation(summary = "7일 체온 기록 그래프 조회", description = "7일 그래프를 위한 기록 조회을 조회합니다. 홈캠에서 사용되는 API입니다." +
+            "\n result는 시간 내림차순 형태입니다. 인덱스 0이 가장 오래된 일주일 전 데이터입니다.<br>"+
+            "7일전, 6일전, 5일전, ... , 오늘"
+    )
     public CustomResponse<List<FeverRecordResponseDTO.FeverRecordGraphDTO>> getFeverRecordGraphDay7(
             @PathVariable("childId") Long childId, @AuthParent Parent parent) {
         List<FeverRecordResponseDTO.FeverRecordGraphDTO> feverRecordViewList =
