@@ -6,7 +6,7 @@ import final_project.momeasy.domain.parent.entity.Parent;
 import java.util.List;
 
 public interface FeverRecordQueryService {
-    FeverRecordResponseDTO.FeverRecordViewDTO getFeverRecord(Long childId, Parent parent);
+    FeverRecordResponseDTO.FeverRecordStateViewDTO getFeverRecord(Long childId, Parent parent);
 
     FeverRecordResponseDTO.FeverRecordViewDTO getRecentHighFeverRecord(Long childId, Parent parent);
 
