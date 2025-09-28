@@ -6,6 +6,7 @@ import final_project.momeasy.common.enums.SocialType;
 import final_project.momeasy.domain.calendar.entity.Calendar;
 import final_project.momeasy.domain.child.entity.Child;
 import final_project.momeasy.domain.home_cam.entity.Homecam;
+import final_project.momeasy.domain.map_favorites.entity.MapFavorites;
 import final_project.momeasy.domain.notification.entity.Notification;
 import final_project.momeasy.domain.setting.entity.Setting;
 import final_project.momeasy.global.entity.BaseEntity;
@@ -67,6 +68,10 @@ public class Parent extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Homecam> homecams = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<MapFavorites> mapFavorites = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     @Builder.Default
