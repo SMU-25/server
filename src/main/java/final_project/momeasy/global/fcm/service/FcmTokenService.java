@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 
 @Service
@@ -23,10 +22,19 @@ public class FcmTokenService {
     public void saveToken(Parent parent, String token, DeviceType deviceType) {
         tokenRepository.findByToken(token).ifPresentOrElse(
                 f -> {
-                    if (!f.getParent().getId().equals(parent.getId())) {
-                        f.setParent(parent);
+                    if (f.getParent().getId().equals(parent.getId())) {
+                        // 같은 parent + token → 업데이트
+                        f.updateDeviceType(deviceType);
+                    } else {
+                        // 다른 parent가 쓰던 토큰 → 삭제 후 새로 저장
+                        tokenRepository.delete(f);
+                        tokenRepository.flush();
+                        tokenRepository.save(FcmToken.builder()
+                                .parent(parent)
+                                .token(token)
+                                .deviceType(deviceType)
+                                .build());
                     }
-                    f.setDeviceType(deviceType);
                 },
                 () -> tokenRepository.save(
                         FcmToken.builder()
@@ -40,12 +48,8 @@ public class FcmTokenService {
 
     @Transactional
     public void deleteToken(Parent parent, String token) {
-        FcmToken f = tokenRepository.findByToken(token)
+        FcmToken f = tokenRepository.findByParentIdAndToken(parent.getId(), token)
                 .orElseThrow(() -> new FcmException(FcmErrorCode.TOKEN_NOT_FOUND));
-
-        if (!f.getParent().getId().equals(parent.getId())) {
-            throw new FcmException(FcmErrorCode.TOKEN_NOT_OWNED);
-        }
         tokenRepository.delete(f);
     }
 
@@ -54,11 +58,22 @@ public class FcmTokenService {
         tokenRepository.findByToken(token).ifPresent(tokenRepository::delete);
     }
 
+    @Transactional
+    public void deleteTokenSilentlyIfExists(Long parentId, String token) {
+        tokenRepository.findByParentIdAndToken(parentId, token)
+                .ifPresent(tokenRepository::delete);
+    }
+
     @Transactional(readOnly = true)
     public List<String> getTokenStringsByParent(Parent parent) {
         return tokenRepository.findAllByParentId(parent.getId())
                 .stream()
                 .map(FcmToken::getToken)
                 .toList();
+    }
+
+    @Transactional
+    public void deleteAllByParent(Parent parent) {
+        tokenRepository.deleteAllByParentId(parent.getId());
     }
 }
