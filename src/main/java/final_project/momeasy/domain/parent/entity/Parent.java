@@ -97,7 +97,6 @@ public class Parent extends BaseEntity {
 
     public void addFcmToken(FcmToken token) {
         this.fcmTokens.add(token);
-        token.setParent(this);
     }
 
     // soft delete
