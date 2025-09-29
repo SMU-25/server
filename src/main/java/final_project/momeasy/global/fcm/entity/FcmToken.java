@@ -6,11 +6,19 @@ import final_project.momeasy.common.enums.DeviceType;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Entity
-@Table(name = "fcm_token", indexes = {
-        @Index(name = "idx_fcm_token_parent", columnList = "parent_id")
-})
+@Table(
+        name = "fcm_token",
+        indexes = {
+                @Index(name = "idx_fcm_token_parent", columnList = "parent_id")
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_parent_token",
+                        columnNames = {"parent_id", "token"}
+                )
+        }
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,18 +33,14 @@ public class FcmToken extends BaseEntity {
     @JoinColumn(name = "parent_id", nullable = false)
     private Parent parent;
 
-    @Column(nullable = false, unique = true, length = 512)
+    @Column(nullable = false, length = 512)
     private String token;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 32)
     private DeviceType deviceType;
 
-    public void setParent(Parent parent) {
-        this.parent = parent;
-    }
-
-    public void setDeviceType(DeviceType deviceType) {
+    public void updateDeviceType(DeviceType deviceType) {
         this.deviceType = deviceType;
     }
 }
