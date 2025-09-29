@@ -31,18 +31,19 @@ public class FcmService {
                 .setToken(targetToken)
                 .setNotification(Notification.builder().setTitle(title).setBody(body).build())
                 .build();
-        doSend(targetToken, message);
+        doSend(null, targetToken, message);
     }
 
     @Async
-    public void sendNotification(String targetToken, DeviceType deviceType, String title, String body, String deeplink, String type) {
+    public void sendNotification(String targetToken, DeviceType deviceType,
+                                 String title, String body, String deeplink, String type) {
         Message message = buildPerDeviceMessage(targetToken, deviceType, title, body, deeplink, type);
-        doSend(targetToken, message);
+        doSend(null, targetToken, message);
     }
 
-
     @Async
-    public void sendAnnouncementToTopic(String topic, String title, String body, String deeplink, String type) {
+    public void sendAnnouncementToTopic(String topic, String title,
+                                        String body, String deeplink, String type) {
         AndroidConfig android = AndroidConfig.builder()
                 .setPriority(AndroidConfig.Priority.HIGH)
                 .setNotification(AndroidNotification.builder()
@@ -69,10 +70,11 @@ public class FcmService {
                 .setApnsConfig(apns)
                 .build();
 
-        doSend(null, message);
+        doSend(null, null, message);
     }
 
-    private Message buildPerDeviceMessage(String token, DeviceType deviceType, String title, String body, String deeplink, String type) {
+    private Message buildPerDeviceMessage(String token, DeviceType deviceType,
+                                          String title, String body, String deeplink, String type) {
         if (deviceType == DeviceType.IOS) {
             return Message.builder()
                     .setToken(token)
@@ -96,16 +98,22 @@ public class FcmService {
         }
     }
 
-    private void doSend(String targetTokenOrNull, Message message) {
+    private void doSend(Long parentIdOrNull, String targetTokenOrNull, Message message) {
         try {
             String response = FirebaseMessaging.getInstance().send(message);
             log.info("FCM sent: {}", response);
         } catch (FirebaseMessagingException e) {
-            MessagingErrorCode code = e.getMessagingErrorCode(); // ✅ Admin SDK 권장 방식
+            MessagingErrorCode code = e.getMessagingErrorCode();
             log.warn("FCM failed: code={}, msg={}", code, e.getMessage(), e);
 
             if (code == MessagingErrorCode.UNREGISTERED && targetTokenOrNull != null) {
-                tokenService.deleteTokenSilentlyIfExists(targetTokenOrNull);
+                if (parentIdOrNull != null) {
+                    // 특정 Parent 소유 토큰만 안전하게 삭제
+                    tokenService.deleteTokenSilentlyIfExists(parentIdOrNull, targetTokenOrNull);
+                } else {
+                    // fallback: parent 정보 없으면 기존 방식으로 삭제
+                    tokenService.deleteTokenSilentlyIfExists(targetTokenOrNull);
+                }
                 throw new FcmException(FcmErrorCode.UNREGISTERED_TOKEN);
             }
             if (code == MessagingErrorCode.INVALID_ARGUMENT) {
