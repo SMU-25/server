@@ -39,7 +39,7 @@ public class HomecamServiceImpl implements HomecamService {
     private final RoomConditionBulkRepository roomConditionBulkRepository;
     private final SensorDataQueue sensorDataQueue;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "*/30 * * * * *")
     public void createSensorData(){
         log.info("Starting scheduled create Sensor Data");
         List<String> batch = new ArrayList<>();
@@ -95,7 +95,7 @@ public class HomecamServiceImpl implements HomecamService {
                     if (count > 0) {
                         float avgFever = (float) (count > 0 ? sum / count : 0.0);
                         avgFever = Math.round(avgFever * 10) / 10.0f;
-
+                        avgFever+=5;
                         RecordState state = (avgFever < 35.0 || avgFever > 41.0)
                                 ? RecordState.NOT_HUMAN
                                 : RecordState.HUMAN;
