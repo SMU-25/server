@@ -1,5 +1,5 @@
 ## 졸업 프로젝트 반오십슴우팀
-백엔드 repository
+BackEnd repository
 
 
 ## 맘편해 제품 소개
