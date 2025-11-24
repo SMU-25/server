@@ -1,4 +1,4 @@
-FROM openjdk:21
+FROM eclipse-temurin:21
 
 # 타임존 설정
 RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
