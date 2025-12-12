@@ -22,26 +22,26 @@ import java.util.List;
 public class HumidityGraphServiceImpl implements HumidityGraphService {
     private final HumidityGraphRepositoy humidityGraphRepositoy;
     private final FeverReportRepository feverReportRepository;
-    private final AvgHumidity avgHumidity;
+    private final HumidityGenerator humidityGenerator;
 
     @Override
     public List<HumidityGraph> createHumidityRecordGraph(Long recordId, Parent parent, Long childId) {
-        FeverReport feverReport = feverReportRepository.findById(recordId).orElseThrow(()->new FeverReportException(FeverReportErrorCode.NOT_FOUND));
+        FeverReport feverReport = feverReportRepository.findById(recordId).orElseThrow(() -> new FeverReportException(FeverReportErrorCode.NOT_FOUND));
 
         List<HumidityGraph> humidityGraphs = new ArrayList<>();
         // 범위 day1
-        for(int t = 0 ; t <24 ; t+=3){
-            humidityGraphs.add(buildHumidityGraph(feverReport, 0, DayRange.DAY1,t, t, childId));
+        for (int t = 0; t < 24; t += 3) {
+            humidityGraphs.add(humidityGenerator.HumidityGraph(feverReport, 0, DayRange.DAY1, t, t, childId));
         }
         // 범위 day3
         for (int d = 2; d >= 0; d--) {
-            humidityGraphs.add(buildHumidityGraph(feverReport, d, DayRange.DAY3,0, 6,childId));   // 새벽
-            humidityGraphs.add(buildHumidityGraph(feverReport, d, DayRange.DAY3,6, 12,childId));  // 오전
-            humidityGraphs.add(buildHumidityGraph(feverReport, d, DayRange.DAY3,12, 24,childId)); // 오후
+            humidityGraphs.add(humidityGenerator.HumidityGraph(feverReport, d, DayRange.DAY3, 0, 6, childId));   // 새벽
+            humidityGraphs.add(humidityGenerator.HumidityGraph(feverReport, d, DayRange.DAY3, 6, 12, childId));  // 오전
+            humidityGraphs.add(humidityGenerator.HumidityGraph(feverReport, d, DayRange.DAY3, 12, 24, childId)); // 오후
         }
         // 범위 day7
-        for(int d = 6; d>=0; d--){
-            humidityGraphs.add(buildHumidityGraph(feverReport, d, DayRange.DAY7,0, 24,childId));
+        for (int d = 6; d >= 0; d--) {
+            humidityGraphs.add(humidityGenerator.HumidityGraph(feverReport, d, DayRange.DAY7, 0, 24, childId));
         }
         humidityGraphRepositoy.saveAll(humidityGraphs);
         return humidityGraphs;
@@ -52,37 +52,19 @@ public class HumidityGraphServiceImpl implements HumidityGraphService {
 
         List<HumidityGraphResponseDTO.HumidityGraphHomecamViewDTO> humidityGraphs = new ArrayList<>();
         // 범위 day1
-        for(int t = 0 ; t <24 ; t+=3){
-            humidityGraphs.add(buildHomecamHumidityGraph(0, DayRange.DAY1,t, t, childId));
+        for (int t = 0; t < 24; t += 3) {
+            humidityGraphs.add(humidityGenerator.HomecamHumidityGraph(0, DayRange.DAY1, t, t, childId));
         }
         // 범위 day3
         for (int d = 2; d >= 0; d--) {
-            humidityGraphs.add(buildHomecamHumidityGraph(d, DayRange.DAY3,0, 6,childId));   // 새벽
-            humidityGraphs.add(buildHomecamHumidityGraph(d, DayRange.DAY3,6, 12,childId));  // 오전
-            humidityGraphs.add(buildHomecamHumidityGraph(d, DayRange.DAY3,12, 24,childId)); // 오후
+            humidityGraphs.add(humidityGenerator.HomecamHumidityGraph(d, DayRange.DAY3, 0, 6, childId));   // 새벽
+            humidityGraphs.add(humidityGenerator.HomecamHumidityGraph(d, DayRange.DAY3, 6, 12, childId));  // 오전
+            humidityGraphs.add(humidityGenerator.HomecamHumidityGraph(d, DayRange.DAY3, 12, 24, childId)); // 오후
         }
         // 범위 day7
-        for(int d = 6; d>=0; d--){
-            humidityGraphs.add(buildHomecamHumidityGraph(d, DayRange.DAY7,0, 24,childId));
+        for (int d = 6; d >= 0; d--) {
+            humidityGraphs.add(humidityGenerator.HomecamHumidityGraph(d, DayRange.DAY7, 0, 24, childId));
         }
         return humidityGraphs;
-    }
-
-    private HumidityGraph buildHumidityGraph(FeverReport feverReport, int dayOffset, DayRange dayRange , int startHour, int endHour, Long childId) {
-        float avg = dayRange == DayRange.DAY1 ? avgHumidity.getHumidityAvgBy3Hour(startHour, childId) : avgHumidity.getHumidityAvgByDayAndTimeRange(dayOffset, startHour, endHour, childId);
-        HumidityGraph humidityGraph = HumidityGraph.builder()
-                .avgHumidity(avg)
-                .dayRange(dayRange)
-                .build();
-        humidityGraph.setFeverReport(feverReport);
-        return humidityGraph;
-    }
-
-    private HumidityGraphResponseDTO.HumidityGraphHomecamViewDTO buildHomecamHumidityGraph(int dayOffset, DayRange dayRange , int startHour, int endHour, Long childId) {
-        float avg = dayRange == DayRange.DAY1 ? avgHumidity.getHumidityAvgBy3Hour(startHour, childId) : avgHumidity.getHumidityAvgByDayAndTimeRange(dayOffset, startHour, endHour, childId);
-        return HumidityGraphResponseDTO.HumidityGraphHomecamViewDTO.builder()
-                .avghumidity(avg)
-                .dayRange(dayRange)
-                .build();
     }
 }
