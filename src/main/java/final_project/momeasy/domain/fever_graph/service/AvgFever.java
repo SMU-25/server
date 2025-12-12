@@ -16,26 +16,25 @@ public class AvgFever {
     private final FeverRecordRepository feverRecordRepository;
 
     public float getFeverAvgBy3Hour(int time, Long childId) {
-        LocalDateTime start = LocalDate.now().atTime(time,0);
+        LocalDateTime start = LocalDate.now().atTime(time, 0);
         LocalDateTime end = (time == 21)
-                ?LocalDate.now().plusDays(1).atStartOfDay()
-                :LocalDate.now().atTime(time+3,0);
-        List<FeverRecord> feverRecords = feverRecordRepository.findByChildIdAndRecordStateAndCreatedAtBetween(childId, RecordState.HUMAN, start,end);
-        return (float) Math.round(
-                feverRecords.stream()
-                        .mapToDouble(FeverRecord::getFever)
-                        .average()
-                        .orElse(0.0) * 10
-        ) / 10;
+                ? LocalDate.now().plusDays(1).atStartOfDay()
+                : LocalDate.now().atTime(time + 3, 0);
+        List<FeverRecord> feverRecords = feverRecordRepository.findByChildIdAndRecordStateAndCreatedAtBetween(childId, RecordState.HUMAN, start, end);
+        return AvgFever(feverRecords);
     }
 
     public float getFeverAvgByDayAndTimeRange(int day, int time1, int time2, Long childId) {
         LocalDate now = LocalDate.now().minusDays(day);
-        LocalDateTime start = now.atTime(time1,0);
+        LocalDateTime start = now.atTime(time1, 0);
         LocalDateTime end = (time2 == 24)
                 ? now.plusDays(1).atStartOfDay()
                 : now.atTime(time2, 0);
-        List<FeverRecord> feverRecords = feverRecordRepository.findByChildIdAndRecordStateAndCreatedAtBetween(childId, RecordState.HUMAN, start,end);
+        List<FeverRecord> feverRecords = feverRecordRepository.findByChildIdAndRecordStateAndCreatedAtBetween(childId, RecordState.HUMAN, start, end);
+        return AvgFever(feverRecords);
+    }
+
+    private float AvgFever(List<FeverRecord> feverRecords) {
         return (float) Math.round(
                 feverRecords.stream()
                         .mapToDouble(FeverRecord::getFever)

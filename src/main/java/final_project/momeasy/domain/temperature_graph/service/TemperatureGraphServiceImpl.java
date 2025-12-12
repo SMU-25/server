@@ -22,26 +22,26 @@ import java.util.List;
 public class TemperatureGraphServiceImpl implements TemperatureGraphService {
     private final TemperatureGraphRepository temperatureGraphRepository;
     private final FeverReportRepository feverReportRepository;
-    private final AvgTemperature avgTemperature;
+    private final TemperatureGenerator temperatureGenerator;
 
     @Override
     public List<TemperatureGraph> createTemperatureRecordGraph(Long recordId, Parent parent, Long childId) {
-        FeverReport feverReport = feverReportRepository.findById(recordId).orElseThrow(()->new FeverReportException(FeverReportErrorCode.NOT_FOUND));
+        FeverReport feverReport = feverReportRepository.findById(recordId).orElseThrow(() -> new FeverReportException(FeverReportErrorCode.NOT_FOUND));
 
         List<TemperatureGraph> temperatureGraphs = new ArrayList<>();
         // 범위 day1
-        for(int t = 0 ; t <24 ; t+=3){
-            temperatureGraphs.add(buildTemperatureGraph(feverReport, 0, DayRange.DAY1,t, t, childId));
+        for (int t = 0; t < 24; t += 3) {
+            temperatureGraphs.add(temperatureGenerator.TemperatureGraph(feverReport, 0, DayRange.DAY1, t, t, childId));
         }
         // 범위 day3
         for (int d = 2; d >= 0; d--) {
-            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.DAY3,0, 6,childId));   // 새벽
-            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.DAY3,6, 12,childId));  // 오전
-            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.DAY3,12, 24,childId)); // 오후
+            temperatureGraphs.add(temperatureGenerator.TemperatureGraph(feverReport, d, DayRange.DAY3, 0, 6, childId));   // 새벽
+            temperatureGraphs.add(temperatureGenerator.TemperatureGraph(feverReport, d, DayRange.DAY3, 6, 12, childId));  // 오전
+            temperatureGraphs.add(temperatureGenerator.TemperatureGraph(feverReport, d, DayRange.DAY3, 12, 24, childId)); // 오후
         }
         // 범위 day7
-        for(int d = 6; d>=0; d--){
-            temperatureGraphs.add(buildTemperatureGraph(feverReport, d, DayRange.DAY7,0, 24,childId));
+        for (int d = 6; d >= 0; d--) {
+            temperatureGraphs.add(temperatureGenerator.TemperatureGraph(feverReport, d, DayRange.DAY7, 0, 24, childId));
         }
         temperatureGraphRepository.saveAll(temperatureGraphs);
         return temperatureGraphs;
@@ -51,38 +51,19 @@ public class TemperatureGraphServiceImpl implements TemperatureGraphService {
     public List<TemperatureGraphResponseDTO.TemperatureGraphHomecamViewDTO> getTemperatureRecordHomecamGraph(Parent parent, Long childId) {
         List<TemperatureGraphResponseDTO.TemperatureGraphHomecamViewDTO> temperatureGraphs = new ArrayList<>();
         // 범위 day1
-        for(int t = 0 ; t <24 ; t+=3){
-            temperatureGraphs.add(buildHomecamTemperatureGraph(0, DayRange.DAY1,t, t, childId));
+        for (int t = 0; t < 24; t += 3) {
+            temperatureGraphs.add(temperatureGenerator.HomecamTemperatureGraph(0, DayRange.DAY1, t, t, childId));
         }
         // 범위 day3
         for (int d = 2; d >= 0; d--) {
-            temperatureGraphs.add(buildHomecamTemperatureGraph(d, DayRange.DAY3,0, 6,childId));   // 새벽
-            temperatureGraphs.add(buildHomecamTemperatureGraph(d, DayRange.DAY3,6, 12,childId));  // 오전
-            temperatureGraphs.add(buildHomecamTemperatureGraph(d, DayRange.DAY3,12, 24,childId)); // 오후
+            temperatureGraphs.add(temperatureGenerator.HomecamTemperatureGraph(d, DayRange.DAY3, 0, 6, childId));   // 새벽
+            temperatureGraphs.add(temperatureGenerator.HomecamTemperatureGraph(d, DayRange.DAY3, 6, 12, childId));  // 오전
+            temperatureGraphs.add(temperatureGenerator.HomecamTemperatureGraph(d, DayRange.DAY3, 12, 24, childId)); // 오후
         }
         // 범위 day7
-        for(int d = 6; d>=0; d--){
-            temperatureGraphs.add(buildHomecamTemperatureGraph(d, DayRange.DAY7,0, 24,childId));
+        for (int d = 6; d >= 0; d--) {
+            temperatureGraphs.add(temperatureGenerator.HomecamTemperatureGraph(d, DayRange.DAY7, 0, 24, childId));
         }
         return temperatureGraphs;
-    }
-
-    private TemperatureGraph buildTemperatureGraph(FeverReport feverReport, int dayOffset, DayRange dayRange , int startHour, int endHour, Long childId) {
-        float avg = dayRange == DayRange.DAY1 ? avgTemperature.getTemperatureAvgBy3Hour(startHour, childId) : avgTemperature.getTemperatureAvgByDayAndTimeRange(dayOffset, startHour, endHour, childId);
-        TemperatureGraph temperatureGraph = TemperatureGraph.builder()
-                .avgTemperature(avg)
-                .dayRange(dayRange)
-                .build();
-        temperatureGraph.setFeverReport(feverReport);
-        return temperatureGraph;
-    }
-
-    private TemperatureGraphResponseDTO.TemperatureGraphHomecamViewDTO buildHomecamTemperatureGraph(int dayOffset, DayRange dayRange , int startHour, int endHour, Long childId) {
-        float avg = dayRange == DayRange.DAY1 ? avgTemperature.getTemperatureAvgBy3Hour(startHour, childId) : avgTemperature.getTemperatureAvgByDayAndTimeRange(dayOffset, startHour, endHour, childId);
-        return TemperatureGraphResponseDTO.TemperatureGraphHomecamViewDTO.builder()
-                .avgtemperature(avg)
-                .dayRange(dayRange)
-                .build();
-
     }
 }
