@@ -1,7 +1,5 @@
 package final_project.momeasy.domain.room_condition.service;
 
-import final_project.momeasy.domain.child.exception.ChildErrorCode;
-import final_project.momeasy.domain.child.exception.ChildException;
 import final_project.momeasy.domain.child.repository.ChildRepository;
 import final_project.momeasy.domain.parent.entity.Parent;
 import final_project.momeasy.domain.room_condition.converter.RoomConditionConverter;
@@ -27,20 +25,15 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
 
     @Override
     public RoomConditionResponseDTO.RoomConditionViewDTO getRoomCondition(Long childId, Parent parent) {
-        childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
-        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        validateChildAccess(childId, parent);
         RoomCondition roomCondition = roomConditionRepository.findTopByChildIdOrderByCreatedAtDesc(childId).orElseThrow(() -> new RoomConditionException(RoomConditionErrorCode.NOT_FOUND));
         return RoomConditionConverter.toRoomConditionViewDTO(roomCondition);
     }
 
     @Override
     public RoomConditionResponseDTO.RoomConditionListViewDTO getRoomConditionPage(Long childId, Long cursor, Integer size, Parent parent) {
-        childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
-        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        validateChildAccess(childId, parent);
+
         if (cursor == 0) {
             cursor = Long.MAX_VALUE;
         }
@@ -62,28 +55,26 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
 
     @Override
     public List<RoomConditionResponseDTO.RoomConditionGrpahDTO> getRoomConditionGraphDay1(Long childId, Parent parent) {
-        childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
-        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        validateChildAccess(childId, parent);
         return roomConditionGraphGenerator.createDay1(childId);
     }
 
     @Override
     public List<RoomConditionResponseDTO.RoomConditionGrpahDTO> getRoomConditionGraphDay3(Long childId, Parent parent) {
-        childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
-        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        validateChildAccess(childId, parent);
         return roomConditionGraphGenerator.createDay3(childId);
     }
 
     @Override
     public List<RoomConditionResponseDTO.RoomConditionGrpahDTO> getRoomConditionGraphDay7(Long childId, Parent parent) {
-        childRepository.findById(childId).orElseThrow(() -> new ChildException(ChildErrorCode.NOT_FOUND));
-        if (!childRepository.existsByChildIdAndParentId(childId, parent.getId())) {
-            throw new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        validateChildAccess(childId, parent);
         return roomConditionGraphGenerator.createDay7(childId);
+    }
+
+    private void validateChildAccess(Long childId, Parent parent) {
+        childRepository.findByIdAndParentId(childId, parent.getId())
+                .orElseThrow(() ->
+                        new RoomConditionException(RoomConditionErrorCode.UNAUTHORIZED_ACCESS)
+                );
     }
 }
