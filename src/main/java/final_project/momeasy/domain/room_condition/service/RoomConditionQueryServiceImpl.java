@@ -26,7 +26,9 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
     @Override
     public RoomConditionResponseDTO.RoomConditionViewDTO getRoomCondition(Long childId, Parent parent) {
         validateChildAccess(childId, parent);
-        RoomCondition roomCondition = roomConditionRepository.findTopByChildIdOrderByCreatedAtDesc(childId).orElseThrow(() -> new RoomConditionException(RoomConditionErrorCode.NOT_FOUND));
+        RoomCondition roomCondition = roomConditionRepository.findTopByChildIdOrderByCreatedAtDesc(childId)
+                .orElseThrow(() ->
+                        new RoomConditionException(RoomConditionErrorCode.NOT_FOUND));
         return RoomConditionConverter.toRoomConditionViewDTO(roomCondition);
     }
 
@@ -40,7 +42,9 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
         Pageable pageable = PageRequest.of(0, size);
         Slice<RoomCondition> roomConditionList = roomConditionRepository.findRoomConditionCursorPagination(childId, cursor, pageable);
         List<RoomCondition> roomConditions = roomConditionList.toList();
-        List<RoomConditionResponseDTO.RoomConditionViewDTO> roomConditionViewDTOS = roomConditions.stream().map(RoomConditionConverter::toRoomConditionViewDTO).toList();
+        List<RoomConditionResponseDTO.RoomConditionViewDTO> roomConditionViewDTOS = roomConditions.stream()
+                .map(RoomConditionConverter::toRoomConditionViewDTO)
+                .toList();
         if (roomConditionList.isEmpty()) {
             throw new RoomConditionException(RoomConditionErrorCode.NOT_FOUND);
         }
@@ -50,7 +54,8 @@ public class RoomConditionQueryServiceImpl implements RoomConditionQueryService 
             nextCursor = roomConditions.get(roomConditions.size() - 1).getId();
         }
 
-        return RoomConditionConverter.toRoomConditionListViewDTO(roomConditionViewDTOS, roomConditionList.hasNext(), nextCursor);
+        return RoomConditionConverter
+                .toRoomConditionListViewDTO(roomConditionViewDTOS, roomConditionList.hasNext(), nextCursor);
     }
 
     @Override
