@@ -27,4 +27,15 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
     boolean existsByChildIdAndParentId(@Param("childId") Long childId, @Param("parentId") Long parentId);
 
     Optional<Child> findByHomecam(Homecam homecam);
+
+    @Query("""
+        SELECT c FROM Child c
+        JOIN ParentChild pc ON pc.child.id = c.id
+        WHERE c.id = :childId
+            AND pc.parent.id = :parentId
+            AND c.deletedAt IS NULL
+    """)
+    Optional<Child> findByIdAndParentId(
+            @Param("childId") Long childId,
+            @Param("parentId") Long parentId);
 }
